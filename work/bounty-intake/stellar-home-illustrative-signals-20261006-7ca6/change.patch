@@ -1,0 +1,13 @@
+diff --git a/src/app/[locale]/page.tsx b/src/app/[locale]/page.tsx
+--- a/src/app/[locale]/page.tsx
++++ b/src/app/[locale]/page.tsx
+@@ -123,6 +123,9 @@
+       </section>
+ 
+       <section className="relative z-10 grid border-t border-landing-line md:grid-cols-3">
++        <p className="px-6 pt-6 text-xs leading-5 text-landing-muted md:col-span-3 md:px-12">
++          Illustrative figures shown for demonstration.
++        </p>
+         {signals.map(([label, value, status], i) => (
+           <motion.div
+             key={label}
