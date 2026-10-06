@@ -1,0 +1,50 @@
+diff --git a/src/components/ui/TimeRangeSelector.tsx b/src/components/ui/TimeRangeSelector.tsx
+--- a/src/components/ui/TimeRangeSelector.tsx
++++ b/src/components/ui/TimeRangeSelector.tsx
+@@ -1,4 +1,4 @@
+-import React, { useEffect, useState } from "react";
++import React, { useEffect, useId, useState } from "react";
+ import { format, subDays, subHours, startOfDay, endOfDay } from "date-fns";
+ 
+ export type Preset = "24h" | "7d" | "30d" | "custom";
+@@ -14,6 +14,8 @@
+   endDate,
+   onChange,
+ }) => {
++  const startDateId = useId();
++  const endDateId = useId();
+   const [preset, setPreset] = useState<Preset>("30d");
+ 
+   useEffect(() => {
+@@ -65,6 +67,7 @@
+         {(["24h", "7d", "30d", "custom"] as Preset[]).map((p) => (
+           <button
+             key={p}
++            aria-pressed={preset === p}
+             onClick={() => applyPreset(p)}
+             className={`py-1.5 px-3 rounded-lg text-sm font-medium transition ${
+               preset === p
+@@ -86,10 +89,11 @@
+       {preset === "custom" && (
+         <div className="grid grid-cols-2 gap-4">
+           <div>
+-            <label className="block text-xs text-muted-foreground mb-1">
++            <label htmlFor={startDateId} className="block text-xs text-muted-foreground mb-1">
+               Start Date
+             </label>
+             <input
++              id={startDateId}
+               type="date"
+               className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+               value={startDate ? format(startDate, "yyyy-MM-dd") : ""}
+@@ -100,8 +104,9 @@
+             />
+           </div>
+           <div>
+-            <label className="block text-xs text-muted-foreground mb-1">End Date</label>
++            <label htmlFor={endDateId} className="block text-xs text-muted-foreground mb-1">End Date</label>
+             <input
++              id={endDateId}
+               type="date"
+               className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+               value={endDate ? format(endDate, "yyyy-MM-dd") : ""}
