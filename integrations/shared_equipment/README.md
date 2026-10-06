@@ -178,6 +178,24 @@ string for a zero-byte file. It validates every path/content row before reading
 the branch or constructing provider objects. Nonempty branch, commit message
 and file paths remain required; content is preserved exactly.
 
+For a small change in a large file, use `github_edit_files` with the same
+`repository`, `branch`, `expected_head`, `message`, and `operation_id`, plus:
+
+```json
+{"edits":[{"path":"src/example.py","expected_blob_sha":"<full blob SHA>",
+"replacements":[{"old":"exact existing text","new":"replacement text"}]}]}
+```
+
+It validates all rows and rejects duplicate paths or anchors before provider
+access. It reads each exact path at the pinned commit, checks its blob SHA and
+content hash, and applies ordered replacements only when each nonempty `old`
+occurs exactly once. Untouched bytes, line endings and non-ASCII text survive
+unchanged. Any mismatch fails before mutation. Completed files delegate to
+`github_commit_files`, preserving its atomic expected-head publication,
+repository-owner account selection, existing keyring and incident checks.
+The source catalog includes the operation after this change; a running host
+must load it before its deployed catalog advertises or executes the operation.
+
 Branch creation proceeds after an existing-ref lookup only when GitHub returns
 an explicit `404`. Other lookup errors remain read failures; they do not trigger
 a create attempt. Tool errors retain any observed HTTP status, Retry-After and
