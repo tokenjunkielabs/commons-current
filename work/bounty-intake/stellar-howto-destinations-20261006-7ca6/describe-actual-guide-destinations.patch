@@ -1,0 +1,32 @@
+diff --git a/src/app/[locale]/how-to-use/page.tsx b/src/app/[locale]/how-to-use/page.tsx
+--- a/src/app/[locale]/how-to-use/page.tsx
++++ b/src/app/[locale]/how-to-use/page.tsx
+@@ -31,7 +31,7 @@
+    step: "02",
+    icon: BarChart3,
+    title: "Explore the Terminal",
+-   body: "Head to the Terminal dashboard for a global overview — live ledger close times, transaction throughput, and current fee pressure at a glance.",
++   body: "Open the Terminal dashboard for payment success, corridor counts, liquidity depth, and settlement-speed summaries. Some displayed histories and updates are simulated.",
+    cta: { label: "Open Terminal", href: "/dashboard" },
+  },
+  {
+@@ -45,7 +45,7 @@
+    step: "04",
+    icon: Activity,
+    title: "Monitor Network Health",
+-   body: "The Network Health screen tracks validator quorum sets, ledger close variance, and surfaced anomalies in real time.",
++   body: "Review anchor reliability summaries, simulated history, and sample incident entries on the Network Health screen.",
+    cta: { label: "Check Health", href: "/health" },
+  },
+  {
+@@ -83,8 +83,8 @@
+ 
+ 
+        <p className="text-muted-foreground text-lg max-w-xl mx-auto leading-relaxed">
+-         Follow the steps below to unlock the full power of real-time Stellar network
+-         intelligence — from your first login to advanced corridor analytics.
++         Explore the screens below to review Stellar data. Some views include
++         representative or simulated values.
+        </p>
+      </section>
+ 
