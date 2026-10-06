@@ -1,0 +1,166 @@
+diff --git a/docs/contract-privilege-graph.md b/docs/contract-privilege-graph.md
+index ad7baff3f79983a3cf00981fefd8a870141a14b3..fd992e243782b7590f3fec6b07f8fd12fb5813c1 100644
+--- a/docs/contract-privilege-graph.md
++++ b/docs/contract-privilege-graph.md
+@@ -2,7 +2,7 @@
+ 
+ ## Overview
+ 
+-This document specifies the formal cross-contract invocation, authorization graph, and transitive privilege boundaries for the **Stellar Insights** smart contract system. It provides a mathematical and operational model of privilege reachability, transitive closure, attack surface analysis, and explicit scope boundaries designed to prevent unintended privilege escalation.
++This document distinguishes the direct target-address restrictions in `scope.rs` from the authorization assumptions and regression assertions for the supplied **Stellar Insights** target implementations. The supplied V1-to-V2 test does not establish that arbitrary replacement WASM preserves those guards or cannot redirect the target's upgrade authority.
+ 
+ ---
+ 
+@@ -12,7 +12,7 @@
+ | :--- | :--- | :--- | :--- | :--- |
+ | **`UpgradeManager`** | Governed contract upgrade orchestration | `create_proposal`, `record_realistic_storage_test`, `approve_upgrade`, `execute_upgrade`, `migrate_upgrade` | Requires `Governance` auth for proposal creation, multi-approver threshold signatures for approvals, and enforces explicit target scope restrictions. | Prohibited from self-modification and cannot target `Governance`. Invokes target via `GovernedTargetClient::governance_upgrade`. |
+ | **`MultisigContract`** (Governance) | Multi-owner governance wallet & execution engine | `initialize`, `reconfigure`, `propose`, `approve`, `execute` | Requires threshold approval from snapshotted owners to invoke arbitrary downstream functions as the Governance entity; `reconfigure` requires admin auth. | Snapshotted policy per proposal prevents retroactive manipulation. Protected from governed upgrade targeting by `TargetScope`. |
+-| **`StellarInsights`** / **`V2`** | Core protocol snapshot storage & aggregation | `initialize`, `set_upgrade_manager`, `submit_snapshot`, `governance_upgrade`, `migrate_schema` | One-time initialization; `set_upgrade_manager` requires admin auth and enforces write-once immutability; `governance_upgrade` & `migrate_schema` require `UpgradeManager` auth. | Upgraded WASM cannot rebind `UpgradeManager` due to `UpgradeManagerAlreadySet` invariant; cannot forge governance auth. |
++| **`StellarInsights`** / **`V2`** | Core protocol snapshot storage & aggregation | `initialize`, `set_upgrade_manager`, `submit_snapshot`, `governance_upgrade`, `migrate_schema` | One-time initialization; `set_upgrade_manager` requires admin auth and enforces write-once immutability; `governance_upgrade` & `migrate_schema` require `UpgradeManager` auth. | The supplied V2 regression expects the existing manager-binding and authentication guards to reject the specified calls. Arbitrary replacement WASM is outside that coverage. |
+ | **`TimeLockedTransactions`** | Time-delayed execution module | `schedule_transfer`, `execute_transfer`, `get_transfer` | Sender authorization required at scheduling; funds locked immediately; deterministic permissionless execution once absolute unlock timestamp is reached. | Non-upgradeable; immutable transfer parameters (recipient, token, amount) committed at schedule time. |
+ | **`EscrowContract`** | Conditional fund custody & release | `__constructor`, `deposit`, `accept`, `release`, `open_dispute`, `resolve_dispute`, `timeout` | Terms committed immutably in constructor; depositor/beneficiary/arbiter must be distinct; typed resolution outcomes (`ReleaseToBeneficiary` / `RefundToDepositor`). | Non-upgradeable; no capability rotation hooks; funds can only flow to predefined terms participants. |
+ | **`TokenSwap`** | Automated liquidity & swap execution | `create_offer`, `cancel_offer`, `settle_offer`, `get_offer` | Maker authorization required for offer creation and cancellation; settler authorization for execution; slippage floor strictly enforced. | Non-upgradeable; self-contained escrow; no administrative backdoors or authority delegation. |
+@@ -34,7 +34,7 @@
+         UpgradeManager -.x|BLOCKED: TargetOutOfScope| Governance
+     end
+ 
+-    subgraph Anti-Redirection Boundary (Governed Target Invariant)
++    subgraph "Supplied Target Guard Regression (Cooperative V2)"
+         GovernedTarget -.x|BLOCKED: UpgradeManagerAlreadySet| RogueManager["Attacker UpgradeManager"]
+         GovernedTarget -.x|BLOCKED: Unauthorized / Abort| DirectUpgrade["Direct governance_upgrade Call"]
+     end
+@@ -44,33 +44,34 @@
+ 
+ ## Formal Invariant Specification (`scope.rs`)
+ 
+-The scope validation module `contracts/upgrade/src/scope.rs` enforces a strict mathematical authorization boundary:
++The scope validation module `contracts/upgrade/src/scope.rs` checks the two target-address restrictions below. The target-implementation assumptions and authorization regressions are separate from those checks.
+ 
+ ### 1. Governance Root Isolation Invariant
+ $$\forall t \in \text{Address}, \quad t = \text{config.governance} \implies \text{validate\_target\_scope}(t) = \text{Err}(\text{TargetOutOfScope})$$
+ - **Guarantee**: An upgrade proposal cannot designate the Governance contract (`MultisigContract`) as an upgrade target.
+-- **Security Purpose**: Prevents an upgrade proposal from replacing governance multi-signature logic, changing owner rosters, reducing voting thresholds, or circumventing consensus rules.
++- **Scope**: Blocks code replacement at the Governance address through this proposal target path. This address check does not audit every other privilege path.
+ 
+-### 2. Upgrade Orchestrator Non-Self-Modification Invariant
++### 2. Upgrade Manager Non-Self-Modification Invariant
+ $$\forall t \in \text{Address}, \quad t = \text{env.current\_contract\_address}() \implies \text{validate\_target\_scope}(t) = \text{Err}(\text{TargetOutOfScope})$$
+ - **Guarantee**: `UpgradeManager` cannot target its own contract address for code replacement.
+-- **Security Purpose**: Guarantees that proposal lifecycles, storage test evidence validation, multi-approver thresholds, and target scope checks cannot be uninstalled or modified.
++- **Scope**: Blocks code replacement at the current `UpgradeManager` address through this proposal target path. It does not inspect the behavior of code installed at other addresses.
+ 
+ ### 3. Transitive Authority Non-Redirection Invariant
++
++This is an assumption about the supplied target implementation and the expectation of its setter regression, not a property enforced on arbitrary replacement WASM by `scope.rs`.
+ $$\text{has\_upgrade\_manager}(\text{target}) = \text{true} \implies \text{set\_upgrade\_manager}(\text{target}, m') = \text{Err}(\text{UpgradeManagerAlreadySet})$$
+-- **Guarantee**: Governed target contracts bind their `UpgradeManager` address as a write-once instance storage variable.
+-- **Security Purpose**: Even when a governed target (e.g. `StellarInsights`) is upgraded to a new WASM binary, the newly installed code cannot reassign or redirect upgrade authority to an attacker-controlled contract. Future upgrades remain strictly gated by the genuine `UpgradeManager`.
++- **Regression assertion**: After installing the supplied `stellar_insights_v2` fixture, the test calls its `set_upgrade_manager` with a different address and expects `UpgradeManagerAlreadySet`.
++- **Boundary**: This exercises the guard implemented by that fixture. It neither installs adversarial replacement code nor proves that future code preserves the setter, storage binding, or authentication checks. Review of replacement code and the trust placed in governance remain separate requirements.
+ 
+ ### 4. Non-Delegation of Governance Authority Invariant
+-$$\text{Caller} \neq \text{config.governance} \implies \text{UpgradeManager.create\_proposal}(\text{caller}) = \text{Err}(\text{Unauthorized / Abort})$$
+-- **Guarantee**: Upgraded target contracts cannot forge or inherit governance authorization.
+-- **Security Purpose**: Upgraded code running at target addresses remains confined to its domain execution context and cannot invoke governance-restricted entrypoints on other protocol contracts.
+ 
++The supplied tests expect a proposal invocation without governance authorization, and direct target upgrade/migration calls without manager authorization, to abort. These are specific authentication regressions; they do not enumerate all indirect privilege paths, model compromised governance, or establish a universal non-delegation property.
++
+ ---
+ 
+-## Exhaustive Capability-Granting Hook Audit
++## Recorded Capability-Granting Hooks
+ 
+-Every contract across the codebase was audited for capability-granting hooks, administrative reconfiguration vectors, and transitive escalation paths:
++The inventory below records per-contract authorization expectations. It is not an exhaustive proof about the behavior of arbitrary replacement WASM.
+ 
+ ### 1. `UpgradeManager`
+ - **Hook Analysis**: Entry points `create_proposal`, `approve_upgrade`, `execute_upgrade`, `migrate_upgrade`.
+@@ -85,7 +86,7 @@
+ ### 3. `StellarInsights` & `StellarInsightsV2`
+ - **Hook Analysis**: `set_upgrade_manager`, `governance_upgrade`, `migrate_schema`.
+ - **Finding**: `set_upgrade_manager` enforces `Error::UpgradeManagerAlreadySet` if `DataKey::UpgradeManager` already exists. `governance_upgrade` and `migrate_schema` strictly require `manager.require_auth()`.
+-- **Status**: **Hardened**. Upgraded code cannot redirect `UpgradeManager` or execute unauthenticated migrations.
++- **Coverage**: The supplied V2 regression expects the existing setter and authentication guards to reject the specified calls. It does not establish those properties for arbitrary replacement code.
+ 
+ ### 4. `TimeLockedTransactions`
+ - **Hook Analysis**: `schedule_transfer`, `execute_transfer`.
+@@ -109,18 +110,20 @@
+ 
+ ---
+ 
+-## Executable Exploit-Attempt Verification
++## Supplied-Contract Regression Coverage
+ 
+-The verification suite in `contracts/upgrade/tests/privilege_escalation_test.rs` executes genuine Soroban contract deployments and interactions:
++The test source in `contracts/upgrade/tests/privilege_escalation_test.rs` configures Soroban contract deployments and the assertions below. This describes the source's intended checks; it is not a new test-execution receipt.
+ 
+ 1. **Self-Upgrade Escalation Check**: `UpgradeManager` rejecting proposals targeting itself with `TargetOutOfScope`.
+ 2. **Governance Upgrade Escalation Check**: `UpgradeManager` rejecting proposals targeting `Governance` with `TargetOutOfScope`.
+ 3. **Threshold Gate Check**: Unapproved proposals cannot invoke `execute_upgrade`.
+-4. **End-to-End Upgrade & Anti-Redirection Verification**:
++4. **End-to-End Supplied V1-to-V2 Regression**:
+    - Deploys `UpgradeManager` and `StellarInsights` v1.
+    - Bootstraps snapshot data.
+    - Executes governed upgrade to `StellarInsightsV2`.
+-   - **Exploit Attempt**: Attempts calling `set_upgrade_manager` on the upgraded V2 contract — verified rejected with `TargetError::UpgradeManagerAlreadySet`.
+-   - **Exploit Attempt**: Attempts calling `governance_upgrade` directly from unauthorized callers — verified rejected.
+-   - **Exploit Attempt**: Attempts calling `migrate_schema` directly without manager auth — verified rejected.
++   - **Setter regression**: Calls `set_upgrade_manager` on the supplied V2 contract and asserts `TargetError::UpgradeManagerAlreadySet`.
++   - **Authentication regression**: Calls `governance_upgrade` directly without authorization and asserts an abort.
++   - **Authentication regression**: Calls `migrate_schema` directly without manager authorization and asserts an abort.
+    - Executes legitimate migration via `UpgradeManager.migrate_upgrade` and confirms state integrity.
++
++The V2 fixture is the supplied cooperative implementation. No adversarial WASM fixture is installed by this test, and its assertions must not be presented as enforcement against arbitrary upgraded code or as closure of issue #381.
+diff --git a/contracts/upgrade/src/scope.rs b/contracts/upgrade/src/scope.rs
+index d8762db443be9b01cf4d77f91a12ccb44659a242..5e37a03212540bf2fa699cd2cd7246ab92342825 100644
+--- a/contracts/upgrade/src/scope.rs
++++ b/contracts/upgrade/src/scope.rs
+@@ -2,36 +2,33 @@
+ 
+ use crate::{Error, GovernanceConfig};
+ 
+-/// Formal invariants governing target scope validation and transitive authorization boundaries:
++/// Target identity restrictions and target-implementation assumptions:
+ ///
+ /// 1. **Governance Root Isolation Invariant**:
+-///    $$\forall t \in \text{Address}, t = \text{config.governance} \implies \text{validate\_target\_scope}(t) = \text{Err}(\text{TargetOutOfScope})$$
+-///    Prevents upgrade proposals from targeting the Governance multi-signature contract. This guarantees that
+-///    governance rules, threshold configurations, and owner sets cannot be overridden via upgrade proposals.
++///    Direct proposal targets equal to the configured Governance address are rejected.
+ ///
+ /// 2. **Upgrade Manager Non-Self-Modification Invariant**:
+-///    $$\forall t \in \text{Address}, t = \text{env.current\_contract\_address}() \implies \text{validate\_target\_scope}(t) = \text{Err}(\text{TargetOutOfScope})$$
+-///    Prevents `UpgradeManager` from modifying its own executable WASM. This guarantees that proposal lifecycles,
+-///    approver thresholds, storage test evidence validation, and target scope checks cannot be bypassed or dismantled.
++///    Direct proposal targets equal to the current UpgradeManager address are rejected.
+ ///
+ /// 3. **Transitive Authority Non-Redirection Invariant**:
+-///    Governed target contracts (such as `StellarInsights`) bind their `UpgradeManager` reference during initialization
+-///    as a write-once value (`UpgradeManagerAlreadySet`). Code installed at a governed target cannot reassign or
+-///    redirect upgrade authority to rogue managers, nor can it bypass the UpgradeManager authentication required for
+-///    subsequent `governance_upgrade` or `migrate_schema` calls.
++///    The supplied target's setter regression expects an existing manager binding to
++///    reject reassignment. This module does not enforce that behavior on arbitrary
++///    replacement WASM or require future implementations to retain the same guard.
+ ///
+ /// 4. **Non-Delegation of Governance Authority Invariant**:
+-///    Governed target contracts hold domain-specific capabilities (e.g. snapshot storage) and cannot acquire
+-///    or delegate governance administrative powers over other contracts in the privilege graph.
++///    The supplied tests exercise specific unauthenticated calls. These target and
++///    caller authorization properties are separate from the address checks here;
++///    they do not constitute an exhaustive transitive-privilege proof.
+ pub struct TargetScope;
+ 
+ impl TargetScope {
+     /// Validates whether a target contract address is eligible for upgrade proposals.
+     ///
+-    /// # Enforced Invariants
++    /// # Enforced Identity Restrictions
+     /// - **Governance Isolation**: Proposal MUST NOT target the Governance contract (`config.governance`).
+     /// - **Manager Self-Upgrade Defense**: Proposal MUST NOT target the UpgradeManager contract itself (`env.current_contract_address()`).
+-    /// - **Transitive Scope Boundary**: Prevents capture or replacement of core authorization infrastructure.
++    ///
++    /// Target-code behavior and indirect privilege paths are not inspected here.
+     pub fn validate_target_scope(
+         env: &Env,
+         target: &Address,
