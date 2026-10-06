@@ -1,0 +1,56 @@
+diff --git a/src/app/[locale]/network/page.tsx b/src/app/[locale]/network/page.tsx
+--- a/src/app/[locale]/network/page.tsx
++++ b/src/app/[locale]/network/page.tsx
+@@ -320,13 +320,11 @@
+             <div className="flex items-center gap-2 mb-4 text-accent">
+               <Info className="w-4 h-4" />
+               <h3 className="font-bold text-[10px] uppercase tracking-widest">
+-                Clusters
++                Nodes
+               </h3>
+             </div>
+             <p className="text-xs text-muted-foreground leading-relaxed">
+-              Nodes that gravitate together represent a shared ecosystem. Larger
+-              nodes indicate high-volume anchors or assets with multiple active
+-              trustlines.
++              Rounded squares represent anchors. Circles represent assets.
+             </p>
+           </div>
+           <div className="p-6 glass border border-white/5 rounded-2xl">
+@@ -337,9 +335,8 @@
+               </h3>
+             </div>
+             <p className="text-xs text-muted-foreground leading-relaxed">
+-              Lines between assets represent corridors. Thickness is proportional
+-              to USD liquidity depth, while color reflects recent payment success
+-              rates.
++              Links connect anchors and assets. Corridor line width reflects
++              reported USD volume, while color reflects the available success rate.
+             </p>
+           </div>
+           <div className="p-6 glass border border-white/5 rounded-2xl">
+@@ -351,7 +348,7 @@
+             </div>
+             <p className="text-xs text-muted-foreground leading-relaxed">
+               Drag nodes to reorganize the layout. Use the mouse wheel to zoom.
+-              Hover over any element to view detailed performance metrics.
++              Hover over a node to see its name and available identifying details.
+             </p>
+           </div>
+         </div>
+diff --git a/src/components/charts/NetworkGraph.tsx b/src/components/charts/NetworkGraph.tsx
+--- a/src/components/charts/NetworkGraph.tsx
++++ b/src/components/charts/NetworkGraph.tsx
+@@ -195,12 +195,6 @@
+               <p className="text-xs text-muted-foreground mb-1">
+                 Full Path: {hoverNode.fullName}
+               </p>
+-              <div className="flex items-center gap-2 mt-2">
+-                <div className="w-2 h-2 rounded-full bg-green-500" />
+-                <span className="text-[10px] font-mono uppercase text-green-400">
+-                  Trading Active
+-                </span>
+-              </div>
+             </div>
+           )}
+         </div>
