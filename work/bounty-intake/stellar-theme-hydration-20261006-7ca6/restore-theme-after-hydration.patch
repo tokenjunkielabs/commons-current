@@ -1,0 +1,34 @@
+diff --git a/src/contexts/ThemeContext.tsx b/src/contexts/ThemeContext.tsx
+index 2c5d5fd..359b7b6 100644
+--- a/src/contexts/ThemeContext.tsx
++++ b/src/contexts/ThemeContext.tsx
+@@ -55,8 +55,9 @@
+ }
+ 
+ export function ThemeProvider({ children }: ThemeProviderProps) {
+-  const [themePreference, setThemePreferenceState] = useState<ThemePreference>(() => getSavedPreference());
+-  const [theme, setTheme] = useState<Theme>(() => resolveTheme(themePreference));
++  // Match the server fallback during the first client render.
++  const [themePreference, setThemePreferenceState] = useState<ThemePreference>('system');
++  const [theme, setTheme] = useState<Theme>('dark');
+ 
+   // Persist preference to localStorage and update resolved theme
+   const setThemePreference = useCallback((preference: ThemePreference) => {
+@@ -71,12 +72,14 @@
+     applyThemeToDOM(resolved);
+   }, []);
+ 
+-  // On mount, apply the initial theme
++  // Restore the browser preference after the matching initial render.
+   useEffect(() => {
+-    const resolved = resolveTheme(themePreference);
++    const savedPreference = getSavedPreference();
++    const resolved = resolveTheme(savedPreference);
++    setThemePreferenceState(savedPreference);
+     setTheme(resolved);
+     applyThemeToDOM(resolved);
+-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
++  }, []);
+ 
+   // Listen for system preference changes when mode is 'system'
+   useEffect(() => {
