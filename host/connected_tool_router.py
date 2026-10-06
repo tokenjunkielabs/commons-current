@@ -302,6 +302,16 @@ class ConnectedToolRouter:
             if tool is not None and (not isinstance(tool, str) or not tool.strip()):
                 raise EquipmentError("runtime tool names must be nonempty strings")
             if tool and isinstance(arguments, dict):
+                # Free economics belong to the observed method, not the whole
+                # provider. An arbitrary runtime binding cannot inherit them.
+                observed_tools = row.get("native_tools", {})
+                observed_methods = ({method for method in observed_tools.values() if isinstance(method, str)}
+                                    if isinstance(observed_tools, dict) else set())
+                if isinstance(row.get("native_tool"), str):
+                    observed_methods.add(row["native_tool"])
+                if tool not in observed_methods:
+                    row["free_plan_verified"] = False
+                    row["zero_net_spend_verified"] = False
                 row["native_tool"] = tool
                 row["binding_state"] = "callable"
             else:
