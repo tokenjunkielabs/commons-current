@@ -1,0 +1,39 @@
+diff --git a/src/components/charts/CorridorHeatmap.tsx b/src/components/charts/CorridorHeatmap.tsx
+--- a/src/components/charts/CorridorHeatmap.tsx
++++ b/src/components/charts/CorridorHeatmap.tsx
+@@ -246,6 +246,8 @@
+         {/* Metric Selector */}
+         <div className="flex bg-slate-100 dark:bg-slate-900/50 p-1 rounded-xl border border-border/50">
+           <button
++            aria-label="Health"
++            aria-pressed={activeMetric === "health"}
+             onClick={() => setActiveMetric("health")}
+             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeMetric === "health" ? "bg-accent text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+           >
+@@ -253,6 +255,8 @@
+             <span className="hidden sm:inline">Health</span>
+           </button>
+           <button
++            aria-label="Success"
++            aria-pressed={activeMetric === "success_rate"}
+             onClick={() => setActiveMetric("success_rate")}
+             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeMetric === "success_rate" ? "bg-accent text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+           >
+@@ -260,6 +264,8 @@
+             <span className="hidden sm:inline">Success</span>
+           </button>
+           <button
++            aria-label="Volume"
++            aria-pressed={activeMetric === "volume"}
+             onClick={() => setActiveMetric("volume")}
+             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeMetric === "volume" ? "bg-accent text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+           >
+@@ -267,6 +273,8 @@
+             <span className="hidden sm:inline">Volume</span>
+           </button>
+           <button
++            aria-label="Latency"
++            aria-pressed={activeMetric === "latency"}
+             onClick={() => setActiveMetric("latency")}
+             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeMetric === "latency" ? "bg-accent text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+           >
