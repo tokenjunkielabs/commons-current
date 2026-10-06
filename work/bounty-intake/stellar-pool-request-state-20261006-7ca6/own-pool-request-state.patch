@@ -1,0 +1,133 @@
+diff --git a/src/app/[locale]/liquidity-pools/page.tsx b/src/app/[locale]/liquidity-pools/page.tsx
+--- a/src/app/[locale]/liquidity-pools/page.tsx
++++ b/src/app/[locale]/liquidity-pools/page.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import React, { useState, useEffect } from "react";
++import React, { useState, useEffect, useCallback, useRef } from "react";
+ import dynamic from "next/dynamic";
+ import {
+   Waves,
+@@ -45,35 +45,69 @@
+   const [stats, setStats] = useState<PoolStats | null>(null);
+   const [selectedPool, setSelectedPool] = useState<LiquidityPool | null>(null);
+   const [snapshots, setSnapshots] = useState<PoolSnapshot[]>([]);
++  const [loadError, setLoadError] = useState<string | null>(null);
++  const [snapshotsLoading, setSnapshotsLoading] = useState(false);
++  const [snapshotsError, setSnapshotsError] = useState<string | null>(null);
++  const snapshotRequest = useRef<object | null>(null);
+   const [sortKey, setSortKey] = useState<SortKey>("apy");
+   const [sortAsc, setSortAsc] = useState(false);
+   const [chartMetric, setChartMetric] = useState<ChartMetric>("apy");
+ 
+-  useEffect(() => {
+-    async function load() {
+-      const [poolsData, statsData] = await Promise.all([
+-        fetchPools(),
+-        fetchPoolStats(),
+-      ]);
+-      setPools(poolsData);
+-      setStats(statsData);
++  const handleSelectPool = useCallback(async (pool: LiquidityPool) => {
++    const request = {};
++    snapshotRequest.current = request;
++    setSelectedPool(pool);
++    setSnapshots([]);
++    setSnapshotsLoading(true);
++    setSnapshotsError(null);
+ 
+-      if (poolsData.length > 0) {
+-        setSelectedPool(poolsData[0]);
+-        const snaps = await fetchPoolSnapshots(poolsData[0].pool_id);
++    try {
++      const snaps = await fetchPoolSnapshots(pool.pool_id);
++      if (snapshotRequest.current === request) {
+         setSnapshots(snaps);
+       }
+-      setLoading(false);
++    } catch {
++      if (snapshotRequest.current === request) {
++        setSnapshotsError("Failed to load pool snapshots. Select the pool again to retry.");
++      }
++    } finally {
++      if (snapshotRequest.current === request) {
++        setSnapshotsLoading(false);
++      }
+     }
+-    load();
+   }, []);
+ 
+-  const handleSelectPool = async (pool: LiquidityPool) => {
+-    setSelectedPool(pool);
+-    const snaps = await fetchPoolSnapshots(pool.pool_id);
+-    setSnapshots(snaps);
+-  };
++  useEffect(() => {
++    let active = true;
+ 
++    async function load() {
++      try {
++        const [poolsData, statsData] = await Promise.all([
++          fetchPools(),
++          fetchPoolStats(),
++        ]);
++        if (!active) return;
++
++        setPools(poolsData);
++        setStats(statsData);
++
++        if (poolsData.length > 0) {
++          await handleSelectPool(poolsData[0]);
++        }
++      } catch {
++        if (active) setLoadError("Failed to load liquidity pools.");
++      } finally {
++        if (active) setLoading(false);
++      }
++    }
++    void load();
++
++    return () => {
++      active = false;
++      snapshotRequest.current = null;
++    };
++  }, [handleSelectPool]);
++
+   const handleSort = (key: SortKey) => {
+     if (sortKey === key) {
+       setSortAsc(!sortAsc);
+@@ -117,6 +151,14 @@
+     );
+   }
+ 
++  if (loadError) {
++    return (
++      <div className="flex h-[80vh] items-center justify-center">
++        <p className="text-sm font-mono text-muted-foreground">{loadError}</p>
++      </div>
++    );
++  }
++
+   return (
+     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+       {/* Page Header */}
+@@ -320,7 +362,17 @@
+                 </button>
+               ))}
+             </div>
+-            <PoolPerformanceChart snapshots={snapshots} metric={chartMetric} />
++            {snapshotsLoading ? (
++              <p className="p-6 text-sm font-mono text-muted-foreground">
++                Loading pool snapshots...
++              </p>
++            ) : snapshotsError ? (
++              <p className="p-6 text-sm font-mono text-muted-foreground">
++                {snapshotsError}
++              </p>
++            ) : (
++              <PoolPerformanceChart snapshots={snapshots} metric={chartMetric} />
++            )}
+           </div>
+ 
+           {/* Pool Detail Panel */}
