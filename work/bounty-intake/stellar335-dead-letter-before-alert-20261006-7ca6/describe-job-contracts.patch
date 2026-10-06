@@ -1,0 +1,32 @@
+diff --git a/backend/jobs/mod.rs b/backend/jobs/mod.rs
+--- a/backend/jobs/mod.rs
++++ b/backend/jobs/mod.rs
+@@ -1,8 +1,9 @@
+-//! Idempotent, dead-letter-aware background job runner.
++//! Background job retries with handler-provided idempotency and in-memory quarantine.
+ //!
+-//! Jobs are built so their writes are upserts (safe to repeat), failures are
+-//! classified as retryable or terminal, and poison messages are quarantined
+-//! with full failure history and an alert instead of looping forever.
++//! Handlers must make repeated execution safe; the scheduler does not enforce
++//! upserts or deduplicate calls. Retryable and terminal classifications select
++//! retries or quarantine. The queue retains supplied failure history in memory,
++//! while alert handling is delegated to the configured sink.
+ 
+ pub mod backfill;
+ pub mod dead_letter;
+diff --git a/backend/jobs/scheduler.rs b/backend/jobs/scheduler.rs
+--- a/backend/jobs/scheduler.rs
++++ b/backend/jobs/scheduler.rs
+@@ -6,8 +6,9 @@
+ use super::dead_letter::{record_failure, AlertSink, DeadLetter, DeadLetterQueue, FailureRecord};
+ use super::error::JobError;
+ 
+-/// A unit of background work. Handlers must be idempotent: their writes are
+-/// upserts, so re-running after a partial failure never double-applies.
++/// A unit of background work. Handlers must make repeated execution safe,
++/// including after partial failure. This trait does not enforce upserts or
++/// deduplicate calls.
+ pub trait Job {
+     fn name(&self) -> &str;
+     fn payload(&self) -> String;
