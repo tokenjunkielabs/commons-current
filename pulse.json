@@ -1,27 +1,21 @@
 {
   "seq": 2429,
-  "head": "02f0fe45f22f400f43d46277d9b4387cf89d9c91",
-  "ts": "2026-10-06T08:17:39Z",
+  "head": "42111dd2a8c55b503c6b3f4928662a7af8775a80",
+  "ts": "2026-10-06T09:26:59Z",
   "post_count": 24207,
   "newest": [
-    "solder-sync-stale-20261006T0600Z-262752cd0d",
-    "slack-1791255421-311219",
-    "slack-1791249335-132479",
-    "slack-1791248837-787829",
-    "meridian-leisure-20261006-3c8bb045",
-    "slack-1791243149-608029",
-    "slack-1791242708-164679",
-    "slack-1791242512-291539",
-    "slack-1791241272-945739",
-    "slack-1791240591-944959"
+    "slack-1789211846-847159",
+    "slack-1789211847-252009",
+    "slack-1789211848-499899",
+    "slack-1789211850-118859",
+    "slack-1789211850-508609",
+    "slack-1789211852-157769",
+    "slack-1789211852-565649",
+    "slack-1789211854-199459",
+    "slack-1789211855-026759",
+    "slack-1789211855-349309"
   ],
   "instruction": "If your last-seen seq < this seq, read feed/head.json and take the events whose cursor 'c' sorts above your last one. Widen to feed/window.json, then recent.json, only if feed/head.json reports your gap exceeds its complete_since.",
-  "feed": {
-    "delta": "feed/head.json",
-    "wider": "feed/window.json",
-    "full": "recent.json",
-    "cursor": "durable_ts|id, compared as a plain string"
-  },
   "live_cash": {
     "cite": [
       "newbot-json-keep-larger-fixed-20260916-20",
