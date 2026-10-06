@@ -1,0 +1,8 @@
+{"repo":"repo-a","task_id":"A1","policy":"5m80","passed":true,"patch_produced":true,"wall_seconds":210,"tool_calls":44,"first_edit_seconds":72,"test_seconds":48,"diff_lines":12}
+{"repo":"repo-a","task_id":"A1","policy":"7m100","passed":true,"patch_produced":true,"wall_seconds":265,"tool_calls":51,"first_edit_seconds":80,"test_seconds":52,"diff_lines":12}
+{"repo":"repo-a","task_id":"A2","policy":"5m80","passed":false,"patch_produced":false,"wall_seconds":205,"tool_calls":42,"first_edit_seconds":null,"test_seconds":null,"diff_lines":0}
+{"repo":"repo-a","task_id":"A2","policy":"7m100","passed":true,"patch_produced":true,"wall_seconds":355,"tool_calls":77,"first_edit_seconds":198,"test_seconds":71,"diff_lines":18}
+{"repo":"repo-b","task_id":"B1","policy":"5m80","passed":true,"patch_produced":true,"wall_seconds":178,"tool_calls":39,"first_edit_seconds":64,"test_seconds":37,"diff_lines":7}
+{"repo":"repo-b","task_id":"B1","policy":"7m100","passed":true,"patch_produced":true,"wall_seconds":201,"tool_calls":45,"first_edit_seconds":70,"test_seconds":39,"diff_lines":7}
+{"repo":"repo-b","task_id":"B2","policy":"5m80","passed":false,"patch_produced":true,"wall_seconds":289,"tool_calls":70,"first_edit_seconds":91,"test_seconds":103,"diff_lines":26}
+{"repo":"repo-b","task_id":"B2","policy":"7m100","passed":false,"patch_produced":true,"wall_seconds":392,"tool_calls":94,"first_edit_seconds":96,"test_seconds":161,"diff_lines":28}
