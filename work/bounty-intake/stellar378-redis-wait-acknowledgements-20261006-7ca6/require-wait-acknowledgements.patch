@@ -1,0 +1,36 @@
+diff --git a/backend/src/distributed_lock/redis_store.rs b/backend/src/distributed_lock/redis_store.rs
+--- a/backend/src/distributed_lock/redis_store.rs
++++ b/backend/src/distributed_lock/redis_store.rs
+@@ -49,6 +49,7 @@
+     /// Failover epoch/generation number to guarantee cross-failover monotonicity
+     pub epoch: u64,
+     /// Optional number of replicas to require synchronous acknowledgment (`WAIT`)
++    /// WAIT errors or insufficient acknowledgments fail the attempt; the Redis key may already exist.
+     pub wait_replicas: u32,
+     /// Timeout for `WAIT` replication acknowledgment in milliseconds
+     pub wait_timeout_ms: u64,
+@@ -333,14 +334,16 @@
+                     .query_async(&mut conn)
+                     .await;
+ 
+-                if let Ok(acked) = wait_cmd {
+-                    if acked < self.config.wait_replicas {
+-                        log::warn!(
+-                            "WAIT acknowledged by {} replicas, expected {}",
+-                            acked,
+-                            self.config.wait_replicas
+-                        );
+-                    }
++                // The script may already have created the lock; do not delete it or reset its expiry on WAIT failure.
++                let acked = wait_cmd.map_err(|e| {
++                    LockError::StorageError(format!("Redis WAIT failed after lock acquisition: {}", e))
++                })?;
++                if acked < self.config.wait_replicas {
++                    return Err(LockError::StorageError(format!(
++                        "Redis WAIT acknowledged by {} replicas, required {}",
++                        acked,
++                        self.config.wait_replicas
++                    )));
+                 }
+             }
+ 
