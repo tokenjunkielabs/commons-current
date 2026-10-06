@@ -1,0 +1,11 @@
+diff --git a/src/app/[locale]/dashboard/page.tsx b/src/app/[locale]/dashboard/page.tsx
+--- a/src/app/[locale]/dashboard/page.tsx
++++ b/src/app/[locale]/dashboard/page.tsx
+@@ -91,6 +91,7 @@
+     if (!response.ok) throw new Error(t("failedToFetch"));
+     const result = await response.json();
+     setData(result);
++    setError(null);
+   }, [t]);
+ 
+   const {
