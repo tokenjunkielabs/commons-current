@@ -1,0 +1,35 @@
+diff --git a/src/hooks/useWebSocket.ts b/src/hooks/useWebSocket.ts
+--- a/src/hooks/useWebSocket.ts
++++ b/src/hooks/useWebSocket.ts
+@@ -66,6 +66,9 @@
+ 
+   const wsRef = useRef<WebSocket | null>(null);
+   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
++  const manualReconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
++    null,
++  );
+   const staleDataTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+   const shouldReconnectRef = useRef(true);
+   const isConnectingRef = useRef(false);
+@@ -175,6 +178,11 @@
+   const disconnect = useCallback((resetPresence = false) => {
+     shouldReconnectRef.current = false;
+ 
++    if (manualReconnectTimeoutRef.current !== null) {
++      clearTimeout(manualReconnectTimeoutRef.current);
++      manualReconnectTimeoutRef.current = null;
++    }
++
+     if (reconnectTimeoutRef.current) {
+       clearTimeout(reconnectTimeoutRef.current);
+       reconnectTimeoutRef.current = null;
+@@ -238,7 +246,8 @@
+     setConnectionAttempts(0);
+ 
+     // Delay slightly before reconnecting
+-    setTimeout(() => {
++    manualReconnectTimeoutRef.current = setTimeout(() => {
++      manualReconnectTimeoutRef.current = null;
+       connect();
+     }, 100);
+   }, [connect, disconnect]);
