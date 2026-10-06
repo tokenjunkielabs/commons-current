@@ -1,0 +1,21 @@
+diff --git a/src/hooks/useRealtimeCorridors.ts b/src/hooks/useRealtimeCorridors.ts
+index e7c2a3e42b08f1c7de1135395712b450d3fb2353..e63c937a5ace270ac131b50ec27c09d90f3a3043
+--- a/src/hooks/useRealtimeCorridors.ts
++++ b/src/hooks/useRealtimeCorridors.ts
+@@ -74,7 +74,7 @@
+   // Get WebSocket URL from environment or default
+   const wsUrl = config.wsUrl;
+ 
+-  const handleMessage = useCallback(
++  const handleMessage = useStableCallback(
+     (message: WsCorridorUpdate | WsHealthAlert | WsNewPayment | WsSubscriptionConfirm | WsPing | WsUnknownMessage) => {
+       if (isCorridorUpdate(message)) {
+         setCorridorUpdates((prev) => {
+@@ -99,7 +99,6 @@
+         logger.debug("Unhandled WebSocket message type:", message.type);
+       }
+     },
+-    [enablePaymentStream, onCorridorUpdate, onHealthAlert, onNewPayment],
+   );
+ 
+   // Stable identities: useWebSocket's `connect` (and the effect that opens
