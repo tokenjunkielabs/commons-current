@@ -1,0 +1,24 @@
+diff --git a/src/app/[locale]/corridors/compare/page.tsx b/src/app/[locale]/corridors/compare/page.tsx
+--- a/src/app/[locale]/corridors/compare/page.tsx
++++ b/src/app/[locale]/corridors/compare/page.tsx
+@@ -74,11 +74,16 @@
+     fetchData();
+   }, [selectedIds]);
+ 
+-  const handleShare = () => {
++  const handleShare = async () => {
+     const url = window.location.href;
+-    navigator.clipboard.writeText(url);
+-    setCopied(true);
+-    setTimeout(() => setCopied(false), 2000);
++    try {
++      await navigator.clipboard.writeText(url);
++      setCopied(true);
++      setTimeout(() => setCopied(false), 2000);
++    } catch (err) {
++      setCopied(false);
++      logger.error("Failed to copy comparison URL:", err);
++    }
+   };
+ 
+   const handleExportCSV = () => {
