@@ -1,0 +1,12 @@
+diff --git a/src/app/[locale]/network/page.tsx b/src/app/[locale]/network/page.tsx
+--- a/src/app/[locale]/network/page.tsx
++++ b/src/app/[locale]/network/page.tsx
+@@ -20,7 +20,7 @@
+ const NetworkGraph = dynamic(
+   () =>
+     import("@/components/charts/NetworkGraph").then((m) => ({
+-      default: m.NetworkGraph,
++      default: m.default,
+     })),
+   { ssr: false },
+ );
