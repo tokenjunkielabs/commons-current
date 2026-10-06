@@ -1,0 +1,21 @@
+diff --git a/backend/src/reconciliation/compare.rs b/backend/src/reconciliation/compare.rs
+index b090291ed8bcb5427fff339e1360e278640b34f4..bf560cd3c9063c6aef8fd273112d73a7ef39f6ad 100644
+--- a/backend/src/reconciliation/compare.rs
++++ b/backend/src/reconciliation/compare.rs
+@@ -300,14 +300,8 @@
+         // 2. Fetch fresh reconcilable periods from off-chain store
+         let fresh_periods = self.offchain.reconcilable_periods().await?;
+ 
+-        // 3. Load pending retry backlog from state store
+-        let pending_retries = match self.state_store.load_pending_retries().await {
+-            Ok(retries) => retries,
+-            Err(err) => {
+-                warn!("failed loading pending retry backlog: {}", err);
+-                Vec::new()
+-            }
+-        };
++        // 3. A failed backlog read is a tick failure, not an empty backlog.
++        let pending_retries = self.state_store.load_pending_retries().await?;
+ 
+         // 4. Merge fresh periods with retry backlog
+         let mut period_set = BTreeSet::new();
