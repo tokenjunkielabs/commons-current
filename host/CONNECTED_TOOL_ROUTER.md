@@ -107,6 +107,29 @@ cooldown remains exactly one second. This restores status visibility and the
 existing router's HTTP-specific decisions. It does not establish a reduction
 in provider calls or deployment to other gateways, and no live write was used.
 
+## Offline rail health
+
+Existing bridge consumers can call `router.rail_health()` on the same router
+and private state file used by dispatch/resume. Operators can inspect it without
+an operation ID or provider call:
+
+```sh
+python host/connected_tool_router.py rail-health \
+  --routes-file inventory/resources/connected_capability_observations.json \
+  --state-file /private/runtime/connected-tools.json
+```
+
+The projection groups the configured route IDs by their exact quota-domain IDs.
+App, actor293 and actor311 remain separate only when their configured domains
+are separate; the helper never infers an actor or changes credentials. It shows
+the latest scalar outcome, provider/client cooldown deadlines, pending counts,
+and observed budget timestamps. Request counts remain separate from generic
+quota balances and request/token buckets. Old journals retain unknown latest
+outcomes and budget provenance until an actual response records them. Balances
+are observations, not current allowance promises; inspect their reset and
+observation times. The output excludes operation arguments and provider results.
+No routing, retry, schedule or provider invocation occurs.
+
 ## Recovery and quota feedback
 
 Keep runtime state outside Git and public artifacts. The state file contains
