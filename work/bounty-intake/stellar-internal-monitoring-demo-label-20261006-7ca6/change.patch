@@ -1,0 +1,19 @@
+diff --git a/src/app/[locale]/internal/monitoring/page.tsx b/src/app/[locale]/internal/monitoring/page.tsx
+index c3876654305fe4fbdc5a9f64e158ba6056253d92..5bd1fabfbc1604b674e46074917bfe9102495be0 100644
+--- a/src/app/[locale]/internal/monitoring/page.tsx
++++ b/src/app/[locale]/internal/monitoring/page.tsx
+@@ -64,11 +64,11 @@
+         <header className="mb-8">
+           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+             <Activity className="text-blue-500" />
+-            Internal Performance Dashboard
++            Internal Performance Dashboard Demo
+           </h1>
+           <p className="text-muted-foreground dark:text-muted-foreground">
+-            Real-time monitoring of frontend vitals, API health, and system
++            Sample data for frontend vitals, API health, system errors, and
+-            errors.
++            session metrics.
+           </p>
+         </header>
+ 
