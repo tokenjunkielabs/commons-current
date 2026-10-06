@@ -739,16 +739,29 @@ function projectSlackSearchResults(response, request, options = {}) {
       throw new TypeError('search ' + key + ' must be a string');
     }
   }
+  if (Object.prototype.hasOwnProperty.call(options, 'include_channel_labels') &&
+      typeof options.include_channel_labels !== 'boolean') {
+    throw new TypeError('include_channel_labels must be boolean');
+  }
+  const includeChannelLabels = options.include_channel_labels === true;
   const defaults = {start_index: 0, max_results: 8, max_body_chars: 800,
     max_total_body_chars: 6400, max_input_chars: 1048576};
   const ceilings = {start_index: Number.MAX_SAFE_INTEGER, max_results: 20,
     max_body_chars: 65536, max_total_body_chars: 262144, max_input_chars: 8388608};
+  if (includeChannelLabels) {
+    Object.assign(defaults, {max_channel_label_chars: 512, max_total_channel_label_chars: 32768});
+    Object.assign(ceilings, {max_channel_label_chars: 65536, max_total_channel_label_chars: 262144});
+  }
   for (const key of Object.keys(options)) {
-    if (key !== 'source_indices' && !Object.prototype.hasOwnProperty.call(defaults, key)) {
-      throw new TypeError('unknown search projection option: ' + key);
+    if (key !== 'source_indices' && key !== 'include_channel_labels' &&
+        !Object.prototype.hasOwnProperty.call(defaults, key)) {
+      const modeHint = ['max_channel_label_chars', 'max_total_channel_label_chars'].includes(key)
+        ? '; channel-label budgets require include_channel_labels: true' : '';
+      throw new TypeError('unknown search projection option: ' + key + modeHint);
     }
   }
   const limits = {...defaults, ...options};
+  delete limits.include_channel_labels;
   for (const [key, value] of Object.entries(limits)) {
     if (key === 'source_indices') continue;
     if (!Number.isSafeInteger(value) || value < (['max_results', 'max_input_chars'].includes(key) ? 1 : 0) ||
@@ -927,6 +940,13 @@ function projectSlackSearchResults(response, request, options = {}) {
         const row = {source_index: i, channel_id: header[3], message_ts: header[4],
           permalink: header[5], rendered_result_range: [header.index, bodyEnd],
           header_range: [header.index, bodyStart], rendered_content_range: [bodyStart, contentEnd]};
+        if (includeChannelLabels) {
+          const channelPrefix = '\nChannel: ';
+          const labelStart = header[0].indexOf(channelPrefix) + channelPrefix.length;
+          const lineEnd = header[0].indexOf('\n', labelStart);
+          const labelEnd = lineEnd - (' (ID: ' + header[3] + ')').length;
+          row.rendered_channel_label_range = [header.index + labelStart, header.index + labelEnd];
+        }
         if (withContext) Object.assign(row, {result_number: resultNumber,
           context_sections: contextSections, context_chars: bodyEnd - contentEnd});
         rows.push(row);
@@ -944,6 +964,9 @@ function projectSlackSearchResults(response, request, options = {}) {
     let full = 0;
     let used = 0;
     let truncated = 0;
+    let selectedLabelChars = 0;
+    let returnedLabelChars = 0;
+    let truncatedLabels = 0;
     for (const row of selected) {
       const [start, end] = row.rendered_content_range;
       let length = Math.min(end - start, limits.max_body_chars, limits.max_total_body_chars - used);
@@ -951,8 +974,29 @@ function projectSlackSearchResults(response, request, options = {}) {
           rendered.charCodeAt(start + length - 1) >= 0xd800 && rendered.charCodeAt(start + length - 1) <= 0xdbff &&
           rendered.charCodeAt(start + length) >= 0xdc00 && rendered.charCodeAt(start + length) <= 0xdfff) length--;
       const clipped = length < end - start;
-      result.results.push({...row, rendered_content: rendered.slice(start, start + length),
-        content_chars: end - start, returned_chars: length, truncated: clipped});
+      const projected = {...row, rendered_content: rendered.slice(start, start + length),
+        content_chars: end - start, returned_chars: length, truncated: clipped};
+      if (includeChannelLabels) {
+        const [labelStart, labelEnd] = row.rendered_channel_label_range;
+        let labelLength = Math.min(labelEnd - labelStart, limits.max_channel_label_chars,
+          limits.max_total_channel_label_chars - returnedLabelChars);
+        if (labelLength > 0 && labelLength < labelEnd - labelStart &&
+            rendered.charCodeAt(labelStart + labelLength - 1) >= 0xd800 &&
+            rendered.charCodeAt(labelStart + labelLength - 1) <= 0xdbff &&
+            rendered.charCodeAt(labelStart + labelLength) >= 0xdc00 &&
+            rendered.charCodeAt(labelStart + labelLength) <= 0xdfff) labelLength--;
+        const labelTruncated = labelLength < labelEnd - labelStart;
+        Object.assign(projected, {
+          rendered_channel_label: rendered.slice(labelStart, labelStart + labelLength),
+          channel_label_chars: labelEnd - labelStart,
+          returned_channel_label_chars: labelLength,
+          channel_label_truncated: labelTruncated,
+        });
+        selectedLabelChars += labelEnd - labelStart;
+        returnedLabelChars += labelLength;
+        truncatedLabels += labelTruncated ? 1 : 0;
+      }
+      result.results.push(projected);
       full += end - start; used += length; truncated += clipped ? 1 : 0;
     }
     if (sourceIndices === null) {
@@ -982,6 +1026,14 @@ function projectSlackSearchResults(response, request, options = {}) {
         selected_content_chars: full, returned_content_chars: used, truncated_results: truncated,
         all_rendered_results_included: selected.length === rows.length && truncated === 0});
     }
+    if (includeChannelLabels) result.coverage.channel_labels = {
+      scope: 'selected_rendered_result_headers',
+      interpretation: 'rendered_text_only',
+      authentication: 'not_performed',
+      selected_chars: selectedLabelChars,
+      returned_chars: returnedLabelChars,
+      truncated_labels: truncatedLabels,
+    };
     if (withContext) Object.assign(result.coverage, {
       unrendered_results: declared - rows.length,
       rendered_result_numbers: rows.map(row => row.result_number),
