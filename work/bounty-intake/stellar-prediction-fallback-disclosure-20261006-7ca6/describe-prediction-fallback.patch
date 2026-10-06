@@ -1,0 +1,14 @@
+diff --git a/src/components/prediction/prediction-form.tsx b/src/components/prediction/prediction-form.tsx
+--- a/src/components/prediction/prediction-form.tsx
++++ b/src/components/prediction/prediction-form.tsx
+@@ -297,6 +297,10 @@
+               <p className="text-sm text-gray-400">
+                 Predict payment success before you send
+               </p>
++              <p className="mt-2 text-xs text-gray-400">
++                If the backend prediction cannot be completed, results are simulated
++                locally. The time-of-day input affects only simulated results.
++              </p>
+             </div>
+           </div>
+         </div>
