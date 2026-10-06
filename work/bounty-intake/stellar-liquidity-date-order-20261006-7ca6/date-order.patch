@@ -1,0 +1,21 @@
+diff --git a/src/components/charts/LiquidityChart.tsx b/src/components/charts/LiquidityChart.tsx
+--- a/src/components/charts/LiquidityChart.tsx
++++ b/src/components/charts/LiquidityChart.tsx
+@@ -45,14 +45,15 @@
+   });
+ 
+   const chartData = Array.from(aggregatedData.entries())
++    .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
+     .map(([timestamp, liquidity]) => ({
+       timestamp: new Date(timestamp).toLocaleDateString('en-US', {
+         month: 'short',
+         day: 'numeric',
++        timeZone: 'UTC',
+       }),
+       liquidity_usd: Math.round(liquidity),
+-    }))
+-    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
++    }));
+ 
+   const formatCurrency = (value: number) => {
+     return new Intl.NumberFormat('en-US', {
