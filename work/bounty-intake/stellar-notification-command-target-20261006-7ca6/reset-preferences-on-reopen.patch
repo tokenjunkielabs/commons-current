@@ -1,0 +1,21 @@
+diff --git a/src/components/notifications/NotificationBell.tsx b/src/components/notifications/NotificationBell.tsx
+index 8346655..0e03799 100644
+--- a/src/components/notifications/NotificationBell.tsx
++++ b/src/components/notifications/NotificationBell.tsx
+@@ -65,10 +65,12 @@
+       />
+ 
+       {/* Notification Preferences Modal */}
+-      <NotificationPreferences
+-        isOpen={showPreferences}
+-        onClose={() => setShowPreferences(false)}
+-      />
++      {showPreferences && (
++        <NotificationPreferences
++          isOpen={showPreferences}
++          onClose={() => setShowPreferences(false)}
++        />
++      )}
+     </>
+   );
+ };

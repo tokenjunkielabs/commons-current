@@ -1,4 +1,4 @@
-# Connect the existing notification commands to the bell
+# Notification commands and preference draft lifetime
 
 The mounted command palette and registered notification shortcut both look up `[data-notification-button]` and click the matching button. The actual NotificationBell button has the handler that opens NotificationCenter, but lacks that attribute. This patch adds the existing selector's target to that button.
 
@@ -30,8 +30,33 @@ Apply `notification-command-target.patch` to the pinned NotificationBell. Origin
 
 A bounded exact public Slack phrase search and a Commons repository PR phrase query for data-notification-button returned zero results; the latter reported incomplete_results:false. That is bounded overlap evidence, not a global absence claim. Completed notification selection, read timestamps, CSV, preferences and sound changes remain protected in their separate packets.
 
-The existing document-wide first-match convention is retained. Multiple mounted bell instances, custom key conflicts, browser-reserved shortcuts, palette focus behavior, modal accessibility and unrelated compile/runtime defects are outside this patch. The mounted StateProvider's separately observed duplicate export is being qualified in another lane; this attribute does not establish whole-application build success.
+The existing document-wide first-match convention is retained. Multiple mounted bell instances, custom key conflicts, browser-reserved shortcuts, palette focus behavior, modal accessibility and unrelated compile/runtime defects are outside this patch. The mounted StateProvider's separately observed duplicate export was addressed in [Commons #31962](https://github.com/woahwhattheheck/commons/pull/31962); these Bell changes do not establish whole-application build success.
 
 The complete donor tree contained no AGENTS/RULES path. Retained docs/CONTRIBUTING.md `f66db3b0eece27eb6fa888948c31ee8c7eabcfd2` describes EventSource testing/release steps; current instructions exclude runtime/tests/package publication. Differently attributed MIT notices under docs do not establish repository-wide licensing, so this packet contains only a minimal patch and this original guide.
 
 No runtime, tests, fixtures, browser, keyboard/device action, user data, account, wallet/payment operation, upstream submission, sponsor acceptance, award or payout was performed.
+
+## Additive continuation: discard the cancelled preference draft
+
+NotificationBell originally rendered NotificationPreferences at all times, passing false while closed. The complete panel at `src/components/notifications/NotificationPreferences.tsx`, native blob `fd1482e38a34d706b675e6a2038e57101e4a3ffc`, initializes localPreferences from provider preferences and hasChanges to false. Returning null for isOpen=false does not remove that component from the parent's tree. Cancel, the close control and backdrop call only onClose. Consequently an unsaved draft remains after Cancel, and provider changes while the panel is hidden do not reinitialize that draft.
+
+The actual Reset Changes handler copies current provider preferences into the draft; Save Changes writes that draft and clears hasChanges without closing. These separate explicit controls establish the saved-versus-draft contract. The provider can also update preferences when notification permission is denied or through the retained storage hook's cross-tab event. No permission, storage or browser action was performed to inspect this source.
+
+The additional patch makes Bell render the existing panel only while showPreferences is true. All panel props and close callbacks remain the same. Closing removes the component and discards its local draft; reopening creates it from then-current provider preferences with hasChanges=false. Saving stays open exactly as before. It does not add an effect that would overwrite a draft while the user is editing.
+
+The primary [React preserving and resetting state guide](https://react.dev/learn/preserving-and-resetting-state) documents that state belongs to a component's position in the tree: retaining that component preserves state, removing it discards state, and adding it again initializes state anew. This source-level mounting correction uses that documented lifecycle.
+
+Apply `reset-preferences-on-reopen.patch` after `notification-command-target.patch`:
+
+| Composed state | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Completed command-target postimage | `83466559bfd5732401ada835e2ee2f23e6780c00` | 2812 |
+| Additional conditional panel mount | `0e03799201779f68a4e87ef1f70f98e7a1cae1d4` | 2857 |
+
+This one-hunk continuation is +6/-4, including JSX indentation. Both serialized directions reconstruct their complete expected source strings. The command target and NotificationCenter mounting stay exact. The original command patch artifact is unchanged.
+
+The panel's completed Test Sound cleanup (#31937) and accessible switches (#31941) are in a different file and remain untouched. Their composed full panel postimage is `e0de0893d29d4a546b6e4a103fa7e55abc4b68a7`. Its initialization and close/save/reset handlers remain the source contract above, and it has no required hidden-panel effect. An already-started test tone still owns its existing ended cleanup; closing the panel is not audio cancellation or rollback.
+
+A precise public showPreferences search returned zero/native END, and a bounded Commons PR query for NotificationPreferences plus draft returned zero/incomplete_results:false. A broader public Slack query returned twenty header previews and a continuation; it was not exhausted and is not claimed complete. Known own packets and unrelated external publication/contract topics were excluded without body expansion.
+
+Cross-tab/provider changes while the panel is already open, persistence failure semantics, focus restoration, transition timing and modal accessibility remain outside this correction. No runtime, tests, component rendering, browser, permission prompt, audio, account action or upstream acceptance is claimed.
