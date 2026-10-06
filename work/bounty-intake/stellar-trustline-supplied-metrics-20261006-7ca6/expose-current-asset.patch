@@ -1,0 +1,11 @@
+diff --git a/src/app/[locale]/trustlines/page.tsx b/src/app/[locale]/trustlines/page.tsx
+--- a/src/app/[locale]/trustlines/page.tsx
++++ b/src/app/[locale]/trustlines/page.tsx
+@@ -236,6 +236,7 @@
+                 <button
+                   key={`${asset.asset_code}-${asset.asset_issuer}`}
+                   onClick={() => handleSelectAsset(asset)}
++                  aria-current={isSelected ? "true" : undefined}
+                   className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
+                     isSelected
+                       ? "bg-accent/10 border border-accent/20"
