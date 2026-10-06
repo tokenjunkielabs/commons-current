@@ -1,0 +1,65 @@
+diff --git a/src/lib/soroban-api.ts b/src/lib/soroban-api.ts
+--- a/src/lib/soroban-api.ts
++++ b/src/lib/soroban-api.ts
+@@ -41,7 +41,7 @@
+ }
+ 
+ export interface SorobanNewDeploymentsResponse {
+-  /** True when deployment/init event coverage is incomplete. */
++  /** True when deployment coverage is incomplete or unconfirmed. */
+   partial: boolean;
+   deployments: SorobanDeployment[];
+   /** Human-readable note when data is partial or empty due to upstream gaps. */
+@@ -207,7 +207,7 @@
+       partial: true,
+       deployments: [],
+       notice:
+-        "New deployments data is unavailable or incomplete until contract deployment/init events are fully ingested.",
++        "Deployment data is unavailable or incomplete. This list may not include all deployments.",
+     };
+   }
+ }
+diff --git a/src/app/[locale]/soroban/page.tsx b/src/app/[locale]/soroban/page.tsx
+--- a/src/app/[locale]/soroban/page.tsx
++++ b/src/app/[locale]/soroban/page.tsx
+@@ -77,7 +77,7 @@
+         partial: true,
+         deployments: [],
+         notice:
+-          "New deployments data is unavailable or incomplete until contract deployment/init events are fully ingested.",
++          "Deployment data is unavailable or incomplete. This list may not include all deployments.",
+       });
+       setContractCalls({ points: [], metric: "events", unavailable: true });
+       setGasUsage({ total_gas: 0, window: "7d", coming_soon: true });
+diff --git a/src/components/soroban/NewDeploymentsList.tsx b/src/components/soroban/NewDeploymentsList.tsx
+--- a/src/components/soroban/NewDeploymentsList.tsx
++++ b/src/components/soroban/NewDeploymentsList.tsx
+@@ -8,7 +8,7 @@
+ 
+ interface NewDeploymentsListProps {
+   deployments: SorobanDeployment[];
+-  /** Backend marks coverage incomplete pending contracts-repo event work. */
++  /** Deployment coverage is incomplete or unconfirmed. */
+   partial?: boolean;
+   notice?: string | null;
+   loading?: boolean;
+@@ -27,7 +27,7 @@
+ }
+ 
+ const DEFAULT_PARTIAL_NOTICE =
+-  "Deployment coverage is partial — some contracts do not emit init/deploy events yet. This list may be incomplete.";
++  "Deployment coverage is partial or unconfirmed. This list may be incomplete.";
+ 
+ export function NewDeploymentsList({
+   deployments,
+@@ -106,8 +106,8 @@
+           </p>
+           <p className="text-xs text-muted-foreground/70 mt-2 max-w-md mx-auto">
+             {partial
+-              ? "Empty for now — waiting on contract deployment/init event coverage from the contracts repo."
+-              : "No new Soroban deployments in the current window."}
++              ? "No deployments are available to display; coverage may be incomplete."
++              : "No deployments were returned for this view."}
+           </p>
+         </div>
+       ) : (
