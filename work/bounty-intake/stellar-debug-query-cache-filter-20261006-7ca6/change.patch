@@ -1,0 +1,18 @@
+diff --git a/src/components/StateProvider.tsx b/src/components/StateProvider.tsx
+index 0e1dcc03a89c254787636dbed3afe933abbcf5da..b2c88faf1454af6d44373662b209a04a724a1b82 100644
+--- a/src/components/StateProvider.tsx
++++ b/src/components/StateProvider.tsx
+@@ -48,9 +48,10 @@ function StateDevTools() {
+           queryClient.invalidateQueries();
+         },
+         getQueryData: (queryKey: string[]) => {
+-          const query = queryClient.getQueryCache().find(({ queryKey: key }) =>
+-            JSON.stringify(key) === JSON.stringify(queryKey)
+-          );
++          const query = queryClient.getQueryCache().find({
++            queryKey,
++            exact: true,
++          });
+           return query?.state.data;
+         },
+ 
