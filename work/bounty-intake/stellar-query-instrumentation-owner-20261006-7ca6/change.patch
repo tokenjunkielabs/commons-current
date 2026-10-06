@@ -1,0 +1,23 @@
+diff --git a/src/components/StateProvider.tsx b/src/components/StateProvider.tsx
+--- a/src/components/StateProvider.tsx
++++ b/src/components/StateProvider.tsx
+@@ -3,9 +3,7 @@
+ import React from 'react';
+ import { useQueryClient } from '@tanstack/react-query';
+ import { logger } from '@/lib/logger';
+-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+-import { ReactQueryLogger } from '@/lib/react-query/logger';
+ import { ReactQueryProvider as CustomReactQueryProvider } from '@/lib/react-query/provider';
+ import { useAppStore } from '@/lib/zustand/store';
+ 
+ interface StateProviderProps {
+@@ -16,9 +14,7 @@
+   return (
+     <CustomReactQueryProvider>
+       {children}
+-      <ReactQueryLogger />
+-      <ReactQueryDevtools initialIsOpen={false} />
+       <StateDevTools />
+     </CustomReactQueryProvider>
+   );
+ }
