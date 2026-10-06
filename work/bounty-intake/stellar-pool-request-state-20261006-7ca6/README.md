@@ -54,3 +54,27 @@ Bounded path history returned relocation commit `59fad72d9fbef9cfd6f47e215392da4
 The complete donor tree had no root AGENTS/RULES path. EventSource-specific contribution/release guidance does not override the explicit no-tests/no-runtime/no-upstream scope. Differently attributed documentation license notices do not establish a whole-frontend license. This Commons packet contains a minimal patch and an original attributed guide, not a full-source republishing.
 
 No upstream branch, PR, maintainer assignment, sponsor interpretation, bounty/payment or whole-issue completion is performed or claimed.
+
+## Continuation: describe data provenance without invented comparisons
+
+The same complete helper establishes a separate presentation boundary. Its caught-failure fallbacks supply representative pool/stat records and generated fourteen-point histories. Its PoolStats interface has no prior-window trend fields. The page nevertheless presents four literal upward trends (8.2, 12.5, 2.3 and 5.1), unconditionally displays LIVE_FEED, calls every returned row active, and describes the page as real-time.
+
+`describe-pool-data-provenance.patch` is **+6/-17 in three hunks**, applied after the request-state patch from [Commons #32088](https://github.com/woahwhattheheck/commons/pull/32088). It:
+
+* removes all four literal trend/direction pairs;
+* removes the unconditional LIVE_FEED badge;
+* labels the existing count POOLS, without asserting an activity status;
+* uses neutral pool-performance heading copy;
+* explains that representative metrics and simulated history may be shown when backend requests fail.
+
+No response-specific provenance flag exists in this scope, so the note describes possible fallback behavior rather than classifying the currently displayed response. Successful real backend values remain possible. The helper's generators, requests, fallback decisions and all returned data are unchanged.
+
+Retained source evidence from root's complete shared MetricCard module `src/components/dashboard/MetricCard.tsx`, blob `0be01cd20b73e9cd85b74e17f94398ae7f69e7f0` (2,043 B), establishes that trend is optional, its comparison branch checks trend !== undefined, and the icon glow also depends on trendDirection. Removing both props therefore hides the unsupported “vs prev window” comparison and removes its positive-direction glow. The shared MetricCard itself is unchanged. This is supplied retained source evidence, not a new module acquisition or runtime observation.
+
+Incremental page identity:
+`a62adf63810cb1261e2a0fc006537fa54c5f8c8f` (21,758 B)
+→ `8aa450843ce73292fdc8ae9aa382f7d8fa4a1d88` (21,455 B).
+
+Complete serialized forward/inverse reconstruction matched. Additional retained-string comparisons preserve the entire request-state prefix and all source from the pool rankings table through the end of the module, including chart loading/error handling, sorting, selection callbacks, comparison cards and detail display. The original request-state patch artifact is not rewritten.
+
+New bounded dedicated Commons PR and public Slack searches for LiquidityPoolsPage plus provenance returned zero; the normalized PR response did not supply global completeness. No earlier accepted overlap query, held route, application operation, fixture, generator, financial calculation, test or browser behavior was replayed. The source's existing sample-data policy, thresholds, yields, units, sorting and pointer-control semantics remain outside the correction.

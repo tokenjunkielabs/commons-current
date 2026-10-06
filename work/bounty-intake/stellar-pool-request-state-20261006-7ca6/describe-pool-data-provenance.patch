@@ -1,0 +1,66 @@
+diff --git a/src/app/[locale]/liquidity-pools/page.tsx b/src/app/[locale]/liquidity-pools/page.tsx
+--- a/src/app/[locale]/liquidity-pools/page.tsx
++++ b/src/app/[locale]/liquidity-pools/page.tsx
+@@ -172,8 +172,7 @@
+             Liquidity Pools
+           </h2>
+           <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-2">
+-            Real-time pool performance, APY tracking, and impermanent loss
+-            analysis
++            Pool performance, APY tracking, and impermanent loss analysis
+           </p>
+         </div>
+         <div className="flex items-center gap-3">
+@@ -181,17 +180,15 @@
+             variant="outline"
+             className="text-[10px] font-mono border-border/50 px-3 py-1 bg-accent/5"
+           >
+-            {pools.length} ACTIVE_POOLS
+-          </Badge>
+-          <Badge
+-            variant="outline"
+-            className="text-[10px] font-mono border-emerald-500/30 px-3 py-1 bg-emerald-500/5 text-emerald-400"
+-          >
+-            LIVE_FEED
++            {pools.length} POOLS
+           </Badge>
+         </div>
+       </div>
+ 
++      <p className="text-sm text-muted-foreground">
++        Representative pool metrics and simulated history may be shown when backend requests fail.
++      </p>
++
+       {/* Overview Metrics */}
+       {stats && (
+         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+@@ -199,29 +196,21 @@
+             label="Total Value Locked"
+             value={formatCurrency(stats.total_value_locked_usd)}
+             subLabel="All Pools Combined"
+-            trend={8.2}
+-            trendDirection="up"
+           />
+           <MetricCard
+             label="24H Volume"
+             value={formatCurrency(stats.total_volume_24h_usd)}
+             subLabel="Trading Activity"
+-            trend={12.5}
+-            trendDirection="up"
+           />
+           <MetricCard
+             label="Average APY"
+             value={formatPercent(stats.avg_apy)}
+             subLabel="Mean Pool Yield"
+-            trend={2.3}
+-            trendDirection="up"
+           />
+           <MetricCard
+             label="24H Fees Earned"
+             value={formatCurrency(stats.total_fees_24h_usd)}
+             subLabel="Liquidity Provider Revenue"
+-            trend={5.1}
+-            trendDirection="up"
+           />
+         </div>
+       )}
