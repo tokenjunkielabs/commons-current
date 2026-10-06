@@ -1,0 +1,12 @@
+diff --git a/src/lib/react-query/hooks.ts b/src/lib/react-query/hooks.ts
+--- a/src/lib/react-query/hooks.ts
++++ b/src/lib/react-query/hooks.ts
+@@ -99,7 +99,7 @@
+         });
+         return result;
+       } catch (error) {
+-        logger.error('Mutation failed', {
++        logger.error('Mutation failed', undefined, {
+           variables,
+           error: error instanceof Error ? error.message : 'Unknown error',
+         });
