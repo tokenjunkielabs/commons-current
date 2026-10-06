@@ -1,0 +1,12 @@
+diff --git a/src/lib/react-query/logger.tsx b/src/lib/react-query/logger.tsx
+--- a/src/lib/react-query/logger.tsx
++++ b/src/lib/react-query/logger.tsx
+@@ -23,7 +23,7 @@
+           count: errorQueries.length,
+           queries: errorQueries.map(q => ({
+             queryKey: q.queryKey,
+-            error: q.state.error,
++            error: q.state.error instanceof Error ? q.state.error.message : q.state.error,
+           })),
+         });
+       }
