@@ -1,0 +1,80 @@
+diff --git a/src/components/Sep24Flow.tsx b/src/components/Sep24Flow.tsx
+--- a/src/components/Sep24Flow.tsx
++++ b/src/components/Sep24Flow.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import React, { useCallback, useEffect, useMemo, useState } from "react";
++import React, { useCallback, useEffect, useMemo, useState, useId } from "react";
+ import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
+ import { zodResolver } from "@hookform/resolvers/zod";
+ import { z } from "zod";
+@@ -30,6 +30,7 @@
+ type FlowKind = "deposit" | "withdraw";
+ 
+ export function Sep24Flow() {
++  const anchorSelectId = useId();
+   // Mutation hooks
+   const startDepositMutation = useStartDepositFlow();
+   const startWithdrawMutation = useStartWithdrawFlow();
+@@ -156,10 +157,11 @@
+         </h2>
+         <div className="flex flex-wrap gap-4 items-end">
+           <div className="flex-1 min-w-[200px]">
+-            <label className="block text-sm font-medium text-muted-foreground mb-1">
++            <label htmlFor={anchorSelectId} className="block text-sm font-medium text-muted-foreground mb-1">
+               Preset anchors
+             </label>
+             <select
++              id={anchorSelectId}
+               className="w-full rounded-xl bg-background/80 border border-border px-4 py-2.5 text-foreground focus:ring-2 focus:ring-accent/50"
+               value={selectedAnchor?.transfer_server ?? ""}
+               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+@@ -212,6 +214,7 @@
+           <button
+             type="button"
+             onClick={() => setFlowKind("deposit")}
++            aria-pressed={flowKind === "deposit"}
+             className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-all ${flowKind === "deposit"
+               ? "bg-accent/20 text-accent border border-accent/30"
+               : "border border-border text-muted-foreground hover:bg-white/5"
+@@ -223,6 +226,7 @@
+           <button
+             type="button"
+             onClick={() => setFlowKind("withdraw")}
++            aria-pressed={flowKind === "withdraw"}
+             className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-all ${flowKind === "withdraw"
+               ? "bg-accent/20 text-accent border border-accent/30"
+               : "border border-border text-muted-foreground hover:bg-white/5"
+diff --git a/src/components/Sep31PaymentFlow.tsx b/src/components/Sep31PaymentFlow.tsx
+--- a/src/components/Sep31PaymentFlow.tsx
++++ b/src/components/Sep31PaymentFlow.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import React, { useCallback, useState } from "react";
++import React, { useCallback, useState, useId } from "react";
+ import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
+ import { zodResolver } from "@hookform/resolvers/zod";
+ import {
+@@ -29,6 +29,7 @@
+ import { sep31PaymentFlowSchema, type Sep31PaymentFlowForm } from "@/lib/schemas";
+ 
+ export function Sep31PaymentFlow() {
++  const anchorSelectId = useId();
+   const [anchors, setAnchors] = useState<Sep31AnchorInfo[]>([]);
+   const [selectedAnchor, setSelectedAnchor] = useState<Sep31AnchorInfo | null>(null);
+   const [info, setInfo] = useState<Sep31InfoResponse | null>(null);
+@@ -235,10 +236,11 @@
+         </h2>
+         <div className="flex flex-wrap gap-4 items-end">
+           <div className="flex-1 min-w-[200px]">
+-            <label className="block text-sm font-medium text-muted-foreground mb-1">
++            <label htmlFor={anchorSelectId} className="block text-sm font-medium text-muted-foreground mb-1">
+               Preset anchors
+             </label>
+             <select
++              id={anchorSelectId}
+               className="w-full rounded-xl bg-background/80 border border-border px-4 py-2.5 text-foreground focus:ring-2 focus:ring-accent/50"
+               value={selectedAnchor?.transfer_server ?? ""}
+               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
