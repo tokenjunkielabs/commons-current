@@ -1,0 +1,30 @@
+diff --git a/src/app/[locale]/corridors/compare/page.tsx b/src/app/[locale]/corridors/compare/page.tsx
+--- a/src/app/[locale]/corridors/compare/page.tsx
++++ b/src/app/[locale]/corridors/compare/page.tsx
+@@ -124,13 +124,19 @@
+     // Download CSV
+     const blob = new Blob([csvContent], { type: "text/csv" });
+     const url = URL.createObjectURL(blob);
+-    const a = document.createElement("a");
+-    a.href = url;
+-    a.download = `corridor-comparison-${new Date().toISOString().split("T")[0]}.csv`;
+-    document.body.appendChild(a);
+-    a.click();
+-    document.body.removeChild(a);
+-    URL.revokeObjectURL(url);
++    try {
++      const a = document.createElement("a");
++      try {
++        a.href = url;
++        a.download = `corridor-comparison-${new Date().toISOString().split("T")[0]}.csv`;
++        document.body.appendChild(a);
++        a.click();
++      } finally {
++        a.remove();
++      }
++    } finally {
++      URL.revokeObjectURL(url);
++    }
+   };
+ 
+   const handleAddCorridor = () => {

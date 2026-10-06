@@ -89,3 +89,36 @@ The actual incremental patch has three hunks and twenty-one rows, with three add
 Apply the original await-copy-acknowledgement.patch first, then name-comparison-controls.patch. No event handler, navigation, clipboard, browser, assistive technology, compiler, fixture, tests or workflow was executed. The dialog's role, focus behavior, keyboard handling, announcements and full WCAG conformance are not claimed.
 
 The current continuation publishes only this new patch and an exact-preimage-guarded update to this guide. The original clipboard patch and three MIT notices remain unchanged; their earlier publication checks are inherited without replay. Both newly written complete immutable bodies and final PR/files/merge/main identities must match. Main reuse still requires exact commit equality; otherwise each changed artifact is read once at the observed immutable main pin. Bounded route/label overlap queries returned zero rows with native Slack END, without any global-absence claim.
+
+## Continuation: release comparison download resources on exceptional exits
+
+The sections above document #32007 and #32012. This third incremental patch consumes their retained complete source postimage and preserves both corrections.
+
+The same mounted page's Export CSV button invokes handleExportCSV. After assembling the existing CSV, that handler creates a Blob, acquires an object URL, creates/configures an anchor, appends it, clicks it, removes it and revokes the URL. In the original straight-line sequence, an exception between acquisition and either cleanup statement skips that cleanup. This is a control-flow gap in the acquired source; no download failure was reproduced.
+
+The patch places an outer try/finally immediately after successful URL acquisition. It places an inner try/finally immediately after successful anchor creation. The inner cleanup calls a.remove(); the outer cleanup reaches the same existing URL.revokeObjectURL(url) operation.
+
+| Source path | Cleanup reached |
+| --- | --- |
+| Anchor creation throws after URL acquisition | Outer URL revocation |
+| Anchor configuration, append or click throws after anchor creation | Anchor removal, then URL revocation |
+| Anchor removal itself throws | Outer URL revocation is still reached |
+| All existing operations return normally | Anchor removal, then URL revocation at the same immediate post-click point |
+
+These are source-level control-flow cases, not executed test cases. If Blob construction or URL acquisition throws, no acquired URL is available for this cleanup. If anchor creation throws, no returned anchor is available to remove. The patch adds no catch, retry, error swallowing or download-success announcement. A cleanup exception can replace an earlier exception; preservation of exception precedence is not claimed.
+
+[MDN's Element.remove reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/remove) states that removal uses the element's parent and is a no-op when it has no parent. This supports using the same cleanup for an anchor whose append did not complete or which was already detached. The existing immediate revocation timing is retained; this patch does not establish browser download completion, delayed revocation compatibility or successful file saving.
+
+| Cleanup continuation item | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Source after #32012, before cleanup | 5ad3af8111e8782eb1df3bb70b0e4620bcfee3b3 | 12093 |
+| Source after cleanup | 576f30a3df21a9f9856e192c38e403f81c8d1d20 | 12169 |
+| download-resource-cleanup.patch | 815cd0930ba1afba7c9725174d90ba6bd388b945 | 1015 |
+
+The actual incremental patch has 1 hunk and 26 rows, with 13 additions and 7 deletions. Complete serialized forward application reconstructs the postimage and inverse application restores the preimage. Replacing only the cleanup block restores every other page byte. CSV headers, row selection, numeric formatting, separators, Blob type, filename and date expression remain exact. The copied-state correction, control names, navigation, data loading and other handlers also remain exact.
+
+Apply await-copy-acknowledgement.patch, then name-comparison-controls.patch, then download-resource-cleanup.patch at the donor root. No application handler, Blob, object URL, anchor, DOM, click, Date expression, clipboard, browser, compiler, fixture, test or workflow was executed.
+
+The bounded route/cleanup overlap query returned only the existing Commons #31453 grouped index header, which was disposed using retained completion maps rather than rereading its issue body or comments. Those maps record #32007 clipboard and #32012 names on this page, plus separate download cleanup paths. The paired Slack query returned zero rows with native END. These observations are bounded custody evidence, not a global absence, ownership or upstream acceptance claim.
+
+The current publication contains only download-resource-cleanup.patch and this exact-preimage-guarded guide update. The two preceding patches and three original MIT notices are unchanged and their accepted checks are inherited without replay. Both newly written complete immutable bodies require native and independent identity matches, followed by exact PR/files/merge/main metadata. Exact observed main-equals-merge equality permits reuse of those bodies; otherwise both changed artifacts are read once at the observed immutable main commit. The separate release and grouped index hold the resulting publication identities.
