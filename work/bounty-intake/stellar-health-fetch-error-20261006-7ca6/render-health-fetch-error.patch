@@ -1,0 +1,19 @@
+diff --git a/src/components/health/health-dashboard.tsx b/src/components/health/health-dashboard.tsx
+--- a/src/components/health/health-dashboard.tsx
++++ b/src/components/health/health-dashboard.tsx
+@@ -106,6 +106,15 @@
+     );
+   }
+ 
++  if (error) {
++    return (
++      <div role="alert" className="glass-card rounded-2xl p-6 border border-red-500/30">
++        <h2 className="text-lg font-bold text-foreground">Health data unavailable</h2>
++        <p className="mt-2 text-sm text-muted-foreground">{error}</p>
++      </div>
++    );
++  }
++
+   const healthyAnchors = anchors.filter(
+     (a) => a.reliability_score >= 95,
+   ).length;
