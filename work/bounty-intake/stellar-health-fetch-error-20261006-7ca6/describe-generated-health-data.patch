@@ -1,0 +1,50 @@
+diff --git a/src/components/health/health-dashboard.tsx b/src/components/health/health-dashboard.tsx
+--- a/src/components/health/health-dashboard.tsx
++++ b/src/components/health/health-dashboard.tsx
+@@ -150,6 +150,10 @@
+         </button>
+       </div>
+ 
++      <p className="text-sm text-muted-foreground">
++        Reliability histories and incident logs below are generated examples.
++      </p>
++
+       {/* Summary Stats */}
+       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+         <MetricCard
+@@ -161,8 +165,6 @@
+           label="Stable"
+           value={healthyAnchors}
+           subLabel=">= 95% Health"
+-          trend={100}
+-          trendDirection="up"
+         />
+         <MetricCard
+           label="Degraded"
+@@ -322,7 +324,7 @@
+                 <div className="flex items-center gap-2 mb-4">
+                   <Activity className="w-3 h-3 text-accent" />
+                   <h3 className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+-                    30-Day Reliability Telemetry
++                    Simulated 30-Day Reliability
+                   </h3>
+                 </div>
+                 <div className="h-24 opacity-80">
+@@ -375,7 +377,7 @@
+                 <div className="flex items-center gap-2 mb-4">
+                   <AlertTriangle className="w-3 h-3 text-red-500" />
+                   <h3 className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+-                    Incident Log
++                    Sample Incident Log
+                   </h3>
+                 </div>
+                 <div className="space-y-2 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+@@ -410,7 +412,7 @@
+                     <div className="p-4 glass rounded-xl border-dashed flex items-center justify-center">
+                       <ShieldCheck className="w-4 h-4 text-green-500/50 mr-2" />
+                       <span className="text-[10px] font-mono text-green-500/50 uppercase">
+-                        No anomalies detected
++                        No sample incidents
+                       </span>
+                     </div>
+                   )}
