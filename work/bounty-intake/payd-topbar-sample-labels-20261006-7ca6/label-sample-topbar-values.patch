@@ -1,0 +1,21 @@
+diff --git a/frontend/src/components/DashboardTopBar.tsx b/frontend/src/components/DashboardTopBar.tsx
+--- a/frontend/src/components/DashboardTopBar.tsx
++++ b/frontend/src/components/DashboardTopBar.tsx
+@@ -18,7 +18,7 @@
+             weight="bold"
+             addlClassName="text-(--muted) uppercase tracking-widest text-[10px]"
+           >
+-            Organization
++            Demo organization
+           </Text>
+           <Text as="span" size="sm" weight="bold" addlClassName="text-(--text)">
+             {orgName}
+@@ -34,7 +34,7 @@
+             weight="bold"
+             addlClassName="text-(--muted) uppercase tracking-widest text-[10px]"
+           >
+-            Available Balance
++            Sample balance
+           </Text>
+           <Text as="span" size="sm" weight="bold" addlClassName="text-(--accent) font-mono">
+             {balance}
