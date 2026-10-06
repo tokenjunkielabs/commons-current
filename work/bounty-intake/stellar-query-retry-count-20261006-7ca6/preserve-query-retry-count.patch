@@ -1,0 +1,21 @@
+diff --git a/src/lib/react-query/hooks.ts b/src/lib/react-query/hooks.ts
+--- a/src/lib/react-query/hooks.ts
++++ b/src/lib/react-query/hooks.ts
+@@ -53,7 +53,7 @@
+     staleTime?: number;
+     refetchInterval?: number;
+     enabled?: boolean;
+-    retry?: boolean;
++    retry?: boolean | number;
+   }
+ ) {
+   return useQuery({
+@@ -73,7 +73,7 @@
+     staleTime: options?.staleTime,
+     refetchInterval: options?.refetchInterval,
+     enabled: options?.enabled,
+-    retry: options?.retry !== false,
++    retry: options?.retry ?? true,
+   });
+ }
+ 
