@@ -1,0 +1,6 @@
+[
+  {"id": "calm-01", "name": "Barrier Support Moisturizer", "supports": ["dryness", "redness"]},
+  {"id": "clear-01", "name": "Lightweight Clarifying Gel", "supports": ["blemishes", "oiliness"]},
+  {"id": "tone-01", "name": "Tone Support Serum", "supports": ["dark_spots"]},
+  {"id": "wash-01", "name": "Gentle Daily Cleanser", "supports": ["oiliness", "dryness"]}
+]
