@@ -1,0 +1,28 @@
+diff --git a/frontend/src/pages/EmployeePortal.tsx b/frontend/src/pages/EmployeePortal.tsx
+index abd4b9974970dbf29f76188fec94a21de9f02438..132d1a2abbfb44d4a4205f43073837c29796c1e1 100644
+--- a/frontend/src/pages/EmployeePortal.tsx
++++ b/frontend/src/pages/EmployeePortal.tsx
+@@ -618,6 +618,7 @@
+               <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
+               <input
+                 type="text"
++                aria-label="Search tx hash, memo…"
+                 placeholder="Search tx hash, memo…"
+                 className={styles.searchInput}
+                 style={{ paddingLeft: 28 }}
+@@ -628,6 +629,7 @@
+ 
+             <select
+               className={styles.filterSelect}
++              aria-label="Filter by status"
+               value={filterStatus}
+               onChange={(e: ChangeEvent<HTMLSelectElement>) => setFilterStatus(e.target.value)}
+             >
+@@ -639,6 +641,7 @@
+ 
+             <select
+               className={styles.filterSelect}
++              aria-label="Filter by type"
+               value={filterType}
+               onChange={(e: ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value)}
+             >
