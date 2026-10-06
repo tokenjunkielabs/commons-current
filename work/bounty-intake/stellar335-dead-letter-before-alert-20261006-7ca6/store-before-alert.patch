@@ -1,0 +1,16 @@
+diff --git a/backend/jobs/dead_letter.rs b/backend/jobs/dead_letter.rs
+--- a/backend/jobs/dead_letter.rs
++++ b/backend/jobs/dead_letter.rs
+@@ -82,11 +82,11 @@
+             history,
+             reason: reason.to_string(),
+         };
+-        sink.alert(&entry);
+         self.entries
+             .lock()
+             .expect("dead letter queue poisoned")
+             .push(entry.clone());
++        sink.alert(&entry);
+         entry
+     }
+ 
