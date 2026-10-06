@@ -1,0 +1,15 @@
+diff --git a/src/components/keyboard-shortcuts/ShortcutsInitializer.tsx b/src/components/keyboard-shortcuts/ShortcutsInitializer.tsx
+index 1059112..14c78a8 100644
+--- a/src/components/keyboard-shortcuts/ShortcutsInitializer.tsx
++++ b/src/components/keyboard-shortcuts/ShortcutsInitializer.tsx
+@@ -47,8 +47,8 @@
+         setPrefs({ sidebarCollapsed: !prefs.sidebarCollapsed });
+       },
+       toggleTheme: () => {
+-        // Cycle through: dark -> light -> system
+-        const nextTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
++        // Toggle the resolved theme between light and dark.
++        const nextTheme = theme === 'dark' ? 'light' : 'dark';
+         setThemePreference(nextTheme);
+       },
+       openNotifications: () => {
