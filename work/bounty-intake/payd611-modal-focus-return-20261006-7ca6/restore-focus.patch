@@ -1,0 +1,25 @@
+diff --git a/frontend/src/components/AnimatedModal.tsx b/frontend/src/components/AnimatedModal.tsx
+--- a/frontend/src/components/AnimatedModal.tsx
++++ b/frontend/src/components/AnimatedModal.tsx
+@@ -140,6 +140,7 @@
+ 
+     const firstElement = focusableElements[0];
+     const lastElement = focusableElements[focusableElements.length - 1];
++    const previouslyFocused = document.activeElement;
+ 
+     firstElement?.focus();
+ 
+@@ -160,7 +161,12 @@
+     }
+ 
+     document.addEventListener('keydown', handleTab);
+-    return () => document.removeEventListener('keydown', handleTab);
++    return () => {
++      document.removeEventListener('keydown', handleTab);
++      if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) {
++        previouslyFocused.focus();
++      }
++    };
+   }, [isOpen]);
+ 
+   const variants = getAnimationVariants(prefersReduced);
