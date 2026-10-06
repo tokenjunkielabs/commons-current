@@ -143,8 +143,21 @@ def response_evidence(value):
 
 
 def project_rail_health(routes, state):
-    """Project existing private observations without arguments or results."""
+    """Project typed observations only; none establishes current recovery."""
     now = _now()
+
+    def timestamp(value):
+        if not isinstance(value, str):
+            return None
+        try:
+            return _iso(_time(value))
+        except (ValueError, TypeError, OverflowError, EquipmentError):
+            return None
+
+    def balance(value):
+        return value if (type(value) in (int, float) and math.isfinite(value)
+                         and value >= 0) else None
+
     domains = {}
     for route in routes:
         domain = route["quota_domain"]
@@ -152,31 +165,59 @@ def project_rail_health(routes, state):
         row["route_ids"].append(route["id"])
     for domain, row in domains.items():
         limits = state.get("quota_domains", {}).get(domain, {})
-        row["last_response"] = {
-            key: value for key, value in limits.get("last_response", {}).items()
-            if key in {"observed_at", "http_status", "failed", "uncertain",
-                       "rate_limited", "rate_limit_kind", "rate_limit_resource"}}
-        row["last_response_known"] = bool(row["last_response"])
-        for key in ("observed_at", "quota_observed_at", "quota_remaining", "reset_at",
-                    "cooldown_until", "client_cooldown_until", "client_backoff_attempts", "quota_remaining_kind"):
-            row[key] = limits.get(key)
-        row["request_budget_known"] = limits.get("quota_remaining_kind") == "requests"
-        row["request_budget_remaining"] = limits.get("quota_remaining") if row["request_budget_known"] else None
-        row["request_budget_observed_at"] = limits.get("quota_observed_at")
-        row["rate_limit_buckets"] = {
-            name: {key: bucket[key] for key in ("remaining", "reset_at", "observed_at") if key in bucket}
-            for name, bucket in limits.get("rate_limit_buckets", {}).items()
-            if name in {"requests", "tokens"}}
-        deadlines = [_time(limits.get(key)) for key in
+        raw = limits.get("last_response", {})
+        raw = raw if isinstance(raw, dict) else {}
+        last = {}
+        observed = timestamp(raw.get("observed_at"))
+        if observed:
+            last["observed_at"] = observed
+        for key in ("failed", "uncertain", "rate_limited"):
+            if type(raw.get(key)) is bool:
+                last[key] = raw[key]
+        status = raw.get("http_status")
+        if type(status) is int and 100 <= status <= 599:
+            last["http_status"] = status
+        if raw.get("rate_limit_kind") in ("primary", "secondary"):
+            last["rate_limit_kind"] = raw["rate_limit_kind"]
+        if raw.get("rate_limit_resource") in ("core", "search", "graphql", "integration_manifest", "code_search"):
+            last["rate_limit_resource"] = raw["rate_limit_resource"]
+        row["last_response"] = last
+        row["last_response_known"] = bool(observed and "failed" in last and "uncertain" in last)
+        row["current_provider_health"] = "unknown"
+        for key in ("observed_at", "quota_observed_at", "reset_at",
+                    "cooldown_until", "client_cooldown_until"):
+            row[key] = timestamp(limits.get(key))
+        row["quota_remaining"] = balance(limits.get("quota_remaining"))
+        kind = limits.get("quota_remaining_kind")
+        row["quota_remaining_kind"] = kind if kind in ("quota", "requests") else None
+        row["client_backoff_attempts"] = (
+            limits.get("client_backoff_attempts") if type(limits.get("client_backoff_attempts")) is int
+            and limits["client_backoff_attempts"] >= 0 else None)
+        row["request_budget_known"] = bool(kind == "requests"
+            and row["quota_remaining"] is not None and row["quota_observed_at"])
+        row["request_budget_remaining"] = row["quota_remaining"] if row["request_budget_known"] else None
+        row["request_budget_observed_at"] = row["quota_observed_at"] if row["request_budget_known"] else None
+        reset = _time(row["reset_at"])
+        row["request_budget_window_expired"] = bool(reset and reset <= now) if reset else None
+        row["rate_limit_buckets"] = {}
+        for name, bucket in limits.get("rate_limit_buckets", {}).items():
+            if name not in ("requests", "tokens") or not isinstance(bucket, dict):
+                continue
+            row["rate_limit_buckets"][name] = {
+                "remaining": balance(bucket.get("remaining")),
+                "reset_at": timestamp(bucket.get("reset_at")),
+                "observed_at": timestamp(bucket.get("observed_at"))}
+        deadlines = [_time(row[key]) for key in
                      ("cooldown_until", "client_cooldown_until")]
         row["cooldown_active"] = any(value and value > now for value in deadlines)
+        row["cooldown_observation_known"] = bool(row["last_response_known"] or any(deadlines))
         row["pending_dispatches"] = sum(
             (operation.get("pending") or {}).get("quota_domain") == domain
             for operation in state.get("operations", {}).values())
     return {"decision": "RAIL_HEALTH", "observed_at": _iso(now),
             "provider_calls": 0, "rails": list(domains.values()),
             "identity_basis": "Configured quota-domain and route IDs only; no actor inference.",
-            "scope": "This private runtime journal only; unknown fields are not a recovered rail."}
+            "scope": "This private runtime journal only; expired deadlines and past success do not establish recovery."}
 
 
 class ConnectedToolRouter:
