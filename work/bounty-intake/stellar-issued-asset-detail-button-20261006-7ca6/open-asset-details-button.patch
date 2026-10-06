@@ -1,0 +1,26 @@
+diff --git a/src/components/anchors/IssuedAssetsTable.tsx b/src/components/anchors/IssuedAssetsTable.tsx
+--- a/src/components/anchors/IssuedAssetsTable.tsx
++++ b/src/components/anchors/IssuedAssetsTable.tsx
+@@ -77,7 +77,21 @@
+                       <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20 font-bold text-xs">
+                         {asset.asset_code.substring(0, 2)}
+                       </div>
+-                      <span>{asset.asset_code}</span>
++                      {onAssetClick ? (
++                        <button
++                          type="button"
++                          className="text-left hover:underline focus-visible:underline"
++                          aria-label={`View ${asset.asset_code} details`}
++                          onClick={(event) => {
++                            event.stopPropagation();
++                            onAssetClick(asset);
++                          }}
++                        >
++                          {asset.asset_code}
++                        </button>
++                      ) : (
++                        <span>{asset.asset_code}</span>
++                      )}
+                     </div>
+                   </td>
+                   <td className="px-6 py-4 text-right text-slate-300">
