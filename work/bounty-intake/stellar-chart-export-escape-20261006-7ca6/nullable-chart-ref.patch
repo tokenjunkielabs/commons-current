@@ -1,0 +1,12 @@
+diff --git a/src/components/charts/ChartExportButton.tsx b/src/components/charts/ChartExportButton.tsx
+--- a/src/components/charts/ChartExportButton.tsx
++++ b/src/components/charts/ChartExportButton.tsx
+@@ -6,7 +6,7 @@
+ import { logger } from '@/lib/logger';
+ 
+ interface ChartExportButtonProps {
+-  chartRef: React.RefObject<HTMLDivElement>;
++  chartRef: React.RefObject<HTMLDivElement | null>;
+   chartName: string;
+   className?: string;
+ }
