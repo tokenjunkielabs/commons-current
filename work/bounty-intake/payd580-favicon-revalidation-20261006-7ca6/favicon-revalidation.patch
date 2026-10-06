@@ -1,0 +1,16 @@
+diff --git a/frontend/nginx.conf b/frontend/nginx.conf
+--- a/frontend/nginx.conf
++++ b/frontend/nginx.conf
+@@ -10,6 +10,12 @@
+     gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+     gzip_min_length 1024;
+ 
++    # The public favicon keeps its filename across builds; revalidate it.
++    location = /favicon.ico {
++        expires -1;
++        try_files $uri =404;
++    }
++
+     # Hashed assets (js/css with content hash) — cache forever
+     location ~* \.(?:js|css|png|jpg|jpeg|gif|webp|avif|svg|ico|woff2?)$ {
+         expires 1y;
