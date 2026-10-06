@@ -1,0 +1,22 @@
+diff --git a/frontend/src/components/CSVUploader.tsx b/frontend/src/components/CSVUploader.tsx
+--- a/frontend/src/components/CSVUploader.tsx
++++ b/frontend/src/components/CSVUploader.tsx
+@@ -1,4 +1,4 @@
+-import React, { useState, useRef } from 'react';
++import React, { useState, useRef, useEffect } from 'react';
+ import { Upload, AlertCircle, CheckCircle } from 'lucide-react';
+ 
+ export interface CSVRow {
+@@ -24,6 +24,12 @@
+   const [fileName, setFileName] = useState<string | null>(null);
+   const fileInputRef = useRef<HTMLInputElement>(null);
+   const latestReadTokenRef = useRef<object | null>(null);
++
++  useEffect(() => {
++    return () => {
++      latestReadTokenRef.current = null;
++    };
++  }, []);
+ 
+   const parseCSV = (content: string): CSVRow[] => {
+     const lines = content.trim().split('\n');
