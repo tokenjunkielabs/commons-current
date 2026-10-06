@@ -1,0 +1,174 @@
+{
+  "schema": "wavelum73-original-integration-proposal/v1",
+  "repository": "stellar-network-builders/wavelum-frontend",
+  "source_commit": "39adce49545f0114ef0ae25ad835af39de46f492",
+  "source_tree": {
+    "sha": "be8107bb996c94cb0151bf4b95d0493b98aef946",
+    "entries": 293,
+    "truncated": false,
+    "provenance": "parent complete native recursive tree"
+  },
+  "issue": {
+    "url": "https://github.com/stellar-network-builders/wavelum-frontend/issues/73",
+    "state": "open",
+    "native_assignee_count": 0,
+    "comments": 4,
+    "comment_scope": "assignment requests; no maintainer assignment observed",
+    "dedicated_carrier_query": {
+      "query": "import in:title",
+      "state": "all",
+      "topn": 10,
+      "result_count": 0,
+      "bounded": true
+    }
+  },
+  "sources": [
+    {
+      "path": "eslint.config.mjs",
+      "sha": "84d7a2a7b33d8930fed0f4d8671c77a4a574fd46",
+      "bytes": 2063,
+      "custody": "complete native and independent"
+    },
+    {
+      "path": ".husky/pre-commit",
+      "sha": "7034c1cd193deba74483bb7dc8a2493c40b58cae",
+      "bytes": 421,
+      "custody": "complete native and independent"
+    },
+    {
+      "path": "package.json",
+      "sha": "abd989198d17220cb482e122f8e438fe7669bf6e",
+      "bytes": 2984,
+      "custody": "complete parent source transfer independently matched after explicit transfer correction"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha": "ec1cf887e0908372facf837b929565a3a43b8a65",
+      "bytes": 3950,
+      "custody": "complete parent source transfer independently matched"
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "sha": "a86e106c5b9b4e5aae41f00c10f0d0132dcf7e8d",
+      "bytes": 15253,
+      "custody": "parent complete source; local exact lint-step excerpt plus enclosing job facts"
+    }
+  ],
+  "proposal": {
+    "original_files": [
+      "eslint.import-order.config.mjs",
+      "lint-staged.config.mjs"
+    ],
+    "severity_override_only": true,
+    "existing_rule_options_preserved": true,
+    "manual_package_fields": {
+      "lint": "eslint --config eslint.import-order.config.mjs",
+      "lint:fix": "eslint --config eslint.import-order.config.mjs --fix"
+    },
+    "package_postimage_prepared": false,
+    "package_applied": false,
+    "admitted_staged_extensions": [
+      "js",
+      "mjs",
+      "ts",
+      "tsx"
+    ],
+    "fix_scope": "all applicable inherited fixable rules",
+    "runtime_verified": false,
+    "dependency_change": false,
+    "donor_context_patch": false
+  },
+  "primary_sources": [
+    {
+      "url": "https://eslint.org/docs/v9.x/use/configure/rules",
+      "result": "success",
+      "supports": "severity exit behavior and severity-only config merge"
+    },
+    {
+      "url": "https://github.com/lint-staged/lint-staged#configuration",
+      "result": "success before separate versioned failure",
+      "supports": "current general ESM/string task contract, not installed-version verification"
+    },
+    {
+      "url": "https://github.com/lint-staged/lint-staged/blob/v16.2.7/README.md",
+      "result": "Internal Error",
+      "held": true,
+      "retry": false,
+      "alternate": false
+    }
+  ],
+  "issue68": {
+    "url": "https://github.com/stellar-network-builders/wavelum-frontend/issues/68",
+    "state": "open",
+    "native_assignee_count": 0,
+    "comments": 2,
+    "disposition": "NO PATCH: real screenshot-baseline prerequisite, no baseline generated",
+    "sources": [
+      {
+        "path": ".github/workflows/visual-regression.yml",
+        "sha": "cb8649b87cb4710caec0a9908a57d7c362f63e20",
+        "bytes": 1513
+      },
+      {
+        "path": "playwright.config.ts",
+        "sha": "56ae4d4cd5c09cd18cb9762e1f2396a4aaa62e5f",
+        "bytes": 1592
+      },
+      {
+        "path": "e2e/visual/home.spec.ts",
+        "sha": "90a7f47fafbb2e6499edfe201b072e79066971d4",
+        "bytes": 742
+      },
+      {
+        "path": "e2e/visual-baselines/.gitkeep",
+        "sha": "5ee69a87530d2d70398d5d504aae242aef5355e8",
+        "bytes": 233
+      }
+    ],
+    "no_png_in_complete_tree": true,
+    "carriers": [
+      {
+        "number": 54,
+        "url": "https://github.com/stellar-network-builders/wavelum-frontend/pull/54",
+        "state": "closed",
+        "merged": true,
+        "author": "real-venus",
+        "head": "788456a60122f1272bc5a753038cb084d2441a57",
+        "merge": "e2527ba8ccee0a69d53428acdb0436293f9249bc"
+      },
+      {
+        "number": 38,
+        "url": "https://github.com/stellar-network-builders/wavelum-frontend/pull/38",
+        "state": "open",
+        "merged": false,
+        "author": "Code-Paragon",
+        "head": "062b7c2abaef30aed6effe3b61fc144ccd2a8333"
+      }
+    ]
+  },
+  "boundaries": {
+    "source_only": true,
+    "no_executor": true,
+    "no_runtime": true,
+    "no_tests": true,
+    "no_workflow_execution": true,
+    "no_upstream_mutation": true,
+    "no_full_issue_completion": true,
+    "no_reward_or_eligibility_claim": true,
+    "no_donor_license_assertion": true,
+    "no_installed_husky_claim": true
+  },
+  "current_guard": {
+    "ref": "refs/heads/main",
+    "sha": "39adce49545f0114ef0ae25ad835af39de46f492",
+    "exact": true
+  },
+  "commons_overlap": {
+    "repository": "woahwhattheheck/commons",
+    "query": "\"wavelum\" \"import order\"",
+    "state": "all",
+    "topn": 10,
+    "result_count": 0,
+    "bounded": true
+  }
+}
