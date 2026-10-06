@@ -1,0 +1,26 @@
+diff --git a/src/components/notifications/NotificationCenter/NotificationCenter.tsx b/src/components/notifications/NotificationCenter/NotificationCenter.tsx
+index 0cd01f4..f9f8f1c 100644
+--- a/src/components/notifications/NotificationCenter/NotificationCenter.tsx
++++ b/src/components/notifications/NotificationCenter/NotificationCenter.tsx
+@@ -125,7 +125,7 @@
+   };
+ 
+   const handleSelectAll = () => {
+-    if (selectedNotifications.size === filteredNotifications.length) {
++    if (filteredNotifications.every(n => selectedNotifications.has(n.id))) {
+       setSelectedNotifications(new Set());
+     } else {
+       setSelectedNotifications(new Set(filteredNotifications.map(n => n.id)));
+diff --git a/src/components/notifications/NotificationCenter/NotificationsTab.tsx b/src/components/notifications/NotificationCenter/NotificationsTab.tsx
+index 56e2737..53ed7b2 100644
+--- a/src/components/notifications/NotificationCenter/NotificationsTab.tsx
++++ b/src/components/notifications/NotificationCenter/NotificationsTab.tsx
+@@ -186,7 +186,7 @@
+             <div className="flex items-center space-x-2">
+               <input
+                 type="checkbox"
+-                checked={selectedNotifications.size === filteredNotifications.length && filteredNotifications.length > 0}
++                checked={filteredNotifications.length > 0 && filteredNotifications.every(n => selectedNotifications.has(n.id))}
+                 onChange={handleSelectAll}
+                 className="rounded"
+               />
