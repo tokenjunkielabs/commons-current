@@ -1,0 +1,40 @@
+diff --git a/src/app/[locale]/anchors/[address]/page.tsx b/src/app/[locale]/anchors/[address]/page.tsx
+index 71fea1b..749e702 100644
+--- a/src/app/[locale]/anchors/[address]/page.tsx
++++ b/src/app/[locale]/anchors/[address]/page.tsx
+@@ -125,7 +125,7 @@
+                 Top Failure Reasons
+               </h4>
+               <div className="space-y-3">
+-                {data.top_failure_reasons?.map((item, i) => (
++                {data.top_failure_reasons?.length ? data.top_failure_reasons.map((item, i) => (
+                   <div
+                     key={i}
+                     className="flex justify-between items-center text-sm"
+@@ -140,7 +140,7 @@
+                       {item.count}
+                     </span>
+                   </div>
+-                )) || (
++                )) : (
+                   <div className="text-sm text-slate-500 italic">
+                     No failure data available
+                   </div>
+@@ -156,7 +156,7 @@
+                 Recent Failed Corridors
+               </h4>
+               <div className="space-y-3">
+-                {data.recent_failed_corridors?.map((item, i) => (
++                {data.recent_failed_corridors?.length ? data.recent_failed_corridors.map((item, i) => (
+                   <div
+                     key={i}
+                     className="flex justify-between items-start text-sm"
+@@ -172,7 +172,7 @@
+                       })}
+                     </span>
+                   </div>
+-                )) || (
++                )) : (
+                   <div className="text-sm text-slate-500 italic">
+                     No recent failures
+                   </div>
