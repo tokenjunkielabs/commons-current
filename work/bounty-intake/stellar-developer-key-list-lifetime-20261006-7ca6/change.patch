@@ -1,0 +1,60 @@
+diff --git a/src/app/[locale]/developer/keys/page.tsx b/src/app/[locale]/developer/keys/page.tsx
+index 3e8ff66..f705854 100644
+--- a/src/app/[locale]/developer/keys/page.tsx
++++ b/src/app/[locale]/developer/keys/page.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import { useEffect, useState, useCallback } from "react";
++import { useEffect, useState, useCallback, useRef } from "react";
+ import {
+   Key,
+   Plus,
+@@ -36,27 +36,43 @@
+   const [error, setError] = useState<string | null>(null);
+   const [modal, setModal] = useState<ModalState>({ type: "none" });
+   const [actionLoading, setActionLoading] = useState(false);
++  const listScopeRef = useRef<{
++    address: string;
++    request: object | null;
++  } | null>(null);
+ 
+   const fetchKeys = useCallback(async () => {
+-    if (!address) return;
++    const scope = listScopeRef.current;
++    if (!address || !scope || scope.address !== address) return;
++    const request = {};
++    scope.request = request;
++    const isCurrent = () =>
++      listScopeRef.current === scope && scope.request === request;
++
+     setLoading(true);
+     setError(null);
+     try {
+       const response = await listApiKeys(address);
+-      setKeys(response.keys);
++      if (isCurrent()) setKeys(response.keys);
+     } catch (err) {
+-      setError(err instanceof Error ? err.message : "Failed to load API keys");
++      if (isCurrent()) {
++        setError(err instanceof Error ? err.message : "Failed to load API keys");
++      }
+     } finally {
+-      setLoading(false);
++      if (isCurrent()) setLoading(false);
+     }
+   }, [address]);
+ 
+   useEffect(() => {
+     if (isConnected && address) {
++      listScopeRef.current = { address, request: null };
+       fetchKeys();
+     } else {
+       setLoading(false);
+     }
++    return () => {
++      listScopeRef.current = null;
++    };
+   }, [isConnected, address, fetchKeys]);
+ 
+   const handleCreate = async (
