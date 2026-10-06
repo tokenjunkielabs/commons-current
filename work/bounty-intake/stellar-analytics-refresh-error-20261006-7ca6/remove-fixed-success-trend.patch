@@ -1,0 +1,12 @@
+diff --git a/src/app/[locale]/analytics/page.tsx b/src/app/[locale]/analytics/page.tsx
+--- a/src/app/[locale]/analytics/page.tsx
++++ b/src/app/[locale]/analytics/page.tsx
+@@ -171,8 +171,6 @@
+           <MetricCard
+             label="Success Probability"
+             value={metrics ? `${metrics.avg_success_rate.toFixed(1)}%` : "0%"}
+-            trend={1.2}
+-            trendDirection="up"
+           />
+           <MetricCard
+             label="Active Routing Nodes"

@@ -56,3 +56,27 @@ The directory carries three unchanged upstream MIT notices, copied byte-for-byte
 The patch is an attributed Commons source proposal. It is not an upstream change, deployment, acceptance or reward event. The narrow Commons phrase search returned zero entries; the first bounded Slack search page contained unrelated, completed or held topics and retained a continuation cursor. Neither result proves global absence of other work. Internal coordination identified no retained same-hunk overlap.
 
 Publication requires the full immutable text plus native and independent blob identities for all five files, and final PR/files/merge/main metadata. Named-main equality may reuse the already verified immutable merge contents only when the observed main SHA equals that merge; otherwise each file is read once at the observed main pin. Actual publication evidence is recorded separately in the release and completion index.
+
+## Continuation: remove an unsupported fixed comparison
+
+This continuation follows #31964 and consumes its complete retained analytics-route postimage. The refresh recovery correction is preserved.
+
+The actual Success Probability MetricCard receives the fetched avg_success_rate as its value, but also receives the constants trend={1.2} and trendDirection="up". The complete mounted child in src/components/dashboard/MetricCard.tsx (0be01cd20b73e9cd85b74e17f94398ae7f69e7f0, 2043 UTF-8 bytes) renders Math.abs(trend) percent followed by "vs prev window" whenever trend is not undefined. Thus the comparison is always 1.2% upward, independent of both current and previous measurements. The declared AnalyticsMetrics type includes avg_success_rate and no previous-window success rate or comparison-delta field. No local calculation derives the fixed trend from history.
+
+The patch removes only those two constant props. The shared MetricCard already makes trend optional and conditionally renders the comparison row; omitting it suppresses that unsupported row. Omitting the fixed direction also removes this card's direction-driven glow-success class from its decorative Activity icon. No zero, unchanged, improved or worsened comparison is substituted. This intentionally leaves the comparison unavailable until a real data contract and calculation support it.
+
+The current value expression, percentage formatting, card label, other cards, shared MetricCard source, metrics request/fallback paths and every other route byte remain exact. The change does not repair or assert the truth of broader analytics data, sample fallback metrics, historical windows or other components' trends.
+
+| Comparison continuation item | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Analytics route after #31964 | 965c6e9ca12f99dfdef41ee9fc86ad302a57e827 | 8460 |
+| Route with fixed comparison props removed | d0dc3903ea602257ce7780fdf94c1a530549a757 | 8404 |
+| remove-fixed-success-trend.patch | 87614d82b1de42c8182965db6d8acd8cca218dcc | 472 |
+
+The incremental serialized patch contains one hunk and eight rows, with zero additions and two deletions. Complete forward and inverse reconstruction matched the source identities. Removing precisely the two unique prop lines produces the full postimage; every other byte is unchanged.
+
+Source qualification uses the complete retained route and analytics API from the preceding packet, and one newly acquired complete MetricCard body with native and independent Git blob equality at the same immutable donor. The analytics API source is d3daf672cc780815418e3c7518ab4d2334c21796, 23025 UTF-8 bytes. Only the public type and actual caller relationship are described here. Bounded analytics/trend/1.2 Commons and AnalyticsPage/trend Slack queries returned zero rows, with native END for Slack; they do not establish global absence.
+
+Apply clear-refresh-error.patch first, then remove-fixed-success-trend.patch. Only the new patch and this exact-preimage-guarded README continuation are written. Original patch and all three MIT notices remain unchanged, preserving attribution.
+
+No application, metric calculation, browser, compiler, fixture, tests, workflow or upstream action was executed. Runtime layout and complete page behavior were not observed. Publication requires both complete newly written immutable bodies to match text, native and independent identities, followed by exact PR/files/head/merge/parents/tree/main metadata. Fresh observed main equality can reuse those verified immutable bodies through an explicit alias; otherwise both changed artifacts are read once at that observed immutable main commit.
