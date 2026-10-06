@@ -1,0 +1,25 @@
+diff --git a/contracts/governance/src/proposal.rs b/contracts/governance/src/proposal.rs
+--- a/contracts/governance/src/proposal.rs
++++ b/contracts/governance/src/proposal.rs
+@@ -11,6 +11,8 @@
+     UnknownProposal,
+     /// The voter has already cast a vote on this proposal.
+     AlreadyVoted,
++    /// Voting has closed on this proposal.
++    VotingClosed,
+ }
+ 
+ /// Lifecycle status of a proposal.
+@@ -56,8 +58,11 @@
+         }
+     }
+ 
+-    /// Record a vote, rejecting duplicate voters.
++    /// Record a vote on an open proposal, rejecting duplicate voters.
+     pub fn cast_vote(&mut self, voter: VoterId, weight: u128) -> Result<(), ProposalError> {
++        if self.status != ProposalStatus::Open {
++            return Err(ProposalError::VotingClosed);
++        }
+         if self.votes.contains_key(&voter) {
+             return Err(ProposalError::AlreadyVoted);
+         }
