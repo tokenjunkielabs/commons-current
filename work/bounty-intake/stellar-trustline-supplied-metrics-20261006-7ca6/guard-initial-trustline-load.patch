@@ -1,0 +1,42 @@
+diff --git a/src/app/[locale]/trustlines/page.tsx b/src/app/[locale]/trustlines/page.tsx
+--- a/src/app/[locale]/trustlines/page.tsx
++++ b/src/app/[locale]/trustlines/page.tsx
+@@ -36,6 +36,7 @@
+   const [loading, setLoading] = useState(true);
+ 
+   useEffect(() => {
++    let active = true;
+     async function loadData() {
+       setLoading(true);
+       try {
+@@ -44,6 +45,7 @@
+           fetchTrustlineRankings(50),
+         ]);
+ 
++        if (!active) return;
+         setStats(statsData);
+         setRankings(rankingsData);
+ 
+@@ -54,17 +56,21 @@
+             fetchTrustlineHistory(topAsset.asset_code, topAsset.asset_issuer),
+             fetchAssetInsights(topAsset.asset_code, topAsset.asset_issuer),
+           ]);
++          if (!active) return;
+           setHistory(historyData);
+           setInsights(insightsData);
+         }
+       } catch (error) {
+         logger.error("Error loading trustline data:", error);
+       } finally {
+-        setLoading(false);
++        if (active) setLoading(false);
+       }
+     }
+ 
+     loadData();
++    return () => {
++      active = false;
++    };
+   }, []);
+ 
+   useEffect(() => {
