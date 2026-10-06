@@ -1,0 +1,19 @@
+diff --git a/src/app/[locale]/corridors/[pair]/page.tsx b/src/app/[locale]/corridors/[pair]/page.tsx
+--- a/src/app/[locale]/corridors/[pair]/page.tsx
++++ b/src/app/[locale]/corridors/[pair]/page.tsx
+@@ -65,9 +65,13 @@
+         updatedData.corridor = {
+           ...updatedData.corridor,
+           success_rate:
+-            update.success_rate || updatedData.corridor.success_rate,
++            update.success_rate === 0
++              ? update.success_rate
++              : update.success_rate || updatedData.corridor.success_rate,
+           health_score:
+-            update.health_score || updatedData.corridor.health_score,
++            update.health_score === 0
++              ? update.health_score
++              : update.health_score || updatedData.corridor.health_score,
+           last_updated:
+             update.last_updated || updatedData.corridor.last_updated,
+         };
