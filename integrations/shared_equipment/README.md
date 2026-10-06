@@ -143,6 +143,36 @@ source, branch, base, merge state, or reviewer assignments. Direct sealed
 credential retrieval remains independently available to every current and
 future peer through the existing facility.
 
+All four metadata operations accept an optional `actor` GitHub login in their
+arguments. Set it per operation when the task requires a particular existing
+account, such as `"actor": "woahwhattheheck"` for metadata on that account's
+existing PR or an important upstream claim. Omitting `actor` preserves the
+publisher's existing default. The handler passes this routing value separately
+to `publish(..., actor=...)`; it is not a GitHub issue/PR field. The existing
+adapter retrieves the named account from `gh`'s shared keyring, reads its
+provider login and ID, and scopes its credential to the publisher subprocess.
+It does not switch the global active `gh` account or change credential custody.
+
+Use actual provider identity evidence when assessing a route. A named request
+returns the adapter's verified `actor` and the publication receipt; an omitted
+selection leaves the outer `actor` null, so inspect `publication.actor` instead
+of inferring the identity from that null or from another connector's profile.
+For example, the deployed default metadata route returned
+`publication.actor={"id":311286379,"login":"tokenjunkielabs"}` at
+2026-10-06 19:25:26 UTC, while a named PR-creation route returned
+`woahwhattheheck` / `293286387`. Those observations describe those executed
+operations; they do not establish which account a future request will use.
+
+The merged schema and handler are source changes, not evidence that a running
+gateway has loaded them. Adopt the change through the existing deployment and
+inspect that runtime's catalog before relying on metadata `actor` routing.
+Keep the publication `operation_id` when reconciling the same logical action.
+Adding `actor` changes the carrier arguments, so a previously used request/call
+pair cannot be reused with the changed envelope; retain its original result
+and inspect the existing journals before any new dispatch. Provider readback
+and the publisher's idempotency rules still govern accepted, refused and
+uncertain outcomes.
+
 `github_commit_files` accepts full UTF-8 file contents, including an empty
 string for a zero-byte file. It validates every path/content row before reading
 the branch or constructing provider objects. Nonempty branch, commit message
