@@ -1,8 +1,8 @@
-# AlertsPage logger binding and selected-rule form identity
+# AlertsPage logger binding, selected-rule identity and form labels
 
 The mounted alerts route calls `logger.error` in seven catch blocks but neither imports nor declares `logger`. The donor's existing logger module exports the named object and the `error(message, error?, metadata?)` method those calls expect. This patch adds that one named import. It changes no alert operation or logging implementation.
 
-This directory also contains the separate selected-rule form continuation described at the end. Apply the logger import first, then the form-identity patch; each patch has its own immutable preimage. The original logger explanation below remains scoped to its one-import patch.
+This directory also contains the separate selected-rule form and field-label continuations described at the end. Apply the logger import first, then the form-identity patch; each patch has its own immutable preimage. The original logger explanation below remains scoped to its one-import patch.
 
 ## Exact source and connection
 
@@ -70,3 +70,28 @@ All inputs belong to the same donor commit above. The type declares `AlertRule.i
 The serialized incremental patch and inverse reconstruct the complete recorded postimage and preimage. The original `import-alerts-logger.patch` remains unchanged. This is an attributed in-place continuation of [Commons #31986](https://github.com/woahwhattheheck/commons/pull/31986), preserving the original authors and earlier limits.
 
 This change does not address an already-started request finishing after another selection, duplicate submissions, same-ID data refresh, malformed/duplicate IDs, backend ownership, atomic writes, focus restoration after remount, persistence or full form accessibility. No browser, runtime, tests, requests, account operation, upstream action, acceptance or payment claim is made.
+
+## Separate continuation: associate the four visible field labels
+
+The same complete `AlertRuleForm` has four labels adjacent to their controls without `htmlFor`/control `id` pairs: Metric, Corridor (Optional), Condition and Threshold Value. The controls are siblings of their labels, not nested inside them. The acquired AlertsPage renders this actual form for create/edit operations.
+
+`associate-field-labels.patch` changes only `src/components/AlertRuleForm.tsx`. It imports `useId`, calls it once unconditionally at the component's top level and derives four suffixes from that instance prefix. Each label's `htmlFor` matches the corresponding native select/input's `id`.
+
+| Field | Shared suffix | Existing control |
+| --- | --- | --- |
+| Metric | `-metric` | select |
+| Corridor (Optional) | `-corridor` | text input |
+| Condition | `-condition` | select |
+| Threshold Value | `-threshold` | number input |
+
+Source identity: `97d01198bc9855e3d5e5c8463a4f8012644fda0a` (8,311 B) → `7b1d4cd6d6d19422548f5c84c715d3677f804aff` (8,670 B), **+10/-5 in six hunks**. This patch applies to the original form module and composes independently with the two page patches. It does not replace the data-derived React key introduced by #31993.
+
+All existing controlled values, state initializers, options, labels' text/classes, validation attributes, submission conversion, callbacks, loading behavior and the three already-associated checkbox controls remain exact. The helper-generated prefix concerns these four associations only; it does not make a claim about every ID in the form or a separately mounted React root.
+
+The [React useId reference](https://react.dev/reference/react/useId) explicitly documents top-level calls and deriving IDs for related label/control elements from one prefix. The [W3C WAI labeling tutorial](https://www.w3.org/WAI/tutorials/forms/labels/) specifies that the label's for value must match the control's ID. No examples or UI were executed.
+
+Parent's retained exact donor dependency metadata reports React 19.2.7, @types/react declared ^19 and locked 19.3.0, Next16.2.10 and TypeScript5.9.3; manifest blob `2b1c6ac1f83096666c7fd6d5ba3fd22780e6b8eb` (3,119 B) and pnpm lock `7ecba249d1b7cd41e629e2fff2782ed6805186f5` (359,885 B). This is an attributed metadata transfer; these full dependency bodies were not reacquired in this lane, and no installed environment was inspected.
+
+The complete serialized patch and inverse reconstruct both exact source identities. Current public Slack label-specific overlap returned zero, and the retained recent bounded Commons AlertRuleForm query supplied no competing carrier before these own continuations. This is not global coverage. The original logger and form-identity patches stay unchanged; this continuation updates only the guide and adds the label patch.
+
+Scope is these explicit associations. It makes no browser, screen-reader, full accessibility, hydration, form-validation, backend-operation, submission-lifecycle or whole-build guarantee. All attribution, licence-custody and no-runtime/no-upstream limits above remain.
