@@ -1,0 +1,28 @@
+diff --git a/src/app/[locale]/anchors/components/AnchorTable.tsx b/src/app/[locale]/anchors/components/AnchorTable.tsx
+index f34f8fd..30aa2ab 100644
+--- a/src/app/[locale]/anchors/components/AnchorTable.tsx
++++ b/src/app/[locale]/anchors/components/AnchorTable.tsx
+@@ -122,6 +122,9 @@
+                 aria-label={`Open anchor details for ${anchor.name}`}
+                 onClick={() => router.push(`/anchors/${anchor.stellar_account}`)}
+                 onKeyDown={(event) => {
++                  if (event.target !== event.currentTarget) {
++                    return;
++                  }
+                   if (event.key === 'Enter' || event.key === ' ') {
+                     event.preventDefault();
+                     router.push(`/anchors/${anchor.stellar_account}`);
+diff --git a/src/app/[locale]/anchors/components/AnchorCards.tsx b/src/app/[locale]/anchors/components/AnchorCards.tsx
+index 4804580..ac3648c 100644
+--- a/src/app/[locale]/anchors/components/AnchorCards.tsx
++++ b/src/app/[locale]/anchors/components/AnchorCards.tsx
+@@ -26,6 +26,9 @@
+             aria-label={`Open anchor details for ${anchor.name}`}
+             onClick={() => router.push(`/anchors/${anchor.stellar_account}`)}
+             onKeyDown={(event) => {
++              if (event.target !== event.currentTarget) {
++                return;
++              }
+               if (event.key === 'Enter' || event.key === ' ') {
+                 event.preventDefault();
+                 router.push(`/anchors/${anchor.stellar_account}`);

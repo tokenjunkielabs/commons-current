@@ -41,3 +41,22 @@ The exact Commons PR overlap query for anchors/simulated/trend returned zero wit
 The retained complete donor tree had no root AGENTS/RULES path. Its acquired docs/CONTRIBUTING.md is EventSource-specific and includes test/release instructions; the explicit current no-runtime/no-tests/no-publication-to-upstream scope remains controlling. Differently attributed MIT notices in documentation do not establish a repository-wide source licence here. This Commons contribution therefore contains only the minimal patch and this original guide, with pinned attribution rather than a copied production module.
 
 This is a source-only presentation correction in Commons. It does not establish real trend data, data accuracy, hydration determinism, localization, zero-denominator behavior, nested-control keyboard behavior, rendering quality, accessibility acceptance, backend integration or whole-issue readiness. No upstream branch/PR/comment, author assignment, sponsor acceptance, bounty award or payment is asserted.
+
+## Separate continuation: keep nested link keys out of the parent handler
+
+The complete table and cards also contain a source-backed event-ownership defect. Each focusable row/card has an Enter/Space handler that calls `preventDefault()` and `router.push()`. Each also contains a Details Link whose existing click handler stops click propagation. A keyboard event from that nested Link still reaches the parent key handler; the click-only stop does not guard that event.
+
+`preserve-nested-link-keys.patch` adds the same early return in both parent key handlers when `event.target !== event.currentTarget`. Events originating on a descendant now reach this handler without it cancelling the default or invoking its router action. Events originating on the row/card itself retain the original Enter/Space behavior.
+
+| Production path | After #32003 / before this patch | After this patch | Bytes before → after |
+| --- | --- | --- | --- |
+| `src/app/[locale]/anchors/components/AnchorTable.tsx` | `f34f8fd1ffbfa8074be53d2fdf1a001efc44ef63` | `30aa2abab512ed808301fd9d91a892289722292a` | 10082 → 10192 |
+| `src/app/[locale]/anchors/components/AnchorCards.tsx` | `480458025426c4bf454141b25f1b38ae4eea0ec1` | `ac3648cb3d41d7c88cccc3747097015d8447b866` | 6160 → 6258 |
+
+Apply this incremental patch **after** `label-simulated-trends.patch` from [Commons #32003](https://github.com/woahwhattheheck/commons/pull/32003). It adds six lines in two hunks (+6/-0). Both simulated captions, chart/producer logic, hrefs, router destinations, parent click handlers, nested click stopPropagation, roles, tabIndex values and all other source bytes remain exact. The original no-final-newline convention is preserved.
+
+The [primary React event-object reference](https://react.dev/reference/react-dom/components/common#react-event-object) defines currentTarget as the node owning the current React handler and target as the originating node, which may be a descendant. It also distinguishes default cancellation from stopping propagation. React's [event propagation guidance](https://react.dev/learn/responding-to-events#event-propagation) supplies the bubbling contract. These support the guard without a native event or browser execution.
+
+The complete retained preimages were inputs to this new correction, not replayed accepted-source validation. Serialized forward/inverse application reconstructs both complete identities. A fresh Commons lexical AnchorTable/keyboard PR query returned zero; public Slack returned only this packet's own earlier release header. Neither is a global absence claim. Original source attribution and instructions above remain.
+
+This correction concerns only these parents' key handling. It does not redesign nested interactive markup, establish table/card or whole-page accessibility, implement localized routes, change modified-key handling on the parent itself, add focus management, control other ancestor handlers, or guarantee browser/assistive-technology behavior. No runtime, keyboard simulation, test, browser, navigation request, API, upstream action, author assignment, acceptance or payment claim is made.
