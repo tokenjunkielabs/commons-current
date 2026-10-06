@@ -1,0 +1,12 @@
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index d996137..7db05b6 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -27,7 +27,6 @@
+ export const viewport: Viewport = {
+   width: "device-width",
+   initialScale: 1,
+-  userScalable: false,
+   themeColor: "#080907",
+ };
+ 
