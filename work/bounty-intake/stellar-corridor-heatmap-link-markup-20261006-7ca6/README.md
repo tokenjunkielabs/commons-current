@@ -102,3 +102,27 @@ Apply supported-link-markup.patch first, then name-and-expose-metric-controls.pa
 Separate bounded component/aria-pressed and component/aria-label overlap queries returned zero Commons rows and zero Slack rows with native END. These queries do not establish global absence or upstream acceptance.
 
 This continuation writes only the new patch and an exact-preimage-guarded guide update. The existing Link patch and three MIT notices stay unchanged, with accepted checks inherited without replay. Both complete newly written immutable bodies require native and independent identity matches, followed by exact final PR/files/head/merge/parents/tree/main metadata. An explicit main alias requires fresh exact commit equality; otherwise both changed artifacts are read once at the observed immutable main pin.
+
+## Continuation: descriptive cell-link text
+
+This continuation follows #32043 and #32046 and consumes the complete retained postimage of both source proposals.
+
+Each nonempty matrix cell links to its existing corridor detail URL. Its sole text child is the formatted active metric. Source and destination names appear elsewhere in separate div-based axes; the link itself has no corridor-purpose text. Repeated values can therefore produce indistinguishable link text. The tooltip has pointer/touch handlers and is not a replacement for descriptive link content.
+
+The four-line patch inserts one `sr-only` span immediately before the existing numeric span. Its text is "Open [source] to [destination] corridor, [metric]: ", followed by the unchanged visible value. Both assets come from the same HeatmapCell that supplies the destination data. The declared metric union is health, success_rate, volume and latency; replacing its single underscore with a space spells "success rate" without introducing new state or calculation. Existing formatting and its one call remain unchanged. The visible value stays part of the link content.
+
+[W3C technique H30](https://www.w3.org/WAI/WCAG22/Techniques/html/H30) describes providing link-purpose text inside the anchor. [Tailwind's display documentation](https://tailwindcss.com/docs/display#screen-reader-only) documents `sr-only` for visually hidden text that remains available to screen readers, including an in-link example. The donor declares Tailwind CSS 4.1.18. These references support the source-level approach; generated CSS, rendered layout and assistive-technology output were not observed. W3C ARIA8 was also consulted, but this change adds link content and does not override it with aria-label.
+
+| Cell-link continuation item | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Source after #32046, before descriptive text | ebdadd15b4f027e2cddc256447f3934f117fe8e8 | 20799 |
+| Source after descriptive text | 4a26625f37d99b7cfac330469d5a5c21342618da | 21055 |
+| describe-cell-links.patch | 2790e82cc2e09e9312712869b790b5fbaa7f31ce | 926 |
+
+The serialized incremental patch contains one hunk and ten rows, with four additions and no deletions. Complete forward and inverse reconstruction matched the source identities. Removing the inserted span restores every prior source byte. The native localized Link, exact href, numeric span, style expressions, pointer/touch behavior, tooltip, metric buttons and calculations are untouched. Empty cells remain non-links. No additional formatter call, callback, ID, state, role or navigation policy is introduced.
+
+Apply supported-link-markup.patch, then name-and-expose-metric-controls.patch, then describe-cell-links.patch. The retained guide and original notices preserve upstream attribution; a relocation commit is not treated as sole authorship.
+
+A bounded component/link/purpose query returned the existing grouped Commons index and a mixed Slack page; unrelated and held prefixes were not expanded, and search-term application or global absence is not inferred. A separate component/sr-only query returned zero Commons rows and zero Slack rows with native END. Root's earlier link-markup and metric-control completions are inherited without replay.
+
+This writes only describe-cell-links.patch and the exact-preimage-guarded guide continuation. No component, browser, CSS build, assistive technology, compiler, test, fixture, workflow or upstream action occurred. Whole-chart accessibility and successful rendering are not claimed. Publication requires both complete newly written immutable artifact bodies with native/text/independent identities and exact PR/files/head/merge/parents/tree/main metadata. An explicit main alias requires equality with the fresh observed named-main commit; otherwise both files are read once at that observed immutable pin.
