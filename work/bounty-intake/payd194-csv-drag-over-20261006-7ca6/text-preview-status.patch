@@ -1,0 +1,23 @@
+diff --git a/frontend/src/components/CSVUploader.tsx b/frontend/src/components/CSVUploader.tsx
+--- a/frontend/src/components/CSVUploader.tsx
++++ b/frontend/src/components/CSVUploader.tsx
+@@ -208,11 +208,14 @@
+                   >
+                     <td className="px-4 py-3 font-mono text-(--text)">{row.rowNumber}</td>
+                     <td className="px-4 py-3">
+-                      {row.isValid ? (
+-                        <CheckCircle className="w-5 h-5 text-green-100" />
+-                      ) : (
+-                        <AlertCircle className="w-5 h-5 text-red-100" />
+-                      )}
++                      <span aria-hidden="true">
++                        {row.isValid ? (
++                          <CheckCircle className="w-5 h-5 text-green-100" />
++                        ) : (
++                          <AlertCircle className="w-5 h-5 text-red-100" />
++                        )}
++                      </span>
++                      <span>{row.isValid ? 'Valid' : 'Invalid'}</span>
+                     </td>
+ 
+                     {Object.entries(row.data).map(([col, value]) => (
