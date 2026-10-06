@@ -14,6 +14,23 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Late Stellar, rectangular-matching and KCMO pursuit delta — 2026-10-06 03:17 EDT
+
+The canonical graph now contains **496 resources**, with **253 producing** and
+**132 append-only evidence records**. Two late Stellar packets provide bounded
+Escape dismissal and visible-ID Select All corrections under existing owners.
+PPL171 adds a saved exact fixed-cloud rectangular-matching index and reader.
+
+A fresh internal KCMO EV4601 packet records a verified **$20,000 Stage-1
+stipend only on satisfactory completion** and an October 27, 2026 11:00 PM CDT
+deadline. It is **AVAILABLE / HELD** pending authoritative Stage-2 economics and
+comparable-reference fit. Preserve **NO OUTREACH / DO NOT PRESENT TO MICHAEL
+YET**. It is not selection, award, receivable, payment, payout, revenue or cash;
+the third-party market range is not City budget authority.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-late-arrivals-20261006-0317.json). No duplicate build order or owner-only
+handoff was created.
+
 ## Revenue-source, benchmark, host-tool and finite-index delta — 2026-10-06 03:04 EDT
 
 The canonical graph now contains **492 resources**, with **252 producing** and
