@@ -1,0 +1,23 @@
+diff --git a/frontend/src/components/CSVUploader.tsx b/frontend/src/components/CSVUploader.tsx
+--- a/frontend/src/components/CSVUploader.tsx
++++ b/frontend/src/components/CSVUploader.tsx
+@@ -23,6 +23,7 @@
+   const [parsedData, setParsedData] = useState<CSVRow[]>([]);
+   const [fileName, setFileName] = useState<string | null>(null);
+   const fileInputRef = useRef<HTMLInputElement>(null);
++  const latestReadTokenRef = useRef<object | null>(null);
+ 
+   const parseCSV = (content: string): CSVRow[] => {
+     const lines = content.trim().split('\n');
+@@ -84,8 +85,11 @@
+ 
+     setFileName(file.name);
+     const reader = new FileReader();
++    const readToken = {};
++    latestReadTokenRef.current = readToken;
+ 
+     reader.onload = (e) => {
++      if (latestReadTokenRef.current !== readToken) return;
+       const content = e.target?.result as string;
+       const rows = parseCSV(content);
+       setParsedData(rows);
