@@ -1,0 +1,272 @@
+{
+  "schema": "commons.source_qualification_evidence/v1",
+  "title": "Stellar backend21: event-window integration feasibility",
+  "analysis_date": "2026-10-06",
+  "disposition": "No seven-day event-time endpoint implementation selected; missing producer/time/coverage contract documented.",
+  "canonical_backend": {
+    "repository_full_name": "Stellar-Analysis/backend",
+    "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+    "tree_sha": "c39f5c12c3421cd08180adab6508f2f365a8e10b",
+    "tree_complete": true,
+    "tree_entry_count": 431,
+    "observed_default_branch": "main",
+    "public": true,
+    "archived": false
+  },
+  "identity_method": {
+    "helper_repository": "woahwhattheheck/commons",
+    "helper_path": "host/connected_git_blob_identity.cjs",
+    "helper_blob_sha": "132074b6393afd73a921939ad39789f3a6b38ce5",
+    "helper_bytes": 3003,
+    "method": "Independent Git UTF-8 blob identity over the complete newly acquired source strings; every result equals both native response and canonical tree ID.",
+    "interpretation": "Byte identity, not execution, compilation, source correctness or deployed-state evidence."
+  },
+  "sources": [
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "README.md",
+      "blob_sha": "160135699501a4db3ad4ab8439fc9f19625e7fe4",
+      "bytes": 3413,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/README.md",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Repository setup and stated project layout; not authority over concrete database types."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "Cargo.toml",
+      "blob_sha": "f0fe093ebbb5c3eb962b3337beb1b764afd0fd39",
+      "bytes": 3555,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/Cargo.toml",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Actual Axum/SQLx dependency features and lint configuration."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/lib.rs",
+      "blob_sha": "6de97c5a7dbc81abe6a2b243b22cb214544bbd3e",
+      "bytes": 1769,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/lib.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Library module registration."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/api/mod.rs",
+      "blob_sha": "23141dded2c5491442d04021c0127c6fd030aa9f",
+      "bytes": 777,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/api/mod.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "API module registration."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/api/v1/mod.rs",
+      "blob_sha": "a3677c8afa44f712a391a15ff1765b6a095b37ac",
+      "bytes": 7385,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/api/v1/mod.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Actual router composition and versioned/unversioned mounts."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/main.rs",
+      "blob_sha": "622bfe12d04b476206149e2fbf42cb42bc922bde",
+      "bytes": 23450,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/main.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Server startup, SQLx migrations, shared state and mounted router."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/api/contract_events.rs",
+      "blob_sha": "4045b0d71b248c6747e711c29b0da44df3f96092",
+      "bytes": 7920,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/api/contract_events.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Existing event/verification API scope and error conventions."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/database.rs",
+      "blob_sha": "0d1a0c5deb3ac6c070df1477d5ef457ac0e31281",
+      "bytes": 77481,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/database.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Concrete SqlitePool and public pool accessor; targeted source review, not a whole database audit."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/state.rs",
+      "blob_sha": "0399f0e69e7ac7c70bfc6d192e236a50bc5463dc",
+      "bytes": 3059,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/state.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Shared Arc<Database> and network-context availability."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/services/event_indexer.rs",
+      "blob_sha": "05eb9a09f7f65e54b1df836a4f7cf7c13f134353",
+      "bytes": 25981,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/services/event_indexer.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Optional caller timestamp, explicit insertion bindings and insertion-time query semantics."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/jobs/contract_event_listener.rs",
+      "blob_sha": "359cffac835f330af35dc3ff17f3838209504816",
+      "bytes": 8546,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/jobs/contract_event_listener.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Single configured contract and placeholder missed-event job."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "migrations/022_create_replay_tables.sql",
+      "blob_sha": "2ca56434b39fe86f11b2e13a61d6b887d311257f",
+      "bytes": 4166,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/migrations/022_create_replay_tables.sql",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Unified event table columns, nullability and timestamp comments."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "migrations/025_create_contract_events.sql",
+      "blob_sha": "b00a0b837f3af30c56ccd9de88c40779c094ab94",
+      "bytes": 70,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/migrations/025_create_contract_events.sql",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Delegates event-table schema to migration022."
+    },
+    {
+      "repository_full_name": "Stellar-Analysis/backend",
+      "commit_sha": "965e916227cf9173cf6ad254a6971429060c1d19",
+      "path": "src/services/contract_listener.rs",
+      "blob_sha": "d50cfd47c73af574a831b4e64c24533150859b0c",
+      "bytes": 20083,
+      "url": "https://github.com/Stellar-Analysis/backend/blob/965e916227cf9173cf6ad254a6971429060c1d19/src/services/contract_listener.rs",
+      "native_tree_identity_matched": true,
+      "independent_utf8_git_blob_identity_matched": true,
+      "role": "Concrete snapshot timestamp producer, ignored ledger-close field and direct row insertion."
+    }
+  ],
+  "issues": [
+    {
+      "number": 21,
+      "url": "https://github.com/Stellar-Analysis/backend/issues/21",
+      "state": "open",
+      "assignees": [],
+      "comments": 0,
+      "evidence": "Direct native issue metadata and complete body.",
+      "requirement": "Count distinct contract IDs from real contract_events rows in a recent window; preserve issue20 coverage dependency.",
+      "seven_day_parameter_in_issue": false
+    },
+    {
+      "number": 20,
+      "url": "https://github.com/Stellar-Analysis/backend/issues/20",
+      "state": "open",
+      "assignees": [],
+      "comments": 0,
+      "evidence": "Transferred public issue requirements from a separate direct native root review; this analysis did not reacquire its body.",
+      "requirement": "Extend the existing configured pipeline across needed contracts; do not build a duplicate. Address rate limits and verify multiple distinct contracts before staged integration.",
+      "author_reported_coverage": "The issue reports ten needed contracts, only three then emitting real events, referring to contracts31; neither these counts nor that referenced issue were independently audited here."
+    }
+  ],
+  "carrier_qualification": {
+    "query": "21",
+    "repository_full_name": "Stellar-Analysis/backend",
+    "state": "all",
+    "sort": "updated",
+    "order": "desc",
+    "topn": 20,
+    "result_numbers": [
+      55
+    ],
+    "related_pr": {
+      "url": "https://github.com/Stellar-Analysis/backend/pull/55",
+      "author": "ndii-dev",
+      "merged": true,
+      "merged_at": "2026-08-28T13:56:36Z",
+      "closes_issue": 46,
+      "qualification": "Related completed rollup schema, not an exact active-contract endpoint carrier; its source was not acquired."
+    },
+    "limitation": "Bounded search result, not proof of global absence."
+  },
+  "frontend_consumer": {
+    "evidence": "Public source contract transferred from the coordinator's complete source review; not a separate full-source audit or independent hash in this packet.",
+    "repository_full_name": "Stellar-Analysis/frontend",
+    "original_canonical_commit": "482ee456369418ef82c4056718cb82d3468f762b",
+    "paths": [
+      "src/lib/soroban-api.ts",
+      "src/app/[locale]/soroban/page.tsx",
+      "src/components/soroban/ActiveContractsPanel.tsx"
+    ],
+    "request": "GET /api/v1/soroban/active-contracts?window=7d",
+    "network_filter_sent": false,
+    "response_contract": "Numeric count; optional window and trend. Caught fetch/page errors use a local unavailable flag; successful malformed numeric normalization remains unchanged.",
+    "composed_postimages": [
+      {
+        "path": "src/lib/soroban-api.ts",
+        "blob_sha": "a3ba6bc1f13ec89d31191d18550e8bb0b584b407",
+        "bytes": 9226
+      },
+      {
+        "path": "src/app/[locale]/soroban/page.tsx",
+        "blob_sha": "80ba478b5aa34d8af463ea4a5c6f969eeca114fa",
+        "bytes": 6254
+      }
+    ],
+    "postimage_location": {
+      "repository_full_name": "woahwhattheheck/commons",
+      "checkpoint_manifest_sha": "63518084a46841ab670add0aa3f5d34ad99975c6",
+      "previous_manifest_sha": "0a7e7e4150015e6498ab6545ff53f4f6e7513452",
+      "qualification": "Coordinator-transferred checkpoint lineage; these composed blobs are not asserted to be files at the original frontend canonical commit."
+    },
+    "accepted_frontend_packets": [
+      32125,
+      32129,
+      32132,
+      32134
+    ]
+  },
+  "licensing_observation": {
+    "repository_metadata_license": null,
+    "complete_tree_no_AGENTS_or_CONTRIBUTING_or_license_file": true,
+    "scope": "Filename/metadata observation at the pinned revision, not a legal or repository-wide license conclusion. This packet contains original analysis and public locators, no donor source payload or patch."
+  },
+  "limitations": [
+    "No deployed endpoint/network response or database contents observed.",
+    "No RPC, runtime, contract, account, transaction or test operation performed.",
+    "No ingestion or backend source change selected.",
+    "No guarantee of whole-repository or whole-ingestion-path coverage.",
+    "No reinterpretation of accepted frontend fixes or completed schema work.",
+    "No private native journals, internal cache locators or private provider messages published."
+  ]
+}
