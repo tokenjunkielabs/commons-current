@@ -1,0 +1,61 @@
+diff --git a/src/hooks/useNotificationSound.ts b/src/hooks/useNotificationSound.ts
+index 2dd1c2f3701ed85dfc9195b545a0aab8bc106974..1184701859cd6e6e29aa243fb483261b1de0c3bf 100644
+--- a/src/hooks/useNotificationSound.ts
++++ b/src/hooks/useNotificationSound.ts
+@@ -1,4 +1,4 @@
+-import { useCallback, useRef } from 'react';
++import { useCallback, useEffect, useRef } from 'react';
+ import { logger } from '@/lib/logger';
+ import { NotificationSound, NotificationType, NotificationPriority } from '@/types/notifications';
+ 
+@@ -26,6 +26,7 @@
+ 
+ export const useNotificationSound = () => {
+   const audioContextRef = useRef<AudioContext | null>(null);
++  const criticalTimersRef = useRef(new Set<ReturnType<typeof setTimeout>>());
+ 
+   const initAudioContext = useCallback(() => {
+     if (!audioContextRef.current) {
+@@ -77,7 +78,10 @@
+       
+       // For critical notifications, play a sequence
+       if (priority === 'critical') {
+-        setTimeout(() => {
++        const timer = setTimeout(() => {
++          criticalTimersRef.current.delete(timer);
++          if (audioContextRef.current !== audioContext) return;
++
+           const oscillator2 = audioContext.createOscillator();
+           const gainNode2 = audioContext.createGain();
+           
+@@ -94,6 +98,7 @@
+           oscillator2.start(audioContext.currentTime);
+           oscillator2.stop(audioContext.currentTime + config.duration / 1000);
+         }, 100);
++        criticalTimersRef.current.add(timer);
+       }
+     } catch (error) {
+       logger.warn('Failed to play notification sound:', error);
+@@ -101,11 +106,19 @@
+   }, [initAudioContext]);
+ 
+   const cleanup = useCallback(() => {
+-    if (audioContextRef.current) {
+-      audioContextRef.current.close();
+-      audioContextRef.current = null;
++    for (const timer of criticalTimersRef.current) clearTimeout(timer);
++    criticalTimersRef.current.clear();
++
++    const audioContext = audioContextRef.current;
++    audioContextRef.current = null;
++    if (audioContext) {
++      void audioContext.close().catch((error) => {
++        logger.warn('Failed to close notification audio:', error);
++      });
+     }
+   }, []);
+ 
++  useEffect(() => cleanup, [cleanup]);
++
+   return { playSound, cleanup };
+ };
