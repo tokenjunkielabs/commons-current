@@ -14,6 +14,25 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Late Stellar CSV and Army IIIAC RFI delta — 2026-10-06 03:28 EDT
+
+The canonical graph now contains **500 resources**, with **253 producing** and
+**133 append-only evidence records**. PR31947 adds one bounded persisted
+notification CSV timestamp/quoting source packet under the existing Stellar
+owner. Two later complete packets add PayD581 language-select association and Stellar chart-export argument forwarding.
+
+Army IIIAC W56ZLWRFI0001 is an active Sources Sought / market-research packet,
+not an RFP or award. The retained internal response skeleton covers three GenAI
+training tracks, secure-environment assumptions, cohort shape and a 12-month
+base plus four options, with response due October 7, 2026 at 16:00 ET. There is
+no verified TJLabs active SAM/UEI/CAGE or solo-prime posture and no official
+contract value. Preserve **NO OUTREACH / NO SUBMISSION / NO MICHAEL
+PRESENTATION**; third-party market estimates are not Government value, award,
+payment, revenue or cash.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-revenue-late-delta-20261006-0328.json). No duplicate build order or owner-only
+handoff was created.
+
 ## Late Stellar, rectangular-matching and KCMO pursuit delta — 2026-10-06 03:17 EDT
 
 The canonical graph now contains **496 resources**, with **253 producing** and
