@@ -1,0 +1,54 @@
+diff --git a/src/components/notifications/NotificationPreferences.tsx b/src/components/notifications/NotificationPreferences.tsx
+index 083079f..e0de089 100644
+--- a/src/components/notifications/NotificationPreferences.tsx
++++ b/src/components/notifications/NotificationPreferences.tsx
+@@ -140,6 +140,9 @@
+                   </p>
+                 </div>
+                 <button
++                  role="switch"
++                  aria-label="Enable Notifications"
++                  aria-checked={localPreferences.enabled}
+                   onClick={() => handlePreferenceChange('enabled', !localPreferences.enabled)}
+                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                     localPreferences.enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+@@ -163,6 +166,9 @@
+                   </p>
+                 </div>
+                 <button
++                  role="switch"
++                  aria-label="Desktop Notifications"
++                  aria-checked={localPreferences.showOnDesktop}
+                   onClick={() => handlePreferenceChange('showOnDesktop', !localPreferences.showOnDesktop)}
+                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                     localPreferences.showOnDesktop ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+@@ -186,6 +192,9 @@
+                   </p>
+                 </div>
+                 <button
++                  role="switch"
++                  aria-label="Auto Hide"
++                  aria-checked={localPreferences.autoHide}
+                   onClick={() => handlePreferenceChange('autoHide', !localPreferences.autoHide)}
+                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                     localPreferences.autoHide ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+@@ -239,6 +248,9 @@
+                   </p>
+                 </div>
+                 <button
++                  role="switch"
++                  aria-label="Enable Sound"
++                  aria-checked={localPreferences.sound.enabled}
+                   onClick={() => handleSoundChange('enabled', !localPreferences.sound.enabled)}
+                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                     localPreferences.sound.enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+@@ -323,6 +335,9 @@
+                     </p>
+                   </div>
+                   <button
++                    role="switch"
++                    aria-label={category}
++                    aria-checked={enabled}
+                     onClick={() => handleCategoryChange(category as keyof NotificationPreferencesType['categories'], !enabled)}
+                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                       enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
