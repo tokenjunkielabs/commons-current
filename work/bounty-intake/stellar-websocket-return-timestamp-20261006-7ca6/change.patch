@@ -1,0 +1,12 @@
+diff --git a/src/hooks/useWebSocket.ts b/src/hooks/useWebSocket.ts
+index e34230ffc5e035cc26e5d5715818167d433567c6..b4450f479b44151ed1a375b5128b5018f96d5663
+--- a/src/hooks/useWebSocket.ts
++++ b/src/hooks/useWebSocket.ts
+@@ -293,6 +293,7 @@
+     isConnecting,
+     isStaleData,
+     lastMessage,
++    lastMessageTime,
+     connectionAttempts,
+     send,
+     subscribe,
