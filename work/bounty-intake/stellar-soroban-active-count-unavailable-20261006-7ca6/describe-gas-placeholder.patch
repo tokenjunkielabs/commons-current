@@ -1,0 +1,60 @@
+diff --git a/src/lib/soroban-api.ts b/src/lib/soroban-api.ts
+--- a/src/lib/soroban-api.ts
++++ b/src/lib/soroban-api.ts
+@@ -70,7 +70,7 @@
+   window?: string;
+   /** Optional trend percentage. */
+   trend?: number;
+-  /** Set to true when backend#23 hasn't landed yet. */
++  /** Legacy placeholder flag; also set for any caught request failure. */
+   coming_soon?: boolean;
+ }
+ 
+@@ -214,9 +214,9 @@
+ 
+ /**
+  * Gas usage statistics (backend#23).
+- * Returns coming_soon: true when the backend endpoint hasn't landed yet
+- * (404 / 501 response), so the dashboard can show an explicit placeholder
+- * rather than an error state.
++ * Returns coming_soon: true for any caught request failure.
++ * The legacy flag requests a placeholder; it does not establish why the
++ * data is unavailable or whether backend integration is pending.
+  */
+ export async function fetchSorobanGasUsage(
+   window = "7d",
+@@ -232,7 +232,7 @@
+       coming_soon: Boolean(data.coming_soon),
+     };
+   } catch (error) {
+-    // 404 / 501 means backend#23 hasn't landed yet — surface "coming soon"
++    // Preserve the existing 404 / 501 classification for error logging.
+     const isNotImplemented =
+       error instanceof Error &&
+       (error.message.includes("404") || error.message.includes("501"));
+diff --git a/src/components/soroban/GasUsagePanel.tsx b/src/components/soroban/GasUsagePanel.tsx
+--- a/src/components/soroban/GasUsagePanel.tsx
++++ b/src/components/soroban/GasUsagePanel.tsx
+@@ -9,7 +9,7 @@
+   avgGas?: number;
+   window?: string;
+   trend?: number;
+-  /** True when backend#23 hasn't shipped yet */
++  /** Show a placeholder instead of gas usage metrics. */
+   comingSoon?: boolean;
+   loading?: boolean;
+ }
+@@ -57,11 +57,11 @@
+           <div className="flex items-center gap-2 text-muted-foreground">
+             <Clock className="w-5 h-5 shrink-0" aria-hidden="true" />
+             <span className="text-xl font-mono font-bold tracking-tighter">
+-              Coming Soon
++              Unavailable
+             </span>
+           </div>
+           <p className="text-[10px] font-mono text-muted-foreground/50 mt-2 uppercase tracking-tighter">
+-            Gas analytics pending backend integration
++            Gas usage data is not currently available
+           </p>
+         </div>
+       </div>
