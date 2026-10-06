@@ -198,17 +198,30 @@ def aggregate_layer(
 
     q = f"""
         WITH tracts AS (
-            SELECT t.GEOID::VARCHAR AS GEOID, t.geometry, t.bbox
+            SELECT t.GEOID::VARCHAR AS GEOID,
+                   t.geometry,
+                   ST_XMin(t.geometry) AS xmin,
+                   ST_XMax(t.geometry) AS xmax,
+                   ST_YMin(t.geometry) AS ymin,
+                   ST_YMax(t.geometry) AS ymax
             FROM '{tract_path}' t
             INNER JOIN {view} s ON t.GEOID::VARCHAR = s.GEOID
+        ),
+        source AS (
+            SELECT geometry,
+                   ST_XMin(geometry) AS xmin,
+                   ST_XMax(geometry) AS xmax,
+                   ST_YMin(geometry) AS ymin,
+                   ST_YMax(geometry) AS ymax
+            FROM '{source_path}'
         )
         SELECT t.GEOID, {expr} AS {col}
         FROM tracts t
-        LEFT JOIN '{source_path}' o
-          ON o.bbox.xmin <= t.bbox.xmax
-         AND o.bbox.xmax >= t.bbox.xmin
-         AND o.bbox.ymin <= t.bbox.ymax
-         AND o.bbox.ymax >= t.bbox.ymin
+        LEFT JOIN source o
+          ON o.xmin <= t.xmax
+         AND o.xmax >= t.xmin
+         AND o.ymin <= t.ymax
+         AND o.ymax >= t.ymin
          AND ST_Intersects(t.geometry, ST_Centroid(o.geometry))
         GROUP BY t.GEOID
     """
@@ -251,7 +264,7 @@ def score_region(features: pd.DataFrame) -> pd.DataFrame:
     )
     transport_raw = 0.65 * housing_demand + 0.35 * land_demand - np.log1p(transport_supply)
 
-    poi_supply = f["overture__pois_count"] + 0.50 * f["infrastructure_count"]
+    poi_supply = f["overture__pois_count"] + 0.50 * f["overture__infrastructure_count"]
     poi_raw = housing_demand - np.log1p(poi_supply)
 
     out = pd.DataFrame({"GEOID": f["GEOID"].astype(str)})
