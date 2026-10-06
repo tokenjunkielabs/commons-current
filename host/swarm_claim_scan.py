@@ -365,7 +365,7 @@ def _is_operation(operation):
 
 def _statement(text, *, source_release=False):
     first = text.lstrip(" *`\n")
-    match = DECLARATION.match(first) or QUALIFIED_DECLARATION.match(first)
+    match = QUALIFIED_DECLARATION.match(first) or DECLARATION.match(first)
     if match:
         operation = match["operation"].rstrip(".:;")
         if _is_operation(operation):
