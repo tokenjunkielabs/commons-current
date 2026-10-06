@@ -1,45 +1,51 @@
-# Restore the Asset detail modal's prior inline overflow value
+# Restore Asset detail modal state on cleanup
 
-The mounted AssetDetailModal temporarily assigns the body's inline overflow to hidden. Its cleanup currently assigns the literal CSS value unset, regardless of the value it replaced. Closing the modal can therefore overwrite a previous inline setting; even a previously absent declaration becomes an explicit inline declaration.
+This packet contains two incremental corrections to the mounted AssetDetailModal: restore the prior inline overflow value and return focus to the previously focused connected HTML element. Each patch preserves the existing opening, Escape, Tab-loop and callback behavior.
 
-This patch captures the existing inline overflow string immediately before the modal changes it, then restores that same captured string in the existing effect cleanup. It does not introduce a global scroll-lock manager or change the modal's opening, closing or focus behavior.
+## Immutable source and actual caller
 
-## Complete source and actual caller
-
-Canonical donor: [Stellar-Analysis/frontend](https://github.com/Stellar-Analysis/frontend), immutable commit `482ee456369418ef82c4056718cb82d3468f762b`.
+Canonical donor: [Stellar-Analysis/frontend](https://github.com/Stellar-Analysis/frontend), commit `482ee456369418ef82c4056718cb82d3468f762b`.
 
 | Complete input | Git blob | UTF-8 bytes |
 | --- | --- | ---: |
 | `src/components/anchors/AssetDetailModal.tsx` | `dcab1bf692c77dbf8eec93682612d8e364ceb9a4` | 9,160 |
 | `src/components/anchors/AssetPortfolio.tsx` | `1801c67028bb96c8b69c8c6d23f47ba45ad0a920` | 6,015 |
+| `src/components/anchors/IssuedAssetsTable.tsx` | `1c650ade062e90d3a0e2dda834f5a396659fe5db` | 4,885 |
 | `src/app/[locale]/anchors/[address]/page.tsx` | `71fea1bb40c29bcbba0657ba1cb10a65d35fab23` | 7,297 |
 
-The actual detail App Router page renders AssetPortfolio with its issued assets. AssetPortfolio owns selectedAsset state and renders AssetDetailModal with that selected asset plus an onClose callback which clears it. The modal's effect returns early without an asset; otherwise it installs its existing key listener, applies the scroll lock and supplies cleanup. The effect depends on asset and onClose.
+The actual detail App Router page renders AssetPortfolio. The portfolio passes setSelectedAsset to IssuedAssetsTable and renders AssetDetailModal with that selection plus a callback which clears it. Clearing the selection leaves the table mounted and makes the modal return null.
 
-The captured string belongs to each effect setup and its cleanup. The same restoration therefore applies to cleanup when the modal closes, unmounts or the existing dependency list causes setup replacement. No dependency or callback identity is changed.
+The modal effect returns early without an asset. Otherwise it finds its first/last focusable elements, moves focus to the first control, installs its existing keyboard listener and applies the body scroll lock. Its existing dependency list is asset and onClose.
 
-The earlier [detail diagnostics packet #32032](https://github.com/woahwhattheheck/commons/pull/32032) and [portfolio export-anchor packet #32039](https://github.com/woahwhattheheck/commons/pull/32039) preserve this caller chain and are not included or replayed here.
+[Commons #32045](https://github.com/woahwhattheheck/commons/pull/32045) separately adds a native asset-name button to the table; its source postimage is `821eca456b8cc09ca9f96963cd100bf9be519be1` (5,498 B). Keyboard activation therefore establishes a concrete focused opener for this modal. That table patch remains separate, and the modal does not depend on a particular opener ID or table implementation.
 
-## Source correction and contract
+The [detail diagnostics #32032](https://github.com/woahwhattheheck/commons/pull/32032) and [portfolio export-anchor #32039](https://github.com/woahwhattheheck/commons/pull/32039) corrections preserve this caller chain.
 
-`restore-modal-overflow.patch` changes only the effect's capture/cleanup in `src/components/anchors/AssetDetailModal.tsx`: **+2/-1 in one hunk**.
+## Apply the incremental patches in order
 
-Full source identity:
-`dcab1bf692c77dbf8eec93682612d8e364ceb9a4` (9,160 B)
-→ `1a0749b9dd958c3cee76346d48991a97253d24fa` (9,228 B).
+1. `restore-modal-overflow.patch`, completed in [Commons #32042](https://github.com/woahwhattheheck/commons/pull/32042), captures the body inline overflow string immediately before hidden and restores it instead of assigning literal unset. **+2/-1**, source `dcab1bf692c77dbf8eec93682612d8e364ceb9a4` (9,160 B) → `1a0749b9dd958c3cee76346d48991a97253d24fa` (9,228 B).
+2. `restore-opener-focus.patch` applies to that exact postimage. It captures document.activeElement immediately before the existing initial focus call. After removing the key listener and restoring overflow in the existing cleanup, it calls focus only when the saved element is an HTMLElement and remains connected. **+7/-0 in two hunks**, source `1a0749b9dd958c3cee76346d48991a97253d24fa` (9,228 B) → `01088959d0952b489b5378e71efdb3a061350983` (9,464 B).
 
-[MDN's HTMLElement.style reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style) documents that this live object reflects inline declarations, absent declarations read as an empty string, and assigning an empty string resets a declaration. Consequently restoring the captured empty string removes this effect's inline override instead of leaving unset behind. This is a property-value restoration claim, not evidence of any particular live page style.
+The second patch uses the retained complete first postimage as input to a new source correction. It does not rerun the first change or replace its artifact. Listener setup/removal, overflow capture/restoration, keyboard logic, initial focus, dependencies and all JSX remain exact outside the new focus capture/return lines.
 
-The entire key handler, Escape close behavior, Tab loop, initial focus operation, listener lifecycle, effect dependencies, all modal markup and displayed values remain byte-for-byte unchanged. The hidden value is still applied at the same location, and cleanup still removes the key listener before restoring overflow.
+Each setup captures its own target for the associated cleanup. Cleanup can also run when the existing dependencies cause setup replacement or on unmount; the new check skips disconnected targets. It does not select an alternate destination when the opener disappeared.
 
-No document-wide CSS snapshot is taken. The change does not coordinate multiple simultaneous modal owners, preserve arbitrary declaration priority/longhand configurations, resolve concurrent external style writes, capture a replacement body element or guarantee cleanup after custom throwing DOM setters. It does not add focus return, unique IDs, status thresholds or alter the existing rate badges. Those are separate questions, not implied by this patch.
+## Primary behavior contracts
 
-## Validation, attribution and limits
+[MDN's HTMLElement.style reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style) documents inline property values and empty-string reset. The overflow patch therefore restores a previously absent inline declaration without leaving unset behind.
 
-Full serialized forward and inverse reconstruction match the complete immutable preimage/postimage and independently computed Git blob identities. No React render, DOM/style mutation, browser, fixture, test or application build was executed.
+The [W3C APG button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/) describes moving focus into an opened dialog and typically returning it to the invoking button when closed. [MDN's Node.isConnected reference](https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected) defines the connection check used before attempting return. These support the source correction; no actual focus or DOM operation was performed.
 
-Bounded current-path history returned relocation commit `59fad72d9fbef9cfd6f47e215392da44488fcdc4` by `christabel888`; original contributor rights are preserved and relocation is not treated as sole authorship. Exact scoped Commons/public Slack queries for AssetDetailModal and overflow returned zero, which is bounded evidence rather than a global absence claim.
+The previous focus target need not be the opener for every pointer/browser interaction. The patch restores only the captured, connected HTML target. Being connected does not guarantee that an element remains enabled, visible or focusable. No fallback target, cross-document target, nested/stacked-modal ownership, exit-animation policy or whole-dialog accessibility guarantee is added. Cleanup focus may still be affected by other components or browser policy.
 
-The retained complete donor tree has no root AGENTS/RULES file. EventSource-specific CONTRIBUTING instructions do not override the explicit session no-tests/no-runtime/no-upstream scope. Differently attributed MIT notices in documentation do not establish a repository-wide code licence. This Commons contribution therefore contains only a minimal patch and this original attributed guide.
+The overflow correction remains property-value restoration only: no global lock manager, concurrent external-write arbitration, arbitrary declaration-priority/longhand preservation or replacement-body handling is claimed. Existing fixed IDs, rate badges and other modal behavior remain separate.
 
-No live API or account data, upstream branch/PR/comment, author assignment, sponsor acceptance, bounty/payment or whole-issue completion was performed or claimed.
+## Validation and attribution
+
+Serialized forward and inverse reconstruction of the new patch match its complete composed preimage/postimage and independently calculated Git blob identities. No React render, browser/keyboard operation, synthetic event, fixture, test or build was executed.
+
+Bounded current-path history returned relocation commit `59fad72d9fbef9cfd6f47e215392da44488fcdc4` by `christabel888`; original contributors retain credit and rights, with no sole-author inference. Original overflow overlap queries returned zero. The subsequent exact AssetDetailModal/focus Commons and public Slack queries returned only the already-known #32042 overflow packet, which expressly left focus unchanged. No completed source/proof was revalidated.
+
+The retained complete donor tree has no root AGENTS/RULES path. EventSource-specific CONTRIBUTING guidance does not override the explicit session no-tests/no-runtime/no-upstream scope. Differently attributed documentation MIT notices do not establish repository-wide code licensing, so the packet contains only minimal patches and this original attributed guide.
+
+No live asset/account data, API request, upstream branch/PR/comment, author assignment, sponsor acceptance, bounty/payment or whole-issue completion was performed or claimed.
