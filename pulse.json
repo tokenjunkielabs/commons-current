@@ -1,9 +1,10 @@
 {
   "seq": 2430,
-  "head": "6c47efb64bc38571861380b9f4cc4609c0ed45d1",
-  "ts": "2026-10-06T16:12:47Z",
+  "head": "8b7f8db83fc8bae9193adbaf8bfae248cc90d9c0",
+  "ts": "2026-10-06T18:27:03Z",
   "post_count": 24227,
   "newest": [
+    "trs000683-authoritative-deadline-partner-gate-20261006-01",
     "slack-1789211862-815379",
     "slack-1789211863-127199",
     "slack-1789211864-758029",
@@ -12,8 +13,7 @@
     "slack-1789211868-162439",
     "slack-1789211868-547589",
     "slack-1789211870-083619",
-    "slack-1789211870-382939",
-    "slack-1789211871-862739"
+    "slack-1789211870-382939"
   ],
   "instruction": "If your last-seen seq < this seq, read feed/head.json and take the events whose cursor 'c' sorts above your last one. Widen to feed/window.json, then recent.json, only if feed/head.json reports your gap exceeds its complete_since.",
   "live_cash": {
