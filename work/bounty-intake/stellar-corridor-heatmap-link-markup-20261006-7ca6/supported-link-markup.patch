@@ -1,0 +1,32 @@
+diff --git a/src/components/charts/CorridorHeatmap.tsx b/src/components/charts/CorridorHeatmap.tsx
+--- a/src/components/charts/CorridorHeatmap.tsx
++++ b/src/components/charts/CorridorHeatmap.tsx
+@@ -355,20 +355,15 @@
+                         {cell ? (
+                           <Link
+                             href={`/corridors/${cell.corridorData.id}`}
+-                            passHref
+-                            legacyBehavior
++                            className={`w-full h-full flex items-center justify-center border border-gray-200 dark:border-slate-600 ${getCellColor(
++                              cell.corridorData,
++                            )} ${getCellOpacity(
++                              cell.corridorData,
++                            )} active:ring-2 sm:hover:ring-2 hover:ring-blue-500 hover:z-10 transition-all cursor-pointer rounded-sm`}
+                           >
+-                            <a
+-                              className={`w-full h-full flex items-center justify-center border border-gray-200 dark:border-slate-600 ${getCellColor(
+-                                cell.corridorData,
+-                              )} ${getCellOpacity(
+-                                cell.corridorData,
+-                              )} active:ring-2 sm:hover:ring-2 hover:ring-blue-500 hover:z-10 transition-all cursor-pointer rounded-sm`}
+-                            >
+-                              <span className="font-bold text-white drop-shadow-md text-[10px] sm:text-xs tracking-tighter">
+-                                {getMetricDisplayValue(cell.corridorData)}
+-                              </span>
+-                            </a>
++                            <span className="font-bold text-white drop-shadow-md text-[10px] sm:text-xs tracking-tighter">
++                              {getMetricDisplayValue(cell.corridorData)}
++                            </span>
+                           </Link>
+                         ) : (
+                           <div className="w-full h-full bg-gray-100 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-sm"></div>
