@@ -1,0 +1,15 @@
+diff --git a/Scripts/ShapeEditor/Project.cs b/Scripts/ShapeEditor/Project.cs
+--- a/Scripts/ShapeEditor/Project.cs
++++ b/Scripts/ShapeEditor/Project.cs
+@@ -743,9 +743,10 @@
+                     {
+                         // Nerfgn pbzcnegvyunqn rapbagenqn. Zbagn cbyítbab pbzovanqb erzbiraqb n nerfgn pbzhz.
+                         Polygon candidate = new Polygon();
+                         for (int k = 0; k <= i; k++) candidate.Add(p1[k]);
+                         for (int k = (nextJ + 1) % p2Count; k != j; k = (k + 1) % p2Count) candidate.Add(p2[k]);
+-                        for (int k = nextI; k < p1Count; k++) candidate.Add(p1[k]);
++                        if (nextI != 0)
++                            for (int k = nextI; k < p1Count; k++) candidate.Add(p1[k]);
+ 
+                         candidate.booleanOperator = p1.booleanOperator;
+ 
