@@ -1,0 +1,12 @@
+diff --git a/src/app/[locale]/alerts/page.tsx b/src/app/[locale]/alerts/page.tsx
+index b2b301a..e57d526 100644
+--- a/src/app/[locale]/alerts/page.tsx
++++ b/src/app/[locale]/alerts/page.tsx
+@@ -9,6 +9,7 @@
+     UpdateAlertRuleRequest,
+ } from "@/lib/alerts-api";
+ import { AlertRuleForm } from "@/components/AlertRuleForm";
++import { logger } from "@/lib/logger";
+ import { Trash2, Edit2, Play, Square, Bell, BellOff, XCircle, Clock } from "lucide-react";
+ 
+ export default function AlertsPage() {
