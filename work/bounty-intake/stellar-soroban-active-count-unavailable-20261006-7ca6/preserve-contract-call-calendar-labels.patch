@@ -1,0 +1,16 @@
+diff --git a/src/components/charts/ContractCallsChart.tsx b/src/components/charts/ContractCallsChart.tsx
+--- a/src/components/charts/ContractCallsChart.tsx
++++ b/src/components/charts/ContractCallsChart.tsx
+@@ -38,6 +38,12 @@
+     label: new Date(point.date).toLocaleDateString("en-US", {
+       month: "short",
+       day: "numeric",
++      timeZone:
++        typeof point.date === "string" &&
++        point.date.length === 10 &&
++        /^\d{4}-\d{2}-\d{2}$/.test(point.date)
++          ? "UTC"
++          : undefined,
+     }),
+     date: point.date,
+     count: point.count,
