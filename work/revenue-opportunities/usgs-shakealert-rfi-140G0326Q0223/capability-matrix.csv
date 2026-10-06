@@ -1,0 +1,21 @@
+requirement_id,sow_reference,requirement,proposed_owner,tjlabs_role,external_dependency,status
+RFI-1,RFI III.1,Applicable socioeconomic designation,Prime or owner,No claim,Current documented designation,BLOCKED
+RFI-2,RFI III.2,Business size standard,Prime or owner,No claim,Current size representation for NAICS 541519,BLOCKED
+RFI-3,RFI III.3,SAM UEI number,Prime or owner,No claim,Active entity record and exact UEI,BLOCKED
+RFI-4,RFI III.4,GSA contract number if applicable,Prime or owner,No claim,Contract number or explicit not applicable,BLOCKED
+RFI-5,RFI III.5,Ability to execute all tasks,Prime,Capability matrix and evidence packet,Named qualified team across every task,PARTIAL
+PERS-1,SOW 8,Demonstrated real-time or safety-critical reviewer,Qualified review lead,Support only,Attributable resume and references,BLOCKED
+T1-1,SOW 3.1.1,Quantitative code metrics,TJLabs,Reproducible metrics baseline,Repository language/build access,CONDITIONAL
+T1-2,SOW 3.1.2,Qualitative module code review,Qualified review lead,Evidence register and finding production,Real-time/safety-critical expert judgment,BLOCKED
+T1-3,SOW 3.1.3,Cross-module integration analysis,Qualified review lead,Interface and failure-propagation matrix,Authoritative schemas and timing semantics,CONDITIONAL
+T2-1,SOW 3.2.1,GitLab code management and workflow,TJLabs,Current-state assessment and recommendations,GitLab configuration access,CONDITIONAL
+T2-2,SOW 3.2.2,Automated static analysis and coverage,TJLabs,Tool evaluation and pipeline design,Language/build/licensing profile,CONDITIONAL
+T2-3,SOW 3.2.3,Coding standards,Qualified review lead,Compliance evidence and enforceable-rule draft,Standards agreed at kickoff,CONDITIONAL
+T2-4,SOW 3.2.4,Deployment-practice assessment,TJLabs,Reproducibility/rollback/config/smoke-test review,Ansible and deployment artifacts,CONDITIONAL
+D1,SOW 6,Month 1 work plan,Prime,Draft methodology and evidence plan,Named team and cadence,CONDITIONAL
+D2,SOW 6,Month 3 metrics baseline,Prime,Primary technical production,Production branch and build access,CONDITIONAL
+D3,SOW 6,Month 6 detailed findings,Qualified review lead,Finding register and report production,Qualified reviewer,BLOCKED
+D4,SOW 6,Month 8 CI/CD assessment,Prime,Primary technical production,Current GitLab and deployment access,CONDITIONAL
+D5,SOW 6,Month 11 final report and briefing,Prime,Traceable report production,Approved findings and executive owner,CONDITIONAL
+D6,SOW 6,Month 12 working CI/CD changes,TJLabs,Approved GitLab implementation,USGS write access and review,CONDITIONAL
+SUBMIT,RFI IV,One authorized PDF submission,Prime or owner,Prepare internal source-bound packet,Exact owner approval recipient and final PDF,BLOCKED
