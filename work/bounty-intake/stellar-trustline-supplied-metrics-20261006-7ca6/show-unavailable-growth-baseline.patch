@@ -1,0 +1,26 @@
+diff --git a/src/components/charts/TrustlineGrowthChart.tsx b/src/components/charts/TrustlineGrowthChart.tsx
+--- a/src/components/charts/TrustlineGrowthChart.tsx
++++ b/src/components/charts/TrustlineGrowthChart.tsx
+@@ -97,11 +97,19 @@
+               </p>
+               <p
+                 className={`text-lg sm:text-xl font-black font-mono tracking-tighter cursor-default ${
+-                  growth >= 0 ? "text-emerald-400" : "text-red-400"
++                  earliestTotal > 0
++                    ? growth >= 0 ? "text-emerald-400" : "text-red-400"
++                    : "text-muted-foreground"
+                 }`}
+               >
+-                {growth >= 0 ? "+" : ""}
+-                {growthPercent.toFixed(1)}%
++                {earliestTotal > 0 ? (
++                  <>
++                    {growth >= 0 ? "+" : ""}
++                    {growthPercent.toFixed(1)}%
++                  </>
++                ) : (
++                  "Unavailable"
++                )}
+               </p>
+             </div>
+           </div>
