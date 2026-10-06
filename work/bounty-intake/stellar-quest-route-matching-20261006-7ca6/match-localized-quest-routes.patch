@@ -1,0 +1,25 @@
+diff --git a/src/components/QuestProgressTracker.tsx b/src/components/QuestProgressTracker.tsx
+index 684ce7f..681df2c 100644
+--- a/src/components/QuestProgressTracker.tsx
++++ b/src/components/QuestProgressTracker.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import { usePathname } from "next/navigation";
++import { usePathname } from "@/i18n/navigation";
+ import { useEffect } from "react";
+ import { checkPathCompletion } from "@/lib/quests";
+ 
+diff --git a/src/lib/quests.ts b/src/lib/quests.ts
+index 1f106e0..be3ef45 100644
+--- a/src/lib/quests.ts
++++ b/src/lib/quests.ts
+@@ -168,7 +168,7 @@
+   for (const quest of QUESTS) {
+     if (isQuestComplete(quest.id)) continue;
+     const matches = Array.isArray(quest.pathMatch) ? quest.pathMatch : [quest.pathMatch];
+-    if (matches.some((p) => pathname.startsWith(p) || pathname === p)) {
++    if (matches.some((p) => pathname === p || (p !== "/" && pathname.startsWith(`${p}/`)))) {
+       markQuestComplete(quest.id);
+       break; // One completion per navigation
+     }
