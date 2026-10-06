@@ -1,0 +1,99 @@
+diff --git a/src/app/[locale]/trustlines/page.tsx b/src/app/[locale]/trustlines/page.tsx
+--- a/src/app/[locale]/trustlines/page.tsx
++++ b/src/app/[locale]/trustlines/page.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import React, { useState, useEffect } from "react";
++import React, { useState, useEffect, useRef } from "react";
+ import {
+   Users,
+   Activity,
+@@ -31,6 +31,8 @@
+   const [history, setHistory] = useState<TrustlineSnapshot[]>([]);
+   const [insights, setInsights] = useState<AssetInsights | null>(null);
+   const [insightsLoading, setInsightsLoading] = useState(false);
++  const [selectionError, setSelectionError] = useState(false);
++  const selectionRequest = useRef<object | null>(null);
+   const [loading, setLoading] = useState(true);
+ 
+   useEffect(() => {
+@@ -65,16 +67,37 @@
+     loadData();
+   }, []);
+ 
++  useEffect(() => {
++    return () => {
++      selectionRequest.current = null;
++    };
++  }, []);
++
+   const handleSelectAsset = async (asset: TrustlineStat) => {
++    const request = {};
++    selectionRequest.current = request;
+     setSelectedAsset(asset);
++    setHistory([]);
++    setInsights(null);
++    setSelectionError(false);
+     setInsightsLoading(true);
+-    const [historyData, insightsData] = await Promise.all([
+-      fetchTrustlineHistory(asset.asset_code, asset.asset_issuer),
+-      fetchAssetInsights(asset.asset_code, asset.asset_issuer),
+-    ]);
+-    setHistory(historyData);
+-    setInsights(insightsData);
+-    setInsightsLoading(false);
++    try {
++      const [historyData, insightsData] = await Promise.all([
++        fetchTrustlineHistory(asset.asset_code, asset.asset_issuer),
++        fetchAssetInsights(asset.asset_code, asset.asset_issuer),
++      ]);
++      if (selectionRequest.current !== request) return;
++      setHistory(historyData);
++      setInsights(insightsData);
++    } catch (error) {
++      if (selectionRequest.current !== request) return;
++      setSelectionError(true);
++      logger.error("Error loading selected asset details:", error);
++    } finally {
++      if (selectionRequest.current === request) {
++        setInsightsLoading(false);
++      }
++    }
+   };
+ 
+   const formatNumber = (value: number) => {
+@@ -264,14 +287,26 @@
+                 </div>
+               </div>
+ 
+-              {/* Chart */}
+-              <TrustlineGrowthChart
+-                data={history}
+-                latestTotal={selectedAsset.total_trustlines}
+-              />
++              {insightsLoading ? (
++                <p className="text-sm text-muted-foreground">
++                  Loading selected asset details...
++                </p>
++              ) : selectionError ? (
++                <p className="text-sm text-destructive">
++                  Unable to load details for this asset. Select it again to retry.
++                </p>
++              ) : (
++                <>
++                  {/* Chart */}
++                  <TrustlineGrowthChart
++                    data={history}
++                    latestTotal={selectedAsset.total_trustlines}
++                  />
+ 
+-              {/* Insights */}
+-              <AssetInsightsPanel data={insights} loading={insightsLoading} />
++                  {/* Insights */}
++                  <AssetInsightsPanel data={insights} loading={insightsLoading} />
++                </>
++              )}
+ 
+               {/* Distribution */}
+               <div className="glass-card rounded-2xl p-6 border border-border/50">
