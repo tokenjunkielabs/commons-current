@@ -1,0 +1,13 @@
+diff --git a/src/app/[locale]/corridors/page.tsx b/src/app/[locale]/corridors/page.tsx
+--- a/src/app/[locale]/corridors/page.tsx
++++ b/src/app/[locale]/corridors/page.tsx
+@@ -175,6 +175,9 @@
+             <TrendingUp className="w-8 h-8 text-accent" />
+             Payment Corridors
+           </h2>
++          <p className="mt-2 text-sm text-muted-foreground">
++            Displayed metrics include simulated live updates.
++          </p>
+         </div>
+         <div className="flex items-center gap-3">
+           <Badge
