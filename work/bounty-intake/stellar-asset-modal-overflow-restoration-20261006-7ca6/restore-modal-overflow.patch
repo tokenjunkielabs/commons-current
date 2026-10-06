@@ -1,0 +1,17 @@
+diff --git a/src/components/anchors/AssetDetailModal.tsx b/src/components/anchors/AssetDetailModal.tsx
+--- a/src/components/anchors/AssetDetailModal.tsx
++++ b/src/components/anchors/AssetDetailModal.tsx
+@@ -52,11 +52,12 @@
+     };
+ 
+     document.addEventListener('keydown', handleKeyDown);
++    const previousOverflow = document.body.style.overflow;
+     document.body.style.overflow = "hidden"; // Prevent background scroll
+ 
+     return () => {
+       document.removeEventListener('keydown', handleKeyDown);
+-      document.body.style.overflow = "unset";
++      document.body.style.overflow = previousOverflow;
+     };
+   }, [asset, onClose]);
+ 
