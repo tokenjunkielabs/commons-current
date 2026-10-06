@@ -62,3 +62,56 @@ Apply skip-nullish-records.patch at the donor repository root to the exact preim
 Bounded Commons and Slack queries for this route/nullish scope returned zero rows, with native END for Slack. Internal custody retained no exact same-hunk correction or hold. These observations are not global absence, ownership, acceptance or reward clearance.
 
 This is an attributed Commons source proposal with no upstream mutation or deployment. Publication verification requires all five complete immutable artifact bodies, native plus independent identities and exact final PR/files/merge/main metadata. An exact observed main-equals-merge identity may reuse the immutable reads; otherwise each artifact is read once at the observed main commit. Actual verification is recorded in the release and grouped index.
+
+
+## Continuation: require admitted anchor endpoints
+
+The original nullish-row proposal above is preserved. This new, incremental `require-anchor-endpoints.patch` starts from its retained route postimage `99957f284bae1b382811ece47f4699bce725ee4a` (3932 UTF-8 bytes). Its earlier missing-linked-nodes limitation is the subject of this continuation; the original patch is neither changed nor replayed.
+
+### Source-established failure path
+
+An anchor becomes a node only when both its identifier and name pass the existing condition. A corridor previously needed only truthy source and destination identifiers, then created its asset node and two links. There was no check that either identifier referred to an admitted anchor. An omitted anchor, or one rejected by the existing name requirement, can therefore leave an emitted link with no matching node. The retained validator checks the two arrays but does not resolve link endpoints.
+
+The complete NetworkGraph component passes this data to ForceGraph2D without overriding the default node or endpoint identifiers. The acquired lockfile pins the dependency chain to react-force-graph-2d 1.29.1, force-graph 1.51.4 and d3-force-3d 3.0.6. These are source and lockfile observations, not installed-runtime measurements.
+
+Pinned primary library source establishes the corresponding consumer contract:
+
+- [force-graph v1.51.4 canvas-force-graph.js](https://github.com/vasturiano/force-graph/blob/v1.51.4/src/canvas-force-graph.js) installs the D3 link force, defaults to the id/source/target properties, and supplies graph nodes followed by links with the configured node identifier accessor.
+- [d3-force-3d v3.0.6 link.js](https://github.com/vasturiano/d3-force-3d/blob/v3.0.6/src/link.js) builds a map of nodes by identifier and resolves nonobject link endpoints from it. Its lookup throws when an endpoint is absent.
+
+| Complete retained source | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| src/components/charts/NetworkGraph.tsx | 635255e9533f791528bf1280fcf59016f8ab039b | 7880 |
+| pnpm-lock.yaml | 7ecba249d1b7cd41e629e2fff2782ed6805186f5 | 359885 |
+| force-graph v1.51.4 src/canvas-force-graph.js | a6f7cdd7ace541f7793f75513daf55f25a96a32c | 22712 |
+| d3-force-3d v3.0.6 src/link.js | c99d07b5aba2889b14e9efca739744917b053413 | 3688 |
+
+The route and type identities are listed in the original source table. The separate #32061 component copy correction removes an unconditional badge; it does not alter the graph-data or identifier wiring discussed here.
+
+### Change and behavior
+
+Inside the existing condition requiring both corridor identifiers, the new guard returns from the current callback unless both mapped nodes have type anchor. It precedes asset creation and both link pushes. A skipped corridor contributes neither a new orphan asset nor its two links; an asset already created for another accepted corridor remains intact. Other corridors continue to be processed.
+
+Checking the mapped type matters because this map also accumulates asset nodes. Mere key membership would not establish that an endpoint is an admitted anchor. The lookup uses the existing identifier values and Map equality; it introduces no coercion, fabricated anchor or new asset-key convention.
+
+For corridors whose two endpoints are admitted anchors, the asset construction, insertion order, link data and fallbacks follow the unchanged original statements. Existing nullish guards remain in place. The patch does not define a broader malformed-value, identifier-collision, duplicate-anchor, asset/anchor key-collision, health, width or aggregation policy. It does not prove that every possible backend payload is valid or that no other graph error can occur.
+
+### Exact incremental artifact
+
+| Item | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Route input after original nullish proposal | 99957f284bae1b382811ece47f4699bce725ee4a | 3932 |
+| Route output after endpoint guard | 60e3ff89b45fe826934c3fe1eaf1d23fe38b4276 | 4118 |
+| require-anchor-endpoints.patch | e8de74b9193c1831838f4a49c6a764c31fde0ccd | 734 |
+
+The actual serialized patch contains one hunk and eleven rows, with five additions and no deletions. Forward text application exactly reconstructs the new output; inverse text application restores the retained input. Removing the inserted guard restores every other byte. These checks operate on the new serialized source artifact, without executing the API, either library, fixtures, compiler, tests, browser or workflow.
+
+Apply the original patch to its exact canonical preimage and then this incremental patch to the stated intermediate identity. That is a consumer application instruction; the previous accepted application was not repeated here.
+
+### Scope and publication
+
+A narrow Commons search for the exact source identifiers returned no rows; the same Slack search returned no rows and native END. A broader Slack query returned twenty bounded prefixes and a next cursor, with no END. Its own completed packets, unrelated pagination scopes, terminal work and held topics were left unexpanded. No global absence or ownership inference follows from these bounded observations.
+
+This continuation modifies only this README and adds the incremental patch. The original patch and all three MIT notices remain unchanged. Existing source attribution is retained. The new guard is an attributed Commons source proposal; it is not an upstream change, deployment, observed incident repair, reward claim or successful rendering report.
+
+Ordinary publication checks require both complete immutable artifact bodies, native and independent identities, and exact final PR/path/parent/tree metadata. An equal observed main may use the preplanned immutable-read alias; otherwise both artifacts are read once at the observed main commit. The actual outcome belongs in the release and grouped index.
