@@ -1,0 +1,60 @@
+diff --git a/src/app/[locale]/soroban/page.tsx b/src/app/[locale]/soroban/page.tsx
+--- a/src/app/[locale]/soroban/page.tsx
++++ b/src/app/[locale]/soroban/page.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import React, { useEffect, useState } from "react";
++import React, { useEffect, useRef, useState } from "react";
+ import dynamic from "next/dynamic";
+ import { Code2, RefreshCw } from "lucide-react";
+ import { TopContractsTable } from "@/components/soroban/TopContractsTable";
+@@ -51,8 +51,11 @@
+     useState<SorobanActiveContractsResponse | null>(null);
+   const [loading, setLoading] = useState(true);
+   const [refreshing, setRefreshing] = useState(false);
++  const loadOwner = useRef<object | null>(null);
+ 
+   const load = async (isRefresh = false) => {
++    const owner = {};
++    loadOwner.current = owner;
+     if (isRefresh) setRefreshing(true);
+     else setLoading(true);
+ 
+@@ -65,6 +68,7 @@
+           fetchSorobanGasUsage("7d"),
+           fetchSorobanActiveContracts("7d"),
+         ]);
++      if (loadOwner.current !== owner) return;
+       setTopContracts(contractsData);
+       setDeployments(deploymentsData);
+       setContractCalls(callsData);
+@@ -72,6 +76,7 @@
+       setActiveContracts(activeData);
+     } catch (error) {
+       logger.error("Failed to load Soroban dashboard panels:", error);
++      if (loadOwner.current !== owner) return;
+       setTopContracts({ window: "7d", contracts: [], unavailable: true });
+       setDeployments({
+         partial: true,
+@@ -83,13 +88,18 @@
+       setGasUsage({ total_gas: 0, window: "7d", coming_soon: true });
+       setActiveContracts({ count: 0, window: "7d", unavailable: true });
+     } finally {
+-      setLoading(false);
+-      setRefreshing(false);
++      if (loadOwner.current === owner) {
++        setLoading(false);
++        setRefreshing(false);
++      }
+     }
+   };
+ 
+   useEffect(() => {
+     void load();
++    return () => {
++      loadOwner.current = null;
++    };
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
+ 
