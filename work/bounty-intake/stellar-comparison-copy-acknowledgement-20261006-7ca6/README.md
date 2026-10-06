@@ -61,3 +61,31 @@ Apply await-copy-acknowledgement.patch at the donor repository root to the exact
 Bounded exact-route/clipboard Commons and Slack queries returned zero results, with native END for Slack. Internal custody retained no same-handler completion or hold. These bounded observations are not global absence, ownership or acceptance clearance.
 
 This is an attributed Commons source proposal, with no upstream mutation or deployment. Publication verification requires all five complete immutable artifact bodies with native plus independent identities, followed by exact PR/files/merge/main metadata. An exact observed main-equals-merge identity may reuse those bodies; otherwise every artifact is read once at the observed immutable main commit. The actual publication result belongs in its separate release and grouped index.
+
+## Continuation: explicit names for three comparison controls
+
+The sections above document the initial #32007 clipboard packet. This continuation consumes its retained source postimage and leaves that handler correction intact.
+
+The same complete mounted page contains an icon-only Back link, an icon-only remove button for each selected corridor and a text input identified visually through its corridor-ID placeholder. The new patch supplies an explicit accessible name to each selected control without changing its destination, behavior or visual layout.
+
+| Existing control | Added accessible name |
+| --- | --- |
+| Header Back link | Back to corridors |
+| Selected corridor remove button | Remove followed by the current corridor ID and from comparison |
+| Add-dialog text input | Corridor ID |
+
+The remove label uses the same id already passed to handleRemoveCorridor, making each repeated button distinguishable. The existing input placeholder and its example remain intact. The existing English copy is retained; this is not a translation or visible-label redesign.
+
+[W3C technique ARIA14](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA14) documents aria-label for naming controls whose purpose is conveyed visually without clear visible label text, including symbol buttons and native inputs. This supports the explicit names here; the technique is not a complete accessibility assessment.
+
+| Continuation item | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Source after #32007, before names | 62d653b5b125e244a8354191f40dd0e97826efdf | 11951 |
+| Source after control names | 5ad3af8111e8782eb1df3bb70b0e4620bcfee3b3 | 12093 |
+| name-comparison-controls.patch | f725531a7021cb724a86237df6e529571c3d8476 | 1356 |
+
+The actual incremental patch has three hunks and twenty-one rows, with three additions and no deletions. Serialized forward and inverse text application matched the complete source identities. Removing the three added attributes restores every other byte, including the accepted clipboard handler.
+
+Apply the original await-copy-acknowledgement.patch first, then name-comparison-controls.patch. No event handler, navigation, clipboard, browser, assistive technology, compiler, fixture, tests or workflow was executed. The dialog's role, focus behavior, keyboard handling, announcements and full WCAG conformance are not claimed.
+
+The current continuation publishes only this new patch and an exact-preimage-guarded update to this guide. The original clipboard patch and three MIT notices remain unchanged; their earlier publication checks are inherited without replay. Both newly written complete immutable bodies and final PR/files/merge/main identities must match. Main reuse still requires exact commit equality; otherwise each changed artifact is read once at the observed immutable main pin. Bounded route/label overlap queries returned zero rows with native Slack END, without any global-absence claim.
