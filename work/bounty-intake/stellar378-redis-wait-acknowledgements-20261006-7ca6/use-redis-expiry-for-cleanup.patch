@@ -1,0 +1,38 @@
+diff --git a/backend/src/distributed_lock/redis_store.rs b/backend/src/distributed_lock/redis_store.rs
+--- a/backend/src/distributed_lock/redis_store.rs
++++ b/backend/src/distributed_lock/redis_store.rs
+@@ -182,15 +182,10 @@
+         "#);
+ 
+         let force_release_script = redis::Script::new(r#"
+-            local exists = redis.call('EXISTS', KEYS[1])
+-            if exists == 0 then
+-                return 0
+-            end
+-            local expires_at = redis.call('HGET', KEYS[1], 'expires_at_ms')
+-            local now = tonumber(ARGV[1])
+-            if expires_at and tonumber(expires_at) <= now then
+-                redis.call('DEL', KEYS[1])
+-                return 1
++            -- Lease expiry is authoritative on Redis, not on a caller's clock.
++            local ttl = redis.call('PTTL', KEYS[1])
++            if ttl == 0 then
++                return redis.call('DEL', KEYS[1])
+             end
+             return 0
+         "#);
+@@ -481,14 +476,8 @@
+         let mut conn = self.get_connection().await?;
+         let lock_key = self.lock_key(resource_id);
+ 
+-        let now_ms = SystemTime::now()
+-            .duration_since(SystemTime::UNIX_EPOCH)
+-            .unwrap()
+-            .as_millis() as i64;
+-
+         let released: i32 = self.force_release_script
+             .key(&lock_key)
+-            .arg(now_ms.to_string())
+             .invoke_async(&mut conn)
+             .await
+             .map_err(|e| LockError::StorageError(format!("Redis force release failed: {}", e)))?;
