@@ -1,0 +1,48 @@
+diff --git a/src/app/[locale]/sep10-demo/page.tsx b/src/app/[locale]/sep10-demo/page.tsx
+index 771aca3..e186e4e 100644
+--- a/src/app/[locale]/sep10-demo/page.tsx
++++ b/src/app/[locale]/sep10-demo/page.tsx
+@@ -21,6 +21,21 @@
+   } | null>(null);
+   const [isTesting, setIsTesting] = useState(false);
+ 
++  const handleWalletAction = async (
++    action: () => Promise<void>,
++    errorMessage: string,
++  ) => {
++    setTestResult(null);
++    try {
++      await action();
++    } catch {
++      setTestResult({
++        success: false,
++        message: errorMessage,
++      });
++    }
++  };
++
+   const testAuthenticatedEndpoint = async () => {
+     if (!authToken) {
+       setTestResult({
+@@ -139,7 +154,9 @@
+           <div className="space-y-4 mb-8">
+             {!isConnected && (
+               <button
+-                onClick={connectWallet}
++                onClick={() =>
++                  handleWalletAction(connectWallet, 'Failed to connect wallet. Please try again.')
++                }
+                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2"
+               >
+                 <Shield className="w-5 h-5" />
+@@ -149,7 +166,9 @@
+ 
+             {isConnected && !isAuthenticated && (
+               <button
+-                onClick={authenticateWithSep10}
++                onClick={() =>
++                  handleWalletAction(authenticateWithSep10, 'Authentication failed. Please try again.')
++                }
+                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2"
+               >
+                 <Shield className="w-5 h-5" />
