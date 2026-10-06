@@ -1,0 +1,91 @@
+diff --git a/backend/src/realtime/fanout.rs b/backend/src/realtime/fanout.rs
+--- a/backend/src/realtime/fanout.rs
++++ b/backend/src/realtime/fanout.rs
+@@ -4,7 +4,7 @@
+ use tokio_tungstenite::tungstenite::protocol::Message;
+ 
+ use crate::realtime::policy::handle_overflow;
+-use crate::realtime::{Connection, ConnectionId, ConnectionRegistry};
++use crate::realtime::{Connection, ConnectionRegistry};
+ 
+ /// Configuration parameters for realtime message fanout.
+ #[derive(Debug, Clone)]
+@@ -36,7 +36,7 @@
+ enum DeliveryResult {
+     Delivered,
+     QuarantinedDropped,
+-    Evict(ConnectionId),
++    Evict(Arc<Connection>),
+ }
+ 
+ /// Fans out a message to all connected clients in the registry with bounded concurrency and per-connection isolation.
+@@ -98,11 +98,11 @@
+                     Err(_) => {
+                         let should_evict = conn.should_evict().await;
+                         if should_evict {
+-                            DeliveryResult::Evict(conn.id.clone())
++                            DeliveryResult::Evict(conn)
+                         } else if conn.is_quarantined().await {
+                             DeliveryResult::QuarantinedDropped
+                         } else {
+-                            DeliveryResult::Evict(conn.id.clone())
++                            DeliveryResult::Evict(conn)
+                         }
+                     }
+                 }
+@@ -125,9 +125,9 @@
+         match result {
+             DeliveryResult::Delivered => summary.delivered += 1,
+             DeliveryResult::QuarantinedDropped => summary.quarantined_dropped += 1,
+-            DeliveryResult::Evict(id) => {
++            DeliveryResult::Evict(connection) => {
+                 summary.failed_evicted += 1;
+-                to_evict.push(id);
++                to_evict.push(connection);
+             }
+         }
+     }
+@@ -136,10 +136,10 @@
+     if !to_evict.is_empty() {
+         let registry_clone = registry.clone();
+         tokio::spawn(async move {
+-            for id in &to_evict {
++            let removed_ids = registry_clone.remove_batch_if_current(&to_evict).await;
++            for id in &removed_ids {
+                 let _ = handle_overflow(id).await;
+             }
+-            registry_clone.remove_batch(&to_evict).await;
+         });
+     }
+ 
+diff --git a/backend/src/realtime/mod.rs b/backend/src/realtime/mod.rs
+--- a/backend/src/realtime/mod.rs
++++ b/backend/src/realtime/mod.rs
+@@ -71,6 +71,27 @@
+         }
+     }
+ 
++    /// Removes only entries still pointing to the supplied connection instances.
++    /// Comparison and removal share one write lock so replacements cannot intervene.
++    pub(crate) async fn remove_batch_if_current(
++        &self,
++        connections: &[Arc<Connection>],
++    ) -> Vec<ConnectionId> {
++        let mut removed_ids = Vec::new();
++        let mut guard = self.connections.write().await;
++        for connection in connections {
++            let is_current = guard
++                .get(&connection.id)
++                .map(|current| Arc::ptr_eq(current, connection))
++                .unwrap_or(false);
++            if is_current {
++                guard.remove(&connection.id);
++                removed_ids.push(connection.id.clone());
++            }
++        }
++        removed_ids
++    }
++
+     /// Retrieves an individual connection if registered.
+     pub async fn get(&self, id: &str) -> Option<Arc<Connection>> {
+         let guard = self.connections.read().await;
