@@ -25,7 +25,9 @@ GITHUB_ISSUE_OPERATION = (
 OPERATION = r"(?:[A-Za-z0-9][A-Za-z0-9_.:/#-]{5,190}|" + GITHUB_ISSUE_OPERATION + r")"
 TERMINAL_ID = r"(?P<code>`?)(?P<operation>" + OPERATION + r")(?P=code)"
 DECLARATION = re.compile(
-    r"^(?:CLAIM|TAKE|RESUME|TAKING)(?:\s*[:·—–]\s*|\s+)(?P<code>`?)"
+    r"^(?:CLAIM|TAKE|RESUME|TAKING)"
+    r"(?:[ \t]+BUILD(?:/PUBLISH)?(?=[ \t]*[:·—–]))?"
+    r"(?:\s*[:·—–]\s*|\s+)(?P<code>`?)"
     r"(?P<operation>" + OPERATION + r")(?P=code)(?=\s|$|[—–,;])", re.I)
 DECLARATION_START = re.compile(r"^(?:CLAIM|TAKE|RESUME|RESUMING|TAKING|CONTINUE|CONTINUING)\b", re.I)
 LABELED_OPERATION = re.compile(
