@@ -1,0 +1,30 @@
+diff --git a/src/components/charts/TVLChart.tsx b/src/components/charts/TVLChart.tsx
+--- a/src/components/charts/TVLChart.tsx
++++ b/src/components/charts/TVLChart.tsx
+@@ -64,7 +64,7 @@
+             Current
+           </p>
+           <p className="text-xl font-black font-mono tracking-tighter text-emerald-400">
+-            {formatCurrency(chartData[chartData.length - 1]?.tvl_usd || 0)}
++            {chartData.length === 0 ? 'N/A' : formatCurrency(chartData[chartData.length - 1]?.tvl_usd || 0)}
+           </p>
+         </div>
+         <div className="p-3 rounded-xl bg-slate-900/30 border border-white/5">
+@@ -72,7 +72,7 @@
+             Average
+           </p>
+           <p className="text-xl font-black font-mono tracking-tighter text-foreground/80">
+-            {formatCurrency(avgTVL)}
++            {chartData.length === 0 ? 'N/A' : formatCurrency(avgTVL)}
+           </p>
+         </div>
+         <div className="p-3 rounded-xl bg-slate-900/30 border border-white/5">
+@@ -80,7 +80,7 @@
+             Volatility
+           </p>
+           <p className="text-xl font-black font-mono tracking-tighter text-accent">
+-            {formatCurrency(maxTVL - minTVL)}
++            {chartData.length === 0 ? 'N/A' : formatCurrency(maxTVL - minTVL)}
+           </p>
+         </div>
+       </div>

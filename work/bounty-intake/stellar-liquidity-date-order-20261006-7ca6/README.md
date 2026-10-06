@@ -2,7 +2,7 @@
 
 ## Connected source defect
 
-The acquired Analytics route renders LiquidityChart with metrics.liquidity when metrics exists. The chart groups values by the existing date prefix obtained from point.timestamp.split('T')[0]. It then formats each bucket to an en-US month/day label, discarding its year, before reparsing those labels to sort the series.
+The acquired Analytics route renders LiquidityChart with metrics.liquidity_history when metrics exists. The chart groups values by the existing date prefix obtained from point.timestamp.split('T')[0]. It then formats each bucket to an en-US month/day label, discarding its year, before reparsing those labels to sort the series.
 
 That sequence makes chronological ordering depend on a yearless display string. It cannot retain the original year information. Formatting the date-only bucket without an explicit time zone also uses the host zone, which can display an earlier calendar day than the bucket key.
 
