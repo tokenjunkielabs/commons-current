@@ -1,0 +1,19 @@
+diff --git a/frontend/src/components/CSVUploader.tsx b/frontend/src/components/CSVUploader.tsx
+--- a/frontend/src/components/CSVUploader.tsx
++++ b/frontend/src/components/CSVUploader.tsx
+@@ -83,7 +83,6 @@
+       return;
+     }
+ 
+-    setFileName(file.name);
+     const reader = new FileReader();
+     const readToken = {};
+     latestReadTokenRef.current = readToken;
+@@ -92,6 +91,7 @@
+       if (latestReadTokenRef.current !== readToken) return;
+       const content = e.target?.result as string;
+       const rows = parseCSV(content);
++      setFileName(file.name);
+       setParsedData(rows);
+       onDataParsed(rows);
+     };
