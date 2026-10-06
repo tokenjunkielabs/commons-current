@@ -1,0 +1,24 @@
+diff --git a/src/components/notifications/NotificationCenter/NotificationCenter.tsx b/src/components/notifications/NotificationCenter/NotificationCenter.tsx
+index f9f8f1c..dd307ad 100644
+--- a/src/components/notifications/NotificationCenter/NotificationCenter.tsx
++++ b/src/components/notifications/NotificationCenter/NotificationCenter.tsx
+@@ -195,6 +195,7 @@
+                 )}
+               </div>
+               <button
++                aria-label="Close notification center"
+                 onClick={onClose}
+                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+               >
+diff --git a/src/components/notifications/NotificationPreferences.tsx b/src/components/notifications/NotificationPreferences.tsx
+index e0de089..eb9c925 100644
+--- a/src/components/notifications/NotificationPreferences.tsx
++++ b/src/components/notifications/NotificationPreferences.tsx
+@@ -113,6 +113,7 @@
+               </h2>
+             </div>
+             <button
++              aria-label="Close notification preferences"
+               onClick={onClose}
+               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+             >
