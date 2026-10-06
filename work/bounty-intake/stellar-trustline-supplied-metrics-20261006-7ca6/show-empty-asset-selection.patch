@@ -1,0 +1,22 @@
+diff --git a/src/app/[locale]/trustlines/page.tsx b/src/app/[locale]/trustlines/page.tsx
+--- a/src/app/[locale]/trustlines/page.tsx
++++ b/src/app/[locale]/trustlines/page.tsx
+@@ -371,9 +371,15 @@
+             <div className="glass-card rounded-2xl p-6 border border-border/50 flex flex-col items-center justify-center h-full">
+               <Users className="w-12 h-12 text-muted-foreground/30 mb-4" />
+               <p className="text-sm font-mono text-muted-foreground uppercase tracking-widest text-center">
+-                Select an asset from the leaderboard
+-                <br />
+-                to view detailed insights
++                {rankings.length > 0 ? (
++                  <>
++                    Select an asset from the leaderboard
++                    <br />
++                    to view detailed insights
++                  </>
++                ) : (
++                  "No assets are available to select."
++                )}
+               </p>
+             </div>
+           )}
