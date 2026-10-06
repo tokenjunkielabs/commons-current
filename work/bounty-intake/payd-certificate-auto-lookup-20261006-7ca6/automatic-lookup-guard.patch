@@ -1,0 +1,29 @@
+diff --git a/frontend/src/components/CertificateDownloadButton.tsx b/frontend/src/components/CertificateDownloadButton.tsx
+--- a/frontend/src/components/CertificateDownloadButton.tsx
++++ b/frontend/src/components/CertificateDownloadButton.tsx
+@@ -1,4 +1,4 @@
+-import { useState, useEffect } from 'react';
++import { useState, useEffect, useRef } from 'react';
+ import { FileText, Loader2 } from 'lucide-react';
+ import { downloadCertificate, getTransactionInfo } from '../services/certificateApi.js';
+ import { useNotification } from '../hooks/useNotification.js';
+@@ -21,10 +21,18 @@
+   const [employeeId, setEmployeeId] = useState<number | undefined>(propEmployeeId);
+   const [organizationId, setOrganizationId] = useState<number | undefined>(propOrganizationId);
+   const { notifySuccess, notifyError } = useNotification();
++  const lastAutomaticLookup = useRef<string | null>(null);
+ 
+   // Auto-fetch employee and organization info if not provided
+   useEffect(() => {
+-    if (transactionHash && !employeeId && !organizationId && !isLoadingInfo) {
++    if (
++      transactionHash &&
++      !employeeId &&
++      !organizationId &&
++      !isLoadingInfo &&
++      lastAutomaticLookup.current !== transactionHash
++    ) {
++      lastAutomaticLookup.current = transactionHash;
+       setIsLoadingInfo(true);
+       getTransactionInfo(transactionHash)
+         .then((info) => {
