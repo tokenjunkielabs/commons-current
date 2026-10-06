@@ -1,0 +1,22 @@
+[
+  {"id":"req-01","expected":"request_shape","trace":{"http_status":400,"error_name":"INVALID_REQUEST","field":"amount"}},
+  {"id":"req-02","expected":"request_shape","trace":{"http_status":422,"error_name":"VALIDATION_ERROR","field":"currency_code"}},
+  {"id":"req-03","expected":"request_shape","trace":{"http_status":400,"error_name":"VALIDATION_ERROR","field":"purchase_units"}},
+  {"id":"req-04","expected":"request_shape","trace":{"http_status":422,"error_name":"INVALID_REQUEST","field":"return_url"}},
+  {"id":"auth-01","expected":"auth_config","trace":{"http_status":401,"error_name":"INVALID_CLIENT","environment":"sandbox"}},
+  {"id":"auth-02","expected":"auth_config","trace":{"http_status":403,"error_name":"AUTHENTICATION_FAILURE","environment":"sandbox"}},
+  {"id":"auth-03","expected":"auth_config","trace":{"http_status":401,"error_name":"AUTHENTICATION_FAILURE","authorization":"Bearer sample"}},
+  {"id":"auth-04","expected":"auth_config","trace":{"http_status":403,"error_name":"INVALID_CLIENT","client_secret":"sample"}},
+  {"id":"webhook-01","expected":"webhook_event","trace":{"webhook_verification":"failed","event_type":"PAYMENT.CAPTURE.COMPLETED"}},
+  {"id":"webhook-02","expected":"webhook_event","trace":{"webhook_verification":"missing","event_type":"CHECKOUT.ORDER.APPROVED"}},
+  {"id":"webhook-03","expected":"webhook_event","trace":{"webhook_verification":"failed","event_type":"PAYMENT.CAPTURE.DENIED"}},
+  {"id":"webhook-04","expected":"webhook_event","trace":{"webhook_verification":"missing","event_type":"BILLING.SUBSCRIPTION.CANCELLED"}},
+  {"id":"idem-01","expected":"idempotency_duplicate","trace":{"idempotency_result":"duplicate","operation":"capture"}},
+  {"id":"idem-02","expected":"idempotency_duplicate","trace":{"idempotency_result":"replayed","operation":"create_order"}},
+  {"id":"idem-03","expected":"idempotency_duplicate","trace":{"idempotency_result":"duplicate","operation":"refund"}},
+  {"id":"idem-04","expected":"idempotency_duplicate","trace":{"idempotency_result":"replayed","operation":"authorize"}},
+  {"id":"amb-01","expected":"abstain","trace":{"http_status":500,"error_name":"INTERNAL_SERVER_ERROR"}},
+  {"id":"amb-02","expected":"abstain","trace":{"http_status":400,"error_name":"UNKNOWN_ERROR"}},
+  {"id":"amb-03","expected":"abstain","trace":{"event_type":"PAYMENT.CAPTURE.COMPLETED"}},
+  {"id":"amb-04","expected":"abstain","trace":{"http_status":401,"error_name":"INVALID_CLIENT","webhook_verification":"failed"}}
+]
