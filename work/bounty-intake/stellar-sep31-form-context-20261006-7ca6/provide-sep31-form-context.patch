@@ -1,0 +1,62 @@
+diff --git a/src/components/Sep31PaymentFlow.tsx b/src/components/Sep31PaymentFlow.tsx
+--- a/src/components/Sep31PaymentFlow.tsx
++++ b/src/components/Sep31PaymentFlow.tsx
+@@ -1,7 +1,7 @@
+ "use client";
+ 
+ import React, { useCallback, useState } from "react";
+-import { useForm, SubmitHandler } from "react-hook-form";
++import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
+ import { zodResolver } from "@hookform/resolvers/zod";
+ import {
+   getSep31Anchors,
+@@ -42,15 +42,7 @@
+   const [error, setError] = useState<string | null>(null);
+   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+ 
+-  const {
+-    register,
+-    handleSubmit,
+-    formState: { errors, isValid, isDirty },
+-    setValue,
+-    watch,
+-    trigger,
+-    resetField,
+-  } = useForm<Sep31PaymentFlowForm>({
++  const methods = useForm<Sep31PaymentFlowForm>({
+     resolver: zodResolver(sep31PaymentFlowSchema),
+     mode: "onChange",
+     defaultValues: {
+@@ -63,6 +55,16 @@
+     },
+   });
+ 
++  const {
++    register,
++    handleSubmit,
++    formState: { errors, isValid, isDirty },
++    setValue,
++    watch,
++    trigger,
++    resetField,
++  } = methods;
++
+   // Watch form values for real-time updates
+   const transferServer = watch("transferServer");
+   const amount = watch("amount");
+@@ -223,7 +225,7 @@
+     return "text-muted-foreground";
+   };
+ 
+-  return (
++  const paymentFlow = (
+     <div className="space-y-8">
+       {/* Anchor selection */}
+       <section className="glass-card rounded-2xl p-6">
+@@ -476,4 +478,6 @@
+       </section>
+     </div>
+   );
++
++  return <FormProvider {...methods}>{paymentFlow}</FormProvider>;
+ }
