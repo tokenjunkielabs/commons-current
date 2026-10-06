@@ -1,0 +1,27 @@
+diff --git a/src/app/[locale]/corridors/page.tsx b/src/app/[locale]/corridors/page.tsx
+--- a/src/app/[locale]/corridors/page.tsx
++++ b/src/app/[locale]/corridors/page.tsx
+@@ -223,6 +223,7 @@
+           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-accent transition-colors" />
+           <input
+             type="text"
++            aria-label="Search corridors"
+             placeholder="Search Intelligence Database..."
+             value={searchTerm}
+             onChange={(e) => setSearchTerm(e.target.value)}
+@@ -231,6 +232,7 @@
+         </div>
+         <div className="lg:col-span-4 flex gap-2">
+           <select
++            aria-label="Time period"
+             value={timePeriod}
+             onChange={(e) =>
+               setTimePeriod(e.target.value as CorridorsTimePeriod)
+@@ -243,6 +245,7 @@
+             <option value="">Time: All</option>
+           </select>
+           <select
++            aria-label="Sort corridors by"
+             value={sortBy}
+             onChange={(e) =>
+               setSortBy(

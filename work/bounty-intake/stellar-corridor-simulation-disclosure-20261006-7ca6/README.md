@@ -59,3 +59,33 @@ Publication is an attributed Commons source proposal, with no upstream mutation 
 | upstream-license-de-wet.md | 4a766e268772888af5df56c3f6c608f68558b789 | 1080 |
 
 All five complete immutable artifact bodies require native plus independent identity matches, followed by exact PR/files/head/merge/parents/tree/main metadata. If fresh named main exactly equals the verified merge, the receipt may explicitly reuse those complete bodies. Otherwise each artifact is read once at the observed immutable main commit. Actual publication identities belong in the separate release and grouped index.
+
+## Continuation: explicit names for listing controls
+
+The preceding sections document #32036. This continuation consumes its retained complete source postimage and preserves the simulation disclosure.
+
+The mounted listing's text input filters corridor source assets, destination assets and IDs. Its two native select elements set the existing time-period and sort preferences. The input has a placeholder, and the selects contain descriptive options, but none of these three controls has an explicit label association or aria-label in the acquired source.
+
+| Control | Added explicit accessible name |
+| --- | --- |
+| Search input | Search corridors |
+| Time-period select | Time period |
+| Sort select | Sort corridors by |
+
+[W3C technique ARIA14](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA14) describes using aria-label to supply a purpose-specific accessible name when clear visible label text is absent. The existing successful primary reference is reused without another provider read. The added attributes make each control's purpose explicit; this does not assert that every browser previously exposed no fallback name.
+
+The patch adds only these three attributes. Placeholder text, option labels and values, handlers, state, preference persistence, loading, filtering, sorting, layout classes and every other source byte remain exact. It does not change the icon-only filter button or invent a filter panel. Existing grid and heatmap buttons are unchanged. The control names follow the existing English copy; translations, visible-label redesign and full accessibility conformance are outside this correction.
+
+| Naming continuation item | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Source after #32036, before names | d68d3579560bb4f5fe4c1046233334d8e461b2ef | 17953 |
+| Source after control names | 08c2e31d96001e66e9775e4dc1be83b89a2c5eef | 18075 |
+| name-listing-controls.patch | 019d6bae22d928a08a23ba495ed0e5e885f4866b | 1095 |
+
+The actual incremental patch has 3 hunks and 21 rows, with 3 additions and no deletions. Complete serialized forward and inverse reconstruction matched both source identities. Removing the three attributes restores every prior byte, including the simulation notice.
+
+Apply disclose-simulated-updates.patch first and name-listing-controls.patch second. No input event, select change, preference write, browser, assistive technology, compiler, fixture, tests or workflow was executed.
+
+The bounded route/name Commons query returned only the existing own #31453 grouped index header. Retained completion maps distinguish the comparison and Anchors control-name packets from this listing source; no grouped issue body or comment was reread. The paired Slack query returned zero rows with native END. This is bounded overlap evidence, not global absence or upstream acceptance.
+
+This continuation publishes only the new patch and an exact-preimage-guarded update to this guide. The simulation patch and three MIT notices remain unchanged, with accepted checks inherited without replay. Both complete newly written immutable bodies require native and independent identity matches, followed by final exact PR/files/head/merge/parents/tree/main metadata. Reuse of those bodies for main requires observed exact commit equality; otherwise both changed artifacts are read once at the observed immutable main commit.
