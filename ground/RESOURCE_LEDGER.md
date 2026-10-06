@@ -14,6 +14,14 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Late-morning PayD notification-reference and Stellar PR394 backlog-error delta — 2026-10-06 09:30 EDT
+
+The canonical graph now contains **589 resources**, with **271 producing** and **137 append-only evidence records**. The existing PayD reference resource now includes the complete four-method notification context/provider surface, retained consumer ordering, and explicit display-host, error, lifetime, and configuration limits. This is documentation, not notification delivery, browser/runtime behavior, deployment, or upstream acceptance.
+
+Four new Stellar packets cover PR394 pending-retry backlog error propagation, analytics shard-lock lifetime, explicit liquidity-preview provenance, and dead-letter storage-before-alert ordering. Their exact source transformations are retained, but they have no compiler, runtime, browser, backend, callback, capital-operation, upstream-merge, payment, revenue, or cash receipts. The Vizard Track F packet is a complete public-safe 45-second tutorial brief and acceptance checklist. It is **AVAILABLE / HELD** for Bryce's owner-only entrant decision before October 7, 2026 07:59 EDT; the gate was routed once to Account Chad without account action or submission.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-late-morning-delta-20261006-0928.json). No nonduplicative build order remained because all six implementations are complete under retained owners; project/runtime composition and entrant actions are existing owner lanes. Existing holds, no-resend, open-door/no-auth, private-data and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Midmorning product-source, competition-core, finite-index and connected-observability delta — 2026-10-06 09:01 EDT
 
 The canonical graph now contains **584 resources**, with **271 producing** and **136 append-only evidence records**. Twenty-nine new and five advanced PayD/Stellar packets address concrete product correctness, accessibility, lifecycle, provenance and request-ownership defects under their existing owners. They are source packets, not application, browser, runtime, upstream acceptance, deployment, payment, revenue or cash evidence.
