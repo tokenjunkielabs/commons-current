@@ -1,0 +1,46 @@
+diff --git a/src/components/charts/ChartExportButton.tsx b/src/components/charts/ChartExportButton.tsx
+--- a/src/components/charts/ChartExportButton.tsx
++++ b/src/components/charts/ChartExportButton.tsx
+@@ -18,7 +18,17 @@
+ }: ChartExportButtonProps) {
+   const [isExporting, setIsExporting] = useState(false);
+   const [showMenu, setShowMenu] = useState(false);
++  const triggerRef = useRef<HTMLButtonElement>(null);
+ 
++  const handleMenuKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
++    if (event.key !== 'Escape' || !showMenu) return;
++
++    event.preventDefault();
++    event.stopPropagation();
++    setShowMenu(false);
++    triggerRef.current?.focus();
++  };
++
+   const handleExport = async (format: ExportFormat) => {
+     if (!chartRef.current || isExporting) return;
+ 
+@@ -38,6 +48,8 @@
+   return (
+     <div className="relative">
+       <button
++        ref={triggerRef}
++        onKeyDown={handleMenuKeyDown}
+         onClick={() => setShowMenu(!showMenu)}
+         disabled={isExporting}
+         className={`
+@@ -71,6 +83,7 @@
+             role="menu"
+           >
+             <button
++              onKeyDown={handleMenuKeyDown}
+               onClick={() => handleExport('png')}
+               className="w-full flex items-center gap-2 px-4 py-2.5
+                 text-[10px] font-mono uppercase tracking-wider
+@@ -81,6 +94,7 @@
+               PNG Image
+             </button>
+             <button
++              onKeyDown={handleMenuKeyDown}
+               onClick={() => handleExport('svg')}
+               className="w-full flex items-center gap-2 px-4 py-2.5
+                 text-[10px] font-mono uppercase tracking-wider
