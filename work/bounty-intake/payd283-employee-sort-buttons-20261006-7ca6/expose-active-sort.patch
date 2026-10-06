@@ -1,0 +1,63 @@
+diff --git a/frontend/src/components/EmployeeList.tsx b/frontend/src/components/EmployeeList.tsx
+--- a/frontend/src/components/EmployeeList.tsx
++++ b/frontend/src/components/EmployeeList.tsx
+@@ -147,7 +147,10 @@
+         <table className="w-full text-left border-collapse">
+           <thead>
+             <tr className="border-b border-hi">
+-              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++              <th
++                aria-sort={sortKey === 'name' ? (sortAsc ? 'ascending' : 'descending') : undefined}
++                className="p-6 text-xs font-bold uppercase tracking-widest text-muted"
++              >
+                 <button
+                   type="button"
+                   onClick={() => handleSort('name')}
+@@ -156,7 +159,10 @@
+                   Name {sortKey === 'name' && (sortAsc ? '▲' : '▼')}
+                 </button>
+               </th>
+-              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++              <th
++                aria-sort={sortKey === 'position' ? (sortAsc ? 'ascending' : 'descending') : undefined}
++                className="p-6 text-xs font-bold uppercase tracking-widest text-muted"
++              >
+                 <button
+                   type="button"
+                   onClick={() => handleSort('position')}
+@@ -165,7 +171,10 @@
+                   Role {sortKey === 'position' && (sortAsc ? '▲' : '▼')}
+                 </button>
+               </th>
+-              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++              <th
++                aria-sort={sortKey === 'wallet' ? (sortAsc ? 'ascending' : 'descending') : undefined}
++                className="p-6 text-xs font-bold uppercase tracking-widest text-muted"
++              >
+                 <button
+                   type="button"
+                   onClick={() => handleSort('wallet')}
+@@ -174,7 +183,10 @@
+                   Wallet {sortKey === 'wallet' && (sortAsc ? '▲' : '▼')}
+                 </button>
+               </th>
+-              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++              <th
++                aria-sort={sortKey === 'salary' ? (sortAsc ? 'ascending' : 'descending') : undefined}
++                className="p-6 text-xs font-bold uppercase tracking-widest text-muted"
++              >
+                 <button
+                   type="button"
+                   onClick={() => handleSort('salary')}
+@@ -183,7 +195,10 @@
+                   Salary {sortKey === 'salary' && (sortAsc ? '▲' : '▼')}
+                 </button>
+               </th>
+-              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++              <th
++                aria-sort={sortKey === 'status' ? (sortAsc ? 'ascending' : 'descending') : undefined}
++                className="p-6 text-xs font-bold uppercase tracking-widest text-muted"
++              >
+                 <button
+                   type="button"
+                   onClick={() => handleSort('status')}
