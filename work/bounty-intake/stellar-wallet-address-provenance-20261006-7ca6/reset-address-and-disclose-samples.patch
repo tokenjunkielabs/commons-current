@@ -1,0 +1,55 @@
+diff --git a/src/app/[locale]/wallet/[address]/page.tsx b/src/app/[locale]/wallet/[address]/page.tsx
+--- a/src/app/[locale]/wallet/[address]/page.tsx
++++ b/src/app/[locale]/wallet/[address]/page.tsx
+@@ -139,16 +139,16 @@
+         <Wallet className="w-8 h-8 text-accent" aria-hidden="true" />
+       </div>
+       <div className="text-[10px] font-mono text-accent uppercase tracking-[0.2em] mb-3">
+-        No Activity Found
++        No Matching Records
+       </div>
+       <h1 className="text-2xl font-black tracking-tighter uppercase italic mb-3">
+-        Empty Wallet
++        No History or Transfers
+       </h1>
+       <p className="text-sm text-muted-foreground font-mono mb-1 break-all">
+         {formatAddressShort(address)}
+       </p>
+       <p className="text-xs text-muted-foreground/60 mt-2 max-w-sm">
+-        This address exists on the Stellar network but has no recorded transactions yet. Data will appear once activity is detected.
++        No balance history, asset allocations, or transfers were returned for this address. This view does not confirm whether the account exists on the network.
+       </p>
+     </div>
+   );
+@@ -250,8 +250,7 @@
+ 
+ // ─── Main page content ────────────────────────────────────────────────────────
+ 
+-function WalletPageContent({ params }: { params: Promise<{ address: string }> }) {
+-  const { address } = use(params);
++function WalletAddressContent({ address }: { address: string }) {
+   const { isConnected, address: connectedAddress } = useWallet();
+ 
+   const [walletData, setWalletData] = useState<WalletData | null>(null);
+@@ -356,6 +355,9 @@
+ 
+       {/* Page title + copy button */}
+       <AddressHeader address={address} />
++      <p className="text-xs text-muted-foreground">
++        Wallet API failures can return generated sample data. Panels may mix API responses with samples, so a populated dashboard alone does not confirm this address&apos;s holdings or transactions.
++      </p>
+ 
+       {/* Row 1: Portfolio value (wide) + Asset allocation (narrow) */}
+       <div className="grid gap-6 lg:grid-cols-12">
+@@ -427,6 +429,11 @@
+       <LargestTransfersTable transfers={transfers} address={address} />
+     </div>
+   );
++}
++
++function WalletPageContent({ params }: { params: Promise<{ address: string }> }) {
++  const { address } = use(params);
++  return <WalletAddressContent key={address} address={address} />;
+ }
+ 
+ // ─── Export ───────────────────────────────────────────────────────────────────
