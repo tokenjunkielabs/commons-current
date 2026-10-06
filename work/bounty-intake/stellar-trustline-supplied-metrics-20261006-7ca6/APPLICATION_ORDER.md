@@ -1,14 +1,14 @@
 # Trustlines patch application order
 
-This reference connects the eight completed Commons source packets through #32162. They supply incremental patch artifacts for the pinned Stellar frontend. The publication of those artifacts did not apply them to the upstream application.
+This reference connects the eight completed Commons source packets through #32162 and the ninth, empty-selection continuation supplied with this revision. They supply incremental patch artifacts for the pinned Stellar frontend. Publishing these artifacts does not apply them to the upstream application.
 
-The original README covers #32126. Later packets add their own guides, so a reviewer needs the order and exact source identities below to assemble the complete proposal. This document adds that navigation and dependency map. It does not change any existing patch, guide, notice or production source.
+The original README covers #32126. Later packets add their own guides, so a reviewer needs the order and exact source identities below to assemble the complete proposal. This document adds that navigation and dependency map. Its current revision accompanies the new empty-selection patch and updates the final route pin; all earlier patch artifacts, companion guides and notices remain unchanged.
 
 ## Starting point and dependency order
 
 Start from Stellar-Analysis/frontend at `482ee456369418ef82c4056718cb82d3468f762b`, with the three canonical file identities in the next section. A checkout with unrelated edits or another donor revision needs its own review; these recorded pins do not establish compatibility with it.
 
-There are seven successive route changes. They must retain their recorded predecessor: #32126 → #32131 → #32135 → #32138 → #32141 → #32144 → #32162. In particular, #32162's current-item attribute assumes the code-plus-issuer predicate already supplied by #32131.
+There are eight successive route changes. They must retain their recorded predecessor: #32126 → #32131 → #32135 → #32138 → #32141 → #32144 → #32162 → empty-selection continuation. In particular, #32162's current-item attribute assumes the code-plus-issuer predicate already supplied by #32131.
 
 #32144 is a two-file patch: it adds optional failure metadata in the API helper and consumes that metadata in the route. Treat the helper and route changes as one packet. Applying only its route hunk loses the intended failed-stats distinction, and applying only the helper hunk leaves the original display unchanged. The helper had no earlier change in this packet family.
 
@@ -24,6 +24,7 @@ There are seven successive route changes. They must retain their recorded predec
 | 6 | [#32144](https://github.com/woahwhattheheck/commons/pull/32144) | [mark-trustline-stats-unavailable.patch](mark-trustline-stats-unavailable.patch) / `c9ad16069e746eebdd7c510534aea4cff97eecc9` / 2392 | [STATS_AVAILABILITY.md](STATS_AVAILABILITY.md) | Distinguish caught stats fallback and absent stats from successful zero counts. |
 | 7 | [#32146](https://github.com/woahwhattheheck/commons/pull/32146) | [show-unavailable-growth-baseline.patch](show-unavailable-growth-baseline.patch) / `4fb52c2569ae492b34411d4bd0e7c2e8594e45f3` / 1042 | [GROWTH_BASELINE.md](GROWTH_BASELINE.md) | Mark relative growth unavailable when its existing positive-baseline prerequisite fails. |
 | 8 | [#32162](https://github.com/woahwhattheheck/commons/pull/32162) | [expose-current-asset.patch](expose-current-asset.patch) / `4d5de1f88e81cc1c902b1f6ca74666868e50bb9d` / 616 | [CURRENT_ASSET.md](CURRENT_ASSET.md) | Expose the visually current asset through the same identity predicate. |
+| 9 | Empty-selection continuation (this revision) | [show-empty-asset-selection.patch](show-empty-asset-selection.patch) / `078afcf5c7e6a81a684b4c4269b7bc0e0ffe71a9` / 1007 | [EMPTY_SELECTION.md](EMPTY_SELECTION.md) | Describe an empty local ranking list without inviting an unavailable selection. |
 
 Read each companion guide before applying its patch. Match the intended source preimage and retain the complete packet; do not apply a hunk solely because a fuzzy match succeeds. No automatic application, installer, combined patch or executable verifier is supplied here.
 
@@ -33,11 +34,11 @@ Git blob identities cover exact UTF-8 source bytes, including line endings. Thes
 
 | Production file | Canonical Git blob / bytes | Final proposed Git blob / bytes | Required packet chain |
 |---|---|---|---|
-| src/app/[locale]/trustlines/page.tsx | `fa5bbbd6c2120c8be0e80f0f01b8f351889465bd` / 14748 | `47f44d7d322abc336ea8037ac37d4a0d7c600010` / 16435 | #32126 → #32131 → #32135 → #32138 → #32141 → #32144 → #32162 |
+| src/app/[locale]/trustlines/page.tsx | `fa5bbbd6c2120c8be0e80f0f01b8f351889465bd` / 14748 | `e28e557814ba7a0d7e62f95ed5eb8445959d30dc` / 16627 | #32126 → #32131 → #32135 → #32138 → #32141 → #32144 → #32162 → empty selection |
 | src/lib/trustline-api.ts | `6ff2791be6f5997b5ab3c1b49f666d100e1be414` / 3116 | `315f8082701f12df466c8fd5b76d7c81afd7137a` / 3166 | #32144 |
 | src/components/charts/TrustlineGrowthChart.tsx | `77aba5b486e459f7fe1c73954eae0b5553e3c4db` / 7260 | `dfd20a698d14c4940abb8d826fa52218c12bc637` / 7509 | #32146 |
 
-The route, API helper and chart's latest complete proposed strings remain in this seat's custody from their original deliveries. Creating this reference did not reapply accepted patches, reconstruct old source, recompute their postimages, rerun their earlier checks or reacquire them from a provider. The dependency validation for this document compared only adjacent recorded postimage/preimage identities and byte counts.
+The route, API helper and chart's earlier complete proposed strings remain in this seat's custody from their original deliveries. This revision applies only the new empty-selection text change directly to the retained #32162 route and checks that new patch forward and backward. It does not reapply accepted patches, reconstruct old source, recompute earlier postimages, rerun earlier checks or reacquire them from a provider. Dependency validation compares adjacent recorded postimage/preimage identities and byte counts; the new route's exact required preimage matches #32162's retained final pin.
 
 ## Every recorded source transition
 
@@ -52,14 +53,17 @@ The route, API helper and chart's latest complete proposed strings remain in thi
 | #32144 | src/app/[locale]/trustlines/page.tsx | `1ceba2ed046441f3e01dd5cddbba84bd072c0b5a` / 16112 | `5739dace8e22e0671039c8b6e88d017cb91dcb95` / 16370 |
 | #32146 | src/components/charts/TrustlineGrowthChart.tsx | `77aba5b486e459f7fe1c73954eae0b5553e3c4db` / 7260 | `dfd20a698d14c4940abb8d826fa52218c12bc637` / 7509 |
 | #32162 | src/app/[locale]/trustlines/page.tsx | `5739dace8e22e0671039c8b6e88d017cb91dcb95` / 16370 | `47f44d7d322abc336ea8037ac37d4a0d7c600010` / 16435 |
+| Empty-selection continuation | src/app/[locale]/trustlines/page.tsx | `47f44d7d322abc336ea8037ac37d4a0d7c600010` / 16435 | `e28e557814ba7a0d7e62f95ed5eb8445959d30dc` / 16627 |
 
 These transitions distinguish a canonical-based patch from a later incremental patch. For example, applying #32135 directly to the canonical route is outside its exact recorded preimage. The final chart hash is independent of the route's later marker, while the final API hash is introduced by #32144.
 
-Each patch's immutable artifact pin appears in the first table. Its Commons PR links identify the original publication and review context. The source pins here are copied from those complete retained receipts, not inferred from similarly named files or PR numbers.
+Each patch's immutable artifact pin appears in the first table. The eight earlier Commons PR links identify their original publication and review context. This revision's containing PR supplies the ninth patch and this updated guide; its number is deliberately not guessed before publication. The source pins here are copied from those complete retained receipts, not inferred from similarly named files or PR numbers.
 
 ## What the combined proposal means
 
 The overview displays supplied total/authorized/active-asset counts without the removed verification and fixed-growth claims. The failure marker from #32144 affects the three overview counts only; successful zero values retain their original formatting.
+
+When loading has finished and no asset is selected, the empty-selection continuation retains the original instruction only if the local rankings array has rows; otherwise it says no assets are available to select. That sentence does not distinguish successful emptiness from a caught-error [] fallback and does not add a retry. Existing selected-asset rendering, loading, handlers and helpers remain unchanged.
 
 The current asset uses code plus issuer, and the button exposes the same visually current-item predicate. Selection writes remain synchronous before the detail requests. A selected asset with pending or failed details is still the current selection; the marker is not a successful-response flag.
 
@@ -91,10 +95,10 @@ Keep the original directory's three exact notices with the source-derived artifa
 | [upstream-license-menke-laguna.md](upstream-license-menke-laguna.md) | `af5411fa243cfcf2b61c79d081dbb6204e956041` | 1111 |
 | [upstream-license-de-wet.md](upstream-license-de-wet.md) | `4a766e268772888af5df56c3f6c608f68558b789` | 1080 |
 
-Original contributor ownership and each packet's qualified source review remain. The notices are preserved attribution artifacts, not a repository-wide licensing determination. This reference contains original integration documentation and copied identity metadata, with no new production code payload.
+Original contributor ownership and each packet's qualified source review remain. The notices are preserved attribution artifacts, not a repository-wide licensing determination. This reference contains original integration documentation and copied identity metadata; the separately linked empty-selection patch supplies this revision's new production change.
 
-Prior complete immutable publication readbacks establish the published artifact bytes described in each receipt. They do not establish that the application compiles or behaves correctly in a browser. No application, request, account, trustline, wallet, payment, export, compiler, build, test, fixture or upstream action was performed to create this reference. Reviewers integrating the proposal must separately validate their chosen checkout and runtime; this document claims no automated application or successful integration.
+Prior complete immutable publication readbacks establish the published artifact bytes described in each receipt. They do not establish that the application compiles or behaves correctly in a browser. No application, request, account, trustline, wallet, payment, export, compiler, build, test, fixture or upstream action was performed to create this reference or its new companion patch. Reviewers integrating the proposal must separately validate their chosen checkout and runtime; this document claims no automated application or successful integration.
 
-New exact verification of this documentation checks its prepared immutable text and independent/native Git identity, plus its Commons PR/path/tree/parents. A predeclared main-equality alias is allowed only on observed equality with the verified immutable readback; otherwise the new document receives one full read at the observed immutable main. No old source or accepted patch is replayed for that publication.
+New exact verification of this documentation checks its prepared immutable text and independent/native Git identity, plus its Commons PR/path/tree/parents. A predeclared main-equality alias is allowed only on observed equality with the verified immutable readback; otherwise all three new or updated artifacts receive a full read at one observed immutable main. No old source or accepted patch is replayed for that publication.
 
-Earlier provider/body holds, the #32074 changed-files UNKNOWN and #32122/#32123 custody-loss qualifications remain unchanged. The unrelated EmployeeList draft stays unpublished. This is a fixed reference through the explicitly listed eight packets; later changes require their own source and application review.
+Earlier provider/body holds, the #32074 changed-files UNKNOWN and #32122/#32123 custody-loss qualifications remain unchanged. The unrelated EmployeeList draft stays unpublished. This is a fixed reference for the explicitly listed nine patches, ten source transitions and three final production files. Later changes require their own source and application review.
