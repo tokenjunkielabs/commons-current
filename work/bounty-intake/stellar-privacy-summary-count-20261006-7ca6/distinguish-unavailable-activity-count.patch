@@ -1,0 +1,30 @@
+diff --git a/src/app/[locale]/settings/gdpr/page.tsx b/src/app/[locale]/settings/gdpr/page.tsx
+--- a/src/app/[locale]/settings/gdpr/page.tsx
++++ b/src/app/[locale]/settings/gdpr/page.tsx
+@@ -163,13 +163,19 @@
+         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+           Data Processing Activities
+         </h3>
+-        <p className="text-muted-foreground dark:text-muted-foreground">
+-          We have recorded{" "}
+-          <span className="font-medium text-gray-900 dark:text-white">
+-            {summary?.data_processing_activities_count || 0}
+-          </span>{" "}
+-          data processing activities associated with your account.
+-        </p>
++        {summary ? (
++          <p className="text-muted-foreground dark:text-muted-foreground">
++            We have recorded{" "}
++            <span className="font-medium text-gray-900 dark:text-white">
++              {summary?.data_processing_activities_count || 0}
++            </span>{" "}
++            data processing activities associated with your account.
++          </p>
++        ) : (
++          <p className="text-muted-foreground dark:text-muted-foreground">
++            Data processing activity count is unavailable.
++          </p>
++        )}
+       </div>
+ 
+       {/* GDPR Information */}
