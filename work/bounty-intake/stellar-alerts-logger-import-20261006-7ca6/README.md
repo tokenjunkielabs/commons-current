@@ -1,6 +1,8 @@
-# Bind the existing logger in AlertsPage
+# AlertsPage logger binding and selected-rule form identity
 
 The mounted alerts route calls `logger.error` in seven catch blocks but neither imports nor declares `logger`. The donor's existing logger module exports the named object and the `error(message, error?, metadata?)` method those calls expect. This patch adds that one named import. It changes no alert operation or logging implementation.
+
+This directory also contains the separate selected-rule form continuation described at the end. Apply the logger import first, then the form-identity patch; each patch has its own immutable preimage. The original logger explanation below remains scoped to its one-import patch.
 
 ## Exact source and connection
 
@@ -39,3 +41,32 @@ No application, browser, test, fixture, workflow, dependency installation, nativ
 The page, handlers and logger are existing work of the Stellar-Analysis/frontend contributors. This Commons continuation contributes only the missing import and this explanatory guide; it does not claim the upstream implementation or replace any contributor's rights or acceptance conditions.
 
 The acquired complete donor tree contained no AGENTS or RULES path. Its retained `docs/CONTRIBUTING.md` at blob `f66db3b0eece27eb6fa888948c31ee8c7eabcfd2` is headed “Contributing to EventSource” and contains test/release guidance. This session explicitly excludes runtime, tests and package publication. Differently attributed MIT notices in the donor do not establish a repository-wide licence for these modules. Accordingly this packet contains a minimal patch and an original guide, not copies of either complete module.
+
+## Separate continuation: initialize the draft for the selected rule
+
+The complete `AlertRuleForm` initializes metric, condition, threshold, corridor and three notification choices from `initialData` with local state. The actual alerts page leaves the form mounted while its list remains interactive. Every rule's Edit button can replace `editingRule` and set the already-true `isFormOpen` again. The form then receives a different `initialData`, while the page's submit callback targets that new rule ID.
+
+Without a changed component identity, the fields can retain the previous draft under the new save target. The same mismatch is possible when an open create form is switched to an existing rule via that list. This is a source-established caller path; no actual rule or account was read or changed.
+
+The follow-on `reset-selected-rule-form.patch` adds exactly one key:
+
+```tsx
+key={editingRule ? `edit:${editingRule.id}` : "create"}
+```
+
+The namespaced edit key is distinct from the create key even when a legitimate string ID itself equals `create`. Selecting a different rule or switching from create to edit remounts the form and uses that selection's existing initializers. Re-renders with the same rule ID preserve its draft. Switching away discards that local draft; this does not create per-rule saved drafts or a confirmation policy.
+
+| Input or output | Actual path | Git blob | UTF-8 bytes |
+| --- | --- | --- | ---: |
+| Page after #31986, before this continuation | `src/app/[locale]/alerts/page.tsx` | `e57d52687aec99a522235a52c1d173ca7eacdbe5` | 16,372 |
+| Page after both patches | `src/app/[locale]/alerts/page.tsx` | `11b1de1fcea8b21919f61c04152bbfd008571fa5` | 16,452 |
+| Unchanged complete form input | `src/components/AlertRuleForm.tsx` | `97d01198bc9855e3d5e5c8463a4f8012644fda0a` | 8,311 |
+| Unchanged rule type and API contract | `src/lib/alerts-api.ts` | `9542be40db7573e988344f812b1115833b58149d` | 2,107 |
+
+All inputs belong to the same donor commit above. The type declares `AlertRule.id: string` and the existing update adapter uses that ID in the rule URL. No API implementation, request data, threshold policy, form field, initializer, onSubmit/onCancel handler, loading state or completed logger import is modified. The incremental source diff is **+1/-0 in one hunk**.
+
+[React's primary state-preservation documentation](https://react.dev/learn/preserving-and-resetting-state), “Resetting state with a key” and “Resetting a form with a key,” explains that a changed key creates distinct component state and recreates the subtree. That contract supports the selected-rule reset; no documentation examples were executed. A fresh donor guard remained at the pinned commit, and bounded Commons/public Slack overlap searches returned zero without asserting global absence.
+
+The serialized incremental patch and inverse reconstruct the complete recorded postimage and preimage. The original `import-alerts-logger.patch` remains unchanged. This is an attributed in-place continuation of [Commons #31986](https://github.com/woahwhattheheck/commons/pull/31986), preserving the original authors and earlier limits.
+
+This change does not address an already-started request finishing after another selection, duplicate submissions, same-ID data refresh, malformed/duplicate IDs, backend ownership, atomic writes, focus restoration after remount, persistence or full form accessibility. No browser, runtime, tests, requests, account operation, upstream action, acceptance or payment claim is made.
