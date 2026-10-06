@@ -1,0 +1,24 @@
+diff --git a/src/components/anchors/AssetDetailModal.tsx b/src/components/anchors/AssetDetailModal.tsx
+--- a/src/components/anchors/AssetDetailModal.tsx
++++ b/src/components/anchors/AssetDetailModal.tsx
+@@ -31,6 +31,7 @@
+     const lastElement = focusableElements?.[focusableElements.length - 1] as HTMLElement;
+ 
+     // Focus the first element (the Close button usually) when modal opens
++    const previouslyFocusedElement = document.activeElement;
+     firstElement?.focus();
+ 
+     const handleKeyDown = (e: KeyboardEvent) => {
+@@ -58,6 +59,12 @@
+     return () => {
+       document.removeEventListener('keydown', handleKeyDown);
+       document.body.style.overflow = previousOverflow;
++      if (
++        previouslyFocusedElement instanceof HTMLElement &&
++        previouslyFocusedElement.isConnected
++      ) {
++        previouslyFocusedElement.focus();
++      }
+     };
+   }, [asset, onClose]);
+ 
