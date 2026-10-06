@@ -1,0 +1,18 @@
+diff --git a/src/app/[locale]/dashboard/page.tsx b/src/app/[locale]/dashboard/page.tsx
+--- a/src/app/[locale]/dashboard/page.tsx
++++ b/src/app/[locale]/dashboard/page.tsx
+@@ -113,7 +113,13 @@
+       if (!prevData) return prevData;
+       const updatedData = { ...prevData };
+       if (update.success_rate !== undefined) {
+-        updatedData.kpi.successRate.value = update.success_rate;
++        updatedData.kpi = {
++          ...prevData.kpi,
++          successRate: {
++            ...prevData.kpi.successRate,
++            value: update.success_rate,
++          },
++        };
+       }
+       return updatedData;
+     });
