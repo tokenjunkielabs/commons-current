@@ -1,0 +1,134 @@
+diff --git a/backend/backup/mod.rs b/backend/backup/mod.rs
+--- a/backend/backup/mod.rs
++++ b/backend/backup/mod.rs
+@@ -1,16 +1,15 @@
+-//! Point-in-time consistent backup/restore across the datastore and cache.
++//! Backup payload packaging and watermark compatibility checks.
+ //!
+-//! The primary datastore is the source of truth for ledger-derived metrics.
+-//! The cache layer holds rate-limit counters and distributed lock state. These
+-//! two stores do not share a transaction boundary, so a naive restore could
+-//! combine two snapshots taken at slightly different moments into a state that
+-//! never actually existed.
++//! Callers supply datastore bytes, cache entries, and ingestion watermarks.
++//! This module does not capture storage snapshots or establish that the supplied
++//! payloads represent the same point in time. Assigning a shared watermark does
++//! not create a transaction boundary between independently collected payloads.
+ //!
+-//! To avoid that, every backup is tagged with the ingestion watermark (the last
+-//! ingested ledger sequence) recorded at snapshot time. On restore we refuse to
+-//! bring the service up if the datastore and cache watermarks disagree beyond a
+-//! documented tolerance. Cache state that is fully derivable is never restored
+-//! from a stale backup; it is cold-started empty instead.
++//! Restore accepts watermarks within the configured tolerance and returns the
++//! lower marker with the original datastore bytes and selected cache entries.
++//! It does not rewind or replay either payload to that marker. Callers must
++//! establish payload consistency before applying the returned state, and own
++//! storage mutation, cache cold-starting, and service-readiness decisions.
+ 
+ pub mod classify;
+ pub mod watermark;
+@@ -18,10 +17,9 @@
+ use classify::CacheStateClass;
+ use watermark::{Watermark, WatermarkMismatch};
+ 
+-/// Documented tolerance for watermark disagreement between the datastore and
+-/// the cache backup. A small skew is expected because the two snapshots are not
+-/// taken under a shared transaction boundary; anything larger means the two
+-/// backups cannot be safely combined.
++/// Maximum watermark difference accepted by the compatibility check.
++/// Acceptance within this threshold does not establish that the unchanged
++/// datastore and cache payloads describe a consistent state.
+ pub const WATERMARK_TOLERANCE: u64 = 1;
+ 
+ /// A backup of the primary datastore, tagged with the ingestion watermark at
+@@ -67,8 +65,9 @@
+ 
+ impl std::error::Error for BackupError {}
+ 
+-/// Take a coordinated backup of the datastore and the cache state that needs a
+-/// real backup, tagging both with the same ingestion watermark.
++/// Package caller-supplied datastore bytes and selected cache entries, assigning
++/// both the supplied watermark. The caller is responsible for the relationship
++/// between that watermark and the already-collected payloads.
+ ///
+ /// `cache_entries` should only contain state classified as
+ /// [`CacheStateClass::NeedsRealBackup`]; derivable state is dropped here so it
+@@ -95,8 +94,9 @@
+     }
+ }
+ 
+-/// Validate that a backup's datastore and cache watermarks agree within the
+-/// documented tolerance. Returns the reconciled watermark on success.
++/// Check that the two watermark values differ by at most the configured
++/// tolerance, returning their minimum. This does not inspect or reconcile the
++/// payload bytes and does not establish point-in-time consistency.
+ pub fn check_consistency(backup: &Backup) -> Result<Watermark, BackupError> {
+     backup
+         .datastore
+@@ -105,12 +105,13 @@
+         .map_err(BackupError::Inconsistent)
+ }
+ 
+-/// Restore a backup, refusing to bring the service up if the two watermarks
+-/// disagree beyond the documented tolerance.
++/// Prepare state for a caller to restore, rejecting watermark differences
++/// beyond the configured tolerance. No storage or service state is changed.
+ ///
+-/// Derivable cache state is intentionally not restored: the caller cold-starts
+-/// it empty. Only entries classified as [`CacheStateClass::NeedsRealBackup`]
+-/// are returned for restoration.
++/// The datastore payload is cloned unchanged; only cache entries classified as
++/// [`CacheStateClass::NeedsRealBackup`] are returned. Selecting the lower marker
++/// does not roll either payload back. The caller owns reconciliation, applying
++/// the returned state, and cold-starting omitted cache state.
+ pub fn restore(backup: &Backup) -> Result<RestoredState, BackupError> {
+     let watermark = check_consistency(backup)?;
+ 
+@@ -129,10 +130,11 @@
+     })
+ }
+ 
+-/// The state produced by a successful restore.
++/// Payloads returned by the restore preparation helper; not proof they were applied.
+ #[derive(Debug, Clone, PartialEq, Eq)]
+ pub struct RestoredState {
+-    /// The reconciled ingestion watermark the restored service resumes from.
++    /// The lower input watermark selected by the compatibility check.
++    /// Payload consistency and a safe resume point remain caller responsibilities.
+     pub watermark: Watermark,
+     pub datastore_payload: Vec<u8>,
+     /// Only cache entries that needed a real backup. Derivable cache state is
+diff --git a/backend/backup/watermark.rs b/backend/backup/watermark.rs
+--- a/backend/backup/watermark.rs
++++ b/backend/backup/watermark.rs
+@@ -1,10 +1,8 @@
+-//! Ingestion watermark tagging for point-in-time consistent backups.
++//! Ingestion watermark values and numeric compatibility checks.
+ //!
+-//! Every backup is tagged with the last-ingested ledger sequence recorded at
+-//! snapshot time. Because the datastore and cache do not share a transaction
+-//! boundary, their snapshots may be taken a moment apart; the watermark lets a
+-//! restore detect and reconcile that skew instead of silently combining
+-//! inconsistent state.
++//! Callers associate these values with their collected payloads. Comparing the
++//! values can detect a difference beyond a chosen tolerance, but does not inspect
++//! payloads or reconcile changes made between their collection times.
+ 
+ /// The ingestion watermark: the last ledger sequence ingested at snapshot time.
+ #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+@@ -19,10 +17,11 @@
+         self.0
+     }
+ 
+-    /// Reconcile this watermark with another, allowing a documented tolerance.
++    /// Compare this watermark with another, allowing the supplied tolerance.
+     ///
+-    /// Returns the lower of the two watermarks (the safe resume point) when the
+-    /// difference is within `tolerance`, otherwise a [`WatermarkMismatch`].
++    /// Returns the lower value when the difference is within `tolerance`,
++    /// otherwise a [`WatermarkMismatch`]. This numeric operation does not
++    /// reconcile payloads or establish that the lower value is a safe resume point.
+     pub fn reconcile(
+         &self,
+         other: &Watermark,
