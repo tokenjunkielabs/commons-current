@@ -34,7 +34,14 @@ The complete public-training leave-one-demonstration-out receipt on the immediat
 - `00d62c1b`: fill 4-connected zero regions that do not reach the grid border with color 4 — candidate replay is 5/5 LODO folds, and the task's held-back public-training test example is exact.
 - `00576224`: repeat the input as a 3×3 tile field while horizontally reflecting the middle tile-row band — candidate replay is 2/2 LODO folds, and the held-back public-training test example is exact.
 
-That is a **+7-fold bounded recovery** on two previously 0-pass public-training tasks. A first adjacent miss audit (`009d5c81`, `00dbd492`, `017c7c7b`, `025d127b`) found zero candidate-fit LODO folds, reducing the obvious false-positive risk. Do **not** convert this targeted delta into a claimed 141/3,232 global result until the complete 1,000-task benchmark is rerun on this exact solver head.
+The complete 1,000-task / 3,232-fold public-training LODO rerun has now finished on exact solver head `80faa19347d365cca73619544e8121951cb2edc1` against `arcprize/ARC-AGI-2@f3283f727488ad98fe575ea6a5ac981e4a188e49`:
+
+- **151 / 3,232 exact held-out folds pass@2 (4.6720%)**;
+- **38 / 1,000 tasks pass every held-out fold (3.8%)**;
+- prior complete baseline: 134 / 3,232 folds and 33 / 1,000 tasks;
+- net delta: **+17 folds and +5 all-fold tasks**, with zero per-task regressions.
+
+The complete result is recorded in Commons PR #31852. Runner wall time was 14.635 seconds with 15,592 KiB peak RSS; solver SHA-256 is `56ac575f1648ea36c9f0da0f800dd7e31f4fd7f32fcb6e18c33504a1058bd80e` and raw result JSON SHA-256 is `56df95ed95258bf2e4a7f468727c5577ebb0a791c89c75a5129e4b021d70ccb1`. These figures remain public-training cross-validation evidence, not a Kaggle score or private-test estimate.
 
 ## Run
 
@@ -69,7 +76,7 @@ The Kaggle competition page requires `submission.json`; every task ID from the c
 1. add periodic-pattern completion and object-relation transforms grounded in training tasks;
 2. add counting, separator, and symmetry-repair hypotheses;
 3. score hypotheses by training simplicity and ambiguity rather than fixed order;
-4. run a broader **training-only** benchmark during development and track incremental pass@2 deltas;
+4. keep the complete **training-only** LODO benchmark as the regression gate for each solver increment;
 5. reserve public evaluation for a final held-out check, then use Kaggle/private scoring only through the competition's permitted path.
 
 ## Contest product (titanmcp)
