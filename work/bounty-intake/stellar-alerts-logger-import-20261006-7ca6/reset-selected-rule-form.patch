@@ -1,0 +1,12 @@
+diff --git a/src/app/[locale]/alerts/page.tsx b/src/app/[locale]/alerts/page.tsx
+index e57d526..11b1de1 100644
+--- a/src/app/[locale]/alerts/page.tsx
++++ b/src/app/[locale]/alerts/page.tsx
+@@ -126,6 +126,7 @@
+                         {editingRule ? "Edit Alert Rule" : "Create New Alert Rule"}
+                     </h2>
+                     <AlertRuleForm
++                        key={editingRule ? `edit:${editingRule.id}` : "create"}
+                         initialData={editingRule}
+                         onSubmit={editingRule ? handleUpdateRule : handleCreateRule}
+                         onCancel={() => {
