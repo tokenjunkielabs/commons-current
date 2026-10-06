@@ -1,0 +1,22 @@
+diff --git a/src/components/charts/ReliabilityTrend.tsx b/src/components/charts/ReliabilityTrend.tsx
+index cb63cdf9f5b7dacbfcf212350d8fec849b7c785e..a2272108fce1321b24cffd93bfad3c8d832c3188
+--- a/src/components/charts/ReliabilityTrend.tsx
++++ b/src/components/charts/ReliabilityTrend.tsx
+@@ -54,7 +54,7 @@
+         <div>
+           <h3 className="font-semibold text-white">Reliability Trend</h3>
+           <p className="text-sm text-slate-400 mt-1">
+-            Historical performance over time
++            Latest data points by record count
+           </p>
+         </div>
+ 
+@@ -69,7 +69,7 @@
+                   : "text-slate-500 hover:text-slate-300"
+               }`}
+             >
+-              {window}
++              {window.replace("d", " pts")}
+             </button>
+           ))}
+         </div>
