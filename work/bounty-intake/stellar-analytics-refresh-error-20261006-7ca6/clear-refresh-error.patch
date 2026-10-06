@@ -1,0 +1,11 @@
+diff --git a/src/app/[locale]/analytics/page.tsx b/src/app/[locale]/analytics/page.tsx
+--- a/src/app/[locale]/analytics/page.tsx
++++ b/src/app/[locale]/analytics/page.tsx
+@@ -89,6 +89,7 @@
+     try {
+       setLoading(true);
+       const data = await fetchAnalyticsMetrics();
++      setError(null);
+       setMetrics(data);
+       setLastUpdated(new Date());
+     } catch (err) {
