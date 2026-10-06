@@ -79,3 +79,29 @@ A dedicated Commons PR search for RedisLockStore and WAIT returned a bounded emp
 No Rust compilation, formatter, Redis process, failover experiment, synthetic fixture, test suite, workflow, benchmark, browser or upstream action was used. No runtime or performance measurement is asserted.
 
 Several existing limitations remain material. WAIT may consume the lock's remaining lifetime before success returns. A reused DistributedLock may retain an earlier token when a later acquisition fails. Existing Lua numeric conversions, epoch arithmetic, client-time metadata, forced expiry cleanup and fencing semantics are unchanged. The donor's documentation has broader claims which this small correction does not validate. Successful acknowledgement is not proof of a valid remaining lease, linearizability, durable failover monotonicity or complete issue378 acceptance.
+
+## Continuation: omit configured URL from constructor failures
+
+The additional `omit-url-from-constructor-errors.patch` applies **after** the acknowledgement patch above, to its retained complete source postimage from [Commons #32090](https://github.com/woahwhattheheck/commons/pull/32090). The earlier patch, source receipts and three notice files remain unchanged. This continuation was composed directly from the saved postimage; the accepted earlier patch was not reapplied or rerun.
+
+The constructor currently passes `config.url.as_str()` into `redis::Client::open`. Its error mapping then formats both the entire `config.url` and the parser error into the returned `LockError::StorageError`. The complete source of `LockError` also shows that the StorageError display includes that stored string. No actual log, error report or exposed credential was observed; the defect is the explicit data flow from configuration into this error value.
+
+The new mapping retains the existing error variant and propagation, but returns only the fixed text `Invalid Redis connection URL`. It ignores the parser error instead of including potentially input-derived detail. The success branch receives exactly the same URL and proceeds through the same scripts and configuration storage.
+
+The deliberate tradeoff is less detailed diagnostics for an invalid URL. The returned value still identifies the Redis connection configuration as the failing operation. There is no credential parsing, substring redaction, password-format assumption or fallback connection. All connection and lock operations remain unchanged.
+
+The maintainer-authored current redis-rs connection documentation, already returned before the tagged lookup, describes URL forms with optional username and password fields ([IntoConnectionInfo](https://docs.rs/redis/latest/redis/trait.IntoConnectionInfo.html), retrieved 2026-10-06). It is used only to explain why a connection URL can contain credentials. This correction uses no new crate API.
+
+A subsequent direct lookup of `https://docs.rs/redis/0.27.6/redis/trait.IntoConnectionInfo.html` returned an inaccessible-page result, despite the tool envelope's false error flag. That exact route is held: no retry or alternate tagged-source acquisition was made. The prior latest documentation is not a validation of the donor's resolved crate version or a clearance of that route. The source-qualified string replacement does not depend on an unobserved tagged implementation or an executed parser.
+
+| Constructor continuation identity | Git blob | Bytes |
+| --- | --- | ---: |
+| Input: saved postimage after #32090 | `a1784185a8f819c1e1562b29d90a41384e2638c3` | 18494 |
+| New complete source postimage | `c280bfcb2ad4d457facd1fabe47f7d6d0a3a0d12` | 18486 |
+| Serialized constructor patch | `55399e470e66d756cdf0411617323c7a36f799c8` | 720 |
+
+The actual serialized patch contains one hunk/eight rows and changes one line for one line. Parsing and applying its context and hunk counts to the complete saved input yields the exact new text; inverse application reproduces the exact input. Reversing the single replacement confirms every other byte is preserved, including the newly accepted WAIT handling.
+
+A new dedicated Commons PR query and public Slack query for RedisLockStore and the invalid-URL error text returned bounded empty results; Slack reached native pagination end. This does not establish global absence of related work.
+
+The guarantee is restricted to the `RedisLockStore::new` error value constructed by this mapping. The configuration's public URL field, derived Debug implementation, `config()` accessor, other connection errors, dependency-internal behavior and unrelated logging are unchanged. There is no repository-wide sanitization or incident-remediation claim. No real credentials or supplied connection URLs were used, and no parser, network connection, Rust build, test, fixture, workflow or application code was executed.
