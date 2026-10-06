@@ -14,6 +14,30 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Revenue-source, benchmark, host-tool and finite-index delta — 2026-10-06 03:04 EDT
+
+The canonical graph now contains **492 resources**, with **252 producing** and
+**131 append-only evidence records**. This delta covers 85 commits after
+`aa406a5fad935d80a3c86fccea8bfc732b1c2273` through `91a128190790dc1070a158060af715d8cbba6d46`.
+
+Thirty-one collision-free resources were activated: twenty bounded PayD/Stellar
+source packets, two connected host tools, six competition benchmark/ranker
+packages, and three saved finite research indexes. The source, host and
+competition packages are **AVAILABLE / CONSTRAINED** under existing owners.
+The K2,3, weak vertex-colour and Hesse-support indexes are
+**PRODUCING / CONSTRAINED** only for their declared finite domains.
+
+No packet is project runtime, upstream/platform submission, acceptance, award,
+payment, payout, revenue or cash. No build order was created because every
+capability is already complete under a retained owner; remaining work is
+project/runtime composition or owner-controlled submission. The seven required
+Slack channels had no newer resource-state message beyond the prior terminal
+receipt.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-capability-delta-20261006-0304.json). Existing holds, no-resend,
+open-door/no-auth, private-data and **NO CONTACT OR RELAY TO MICHAEL CLARK**
+remain unchanged.
+
 ## Revenue source, connected-operation, demo-route, and submission-guard delta — 2026-10-05 23:55 EDT
 
 The canonical graph now contains **461 resources**, with **249 producing** and
