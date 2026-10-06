@@ -1,0 +1,43 @@
+diff --git a/src/app/[locale]/corridors/page.tsx b/src/app/[locale]/corridors/page.tsx
+index a14fe86977c4071ad958ddc3f206b4f07134b072..158ab0f3b4f3a9c70dee980f94c6fe2b3961f0ff
+--- a/src/app/[locale]/corridors/page.tsx
++++ b/src/app/[locale]/corridors/page.tsx
+@@ -92,29 +92,35 @@
+     endIndex,
+   } = usePagination(filteredCorridors.length);
+ 
+   useEffect(() => {
++    let inactive = false;
++
+     async function fetchCorridors() {
+       try {
+         setLoading(true);
+         try {
+           const filters: Record<string, string | number> = {};
+           if (timePeriod) filters.time_period = timePeriod;
+           filters.sort_by = sortBy;
+ 
+           const result = await getCorridors(filters);
+-          setCorridors(result);
++          if (!inactive) setCorridors(result);
+         } catch {
+-          setCorridors(mockCorridors);
++          if (!inactive) setCorridors(mockCorridors);
+         }
+       } catch (err) {
+         logger.error("Error fetching corridors:", err);
+       } finally {
+-        setLoading(false);
++        if (!inactive) setLoading(false);
+       }
+     }
+ 
+     fetchCorridors();
++
++    return () => {
++      inactive = true;
++    };
+   }, [timePeriod, sortBy]);
+ 
+   // Live-tick simulation: nudges each corridor's numbers by a small bounded
+   // random-walk step every few seconds, the same way real telemetry would
