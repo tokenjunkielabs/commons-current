@@ -1,0 +1,13 @@
+diff --git a/src/lib/react-query/provider.tsx b/src/lib/react-query/provider.tsx
+--- a/src/lib/react-query/provider.tsx
++++ b/src/lib/react-query/provider.tsx
+@@ -52,7 +52,8 @@
+ }
+ 
+ export function ReactQueryProvider({ children, client }: ReactQueryProviderProps) {
+-  const queryClient = client || createQueryClient();
++  const [defaultClient] = React.useState(createQueryClient);
++  const queryClient = client || defaultClient;
+ 
+   return (
+     <QueryClientProvider client={queryClient}>
