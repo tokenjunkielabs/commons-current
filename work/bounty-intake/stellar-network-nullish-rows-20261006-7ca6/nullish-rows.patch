@@ -1,0 +1,43 @@
+diff --git a/src/lib/network-api.ts b/src/lib/network-api.ts
+--- a/src/lib/network-api.ts
++++ b/src/lib/network-api.ts
+@@ -90,6 +90,7 @@
+ 
+   return rows
+     .map((row) => {
++      if (row == null) return null;
+       const item = row as {
+         date?: string;
+         day?: string;
+@@ -149,6 +150,7 @@
+ 
+   return rows
+     .map((row) => {
++      if (row == null) return null;
+       const item = row as {
+         date?: string;
+         day?: string;
+@@ -185,6 +187,7 @@
+ 
+   return rows
+     .map((row) => {
++      if (row == null) return null;
+       const item = row as {
+         date?: string;
+         day?: string;
+@@ -216,6 +219,7 @@
+ 
+   return rows
+     .map((row) => {
++      if (row == null) return null;
+       const item = row as {
+         date?: string;
+         day?: string;
+@@ -247,6 +251,7 @@
+ 
+   return rows
+     .map((row) => {
++      if (row == null) return null;
+       const item = row as {
+         date?: string;
+         day?: string;
