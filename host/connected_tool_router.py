@@ -142,6 +142,43 @@ def response_evidence(value):
     return evidence
 
 
+def project_rail_health(routes, state):
+    """Project existing private observations without arguments or results."""
+    now = _now()
+    domains = {}
+    for route in routes:
+        domain = route["quota_domain"]
+        row = domains.setdefault(domain, {"quota_domain": domain, "route_ids": []})
+        row["route_ids"].append(route["id"])
+    for domain, row in domains.items():
+        limits = state.get("quota_domains", {}).get(domain, {})
+        row["last_response"] = {
+            key: value for key, value in limits.get("last_response", {}).items()
+            if key in {"observed_at", "http_status", "failed", "uncertain",
+                       "rate_limited", "rate_limit_kind", "rate_limit_resource"}}
+        row["last_response_known"] = bool(row["last_response"])
+        for key in ("observed_at", "quota_observed_at", "quota_remaining", "reset_at",
+                    "cooldown_until", "client_cooldown_until", "client_backoff_attempts", "quota_remaining_kind"):
+            row[key] = limits.get(key)
+        row["request_budget_known"] = limits.get("quota_remaining_kind") == "requests"
+        row["request_budget_remaining"] = limits.get("quota_remaining") if row["request_budget_known"] else None
+        row["request_budget_observed_at"] = limits.get("quota_observed_at")
+        row["rate_limit_buckets"] = {
+            name: {key: bucket[key] for key in ("remaining", "reset_at", "observed_at") if key in bucket}
+            for name, bucket in limits.get("rate_limit_buckets", {}).items()
+            if name in {"requests", "tokens"}}
+        deadlines = [_time(limits.get(key)) for key in
+                     ("cooldown_until", "client_cooldown_until")]
+        row["cooldown_active"] = any(value and value > now for value in deadlines)
+        row["pending_dispatches"] = sum(
+            (operation.get("pending") or {}).get("quota_domain") == domain
+            for operation in state.get("operations", {}).values())
+    return {"decision": "RAIL_HEALTH", "observed_at": _iso(now),
+            "provider_calls": 0, "rails": list(domains.values()),
+            "identity_basis": "Configured quota-domain and route IDs only; no actor inference.",
+            "scope": "This private runtime journal only; unknown fields are not a recovered rail."}
+
+
 class ConnectedToolRouter:
     """One operation journal and cooldown map shared by all bridge consumers."""
 
@@ -373,6 +410,12 @@ class ConnectedToolRouter:
     def _limits(evidence, current):
         limits = dict(current)
         observed = _time(evidence["observed_at"])
+        limits["last_response"] = {key: evidence[key] for key in
+            ("observed_at", "http_status", "failed", "uncertain", "rate_limited") if key in evidence}
+        if evidence.get("rate_limit_kind") in {"primary", "secondary"}:
+            limits["last_response"]["rate_limit_kind"] = evidence["rate_limit_kind"]
+        if evidence.get("rate_limit_resource") in {"core", "search", "graphql", "integration_manifest", "code_search"}:
+            limits["last_response"]["rate_limit_resource"] = evidence["rate_limit_resource"]
         deadline = _time(evidence.get("retry_not_before"))
         retry_after = evidence.get("retry_after")
         if retry_after is not None:
@@ -400,6 +443,8 @@ class ConnectedToolRouter:
             if not math.isfinite(remaining) or remaining < 0:
                 raise EquipmentError("provider remaining quota must be finite and nonnegative")
             limits["quota_remaining"] = remaining
+            limits["quota_observed_at"] = evidence["observed_at"]
+            limits["quota_remaining_kind"] = "quota" if "quota_remaining" in evidence else "requests"
         reset = evidence.get("rate_limit_reset")
         if reset is not None:
             try:
@@ -517,6 +562,11 @@ class ConnectedToolRouter:
                     "attempted_routes": operation["attempted_routes"],
                     "quota_domains": copy.deepcopy(state["quota_domains"])}
 
+    def rail_health(self):
+        """Offline metadata only; configured identities are never inferred."""
+        with self._state(write=False) as state:
+            return project_rail_health(self.routes, state)
+
     def run(self, request: dict, invoker: Callable[[dict], dict]):
         """Run actual bridge calls, switching immediately on eligible failures."""
         result = self.dispatch(request)
@@ -555,7 +605,7 @@ class ConnectedToolRouter:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("operation", choices=("dispatch", "resume", "run", "status"))
+    parser.add_argument("operation", choices=("dispatch", "resume", "run", "status", "rail-health"))
     parser.add_argument("--routes-file", type=Path, required=True)
     parser.add_argument("--state-file", type=Path, required=True,
                         help="private runtime state outside the git checkout")
@@ -566,7 +616,9 @@ def main():
     args = parser.parse_args()
     try:
         router = ConnectedToolRouter(load_routes(args.routes_file), args.state_file)
-        if args.operation == "status":
+        if args.operation == "rail-health":
+            result = router.rail_health()
+        elif args.operation == "status":
             result = router.status(args.operation_id)
         else:
             request = json.load(sys.stdin)
@@ -597,7 +649,7 @@ def main():
         # Native arguments/results belong to the calling private runtime. Secret
         # credential fields are redacted; the state file is never published.
         print(json.dumps(redacted(result), ensure_ascii=False, allow_nan=False))
-        return 0 if result["decision"] in {"DISPATCH", "COMPLETED", "AWAITING_PROVIDER_RESPONSE", "ROUTING"} else 3
+        return 0 if result["decision"] in {"DISPATCH", "COMPLETED", "AWAITING_PROVIDER_RESPONSE", "ROUTING", "RAIL_HEALTH"} else 3
     except (OSError, ValueError, KeyError, TypeError, EquipmentError) as exc:
         print(json.dumps({"isError": True, "code": "connected_router_failed", "message": redacted(str(exc))}))
         return 2
