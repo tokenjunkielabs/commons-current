@@ -1,0 +1,19 @@
+diff --git a/apps/gateway/src/modules/balancer/load-balancer.service.ts b/apps/gateway/src/modules/balancer/load-balancer.service.ts
+--- a/apps/gateway/src/modules/balancer/load-balancer.service.ts
++++ b/apps/gateway/src/modules/balancer/load-balancer.service.ts
+@@ -212,11 +212,13 @@
+ 
+     state.failures += 1;
+     state.consecutiveFailures += 1;
++    const now = Date.now();
+     if (
+       state.consecutiveFailures >= FAILURES_BEFORE_OPEN &&
+-      state.circuitOpenedAt === null
++      (state.circuitOpenedAt === null ||
++        now - state.circuitOpenedAt >= CIRCUIT_COOLDOWN_MS)
+     ) {
+-      state.circuitOpenedAt = Date.now();
++      state.circuitOpenedAt = now;
+       logger.warn('Provider circuit opened', {
+         providerId,
+         model,
