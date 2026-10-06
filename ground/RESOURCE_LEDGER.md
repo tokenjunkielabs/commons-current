@@ -14,6 +14,14 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Noon product-source and Qloo offline-demo delta — 2026-10-06 12:13 EDT
+
+The canonical graph now contains **623 resources**, with **271 producing** and **138 append-only evidence records**. Thirty-four new PayD/Stellar packets preserve exact, attributed corrections across request lifetime and ownership, unavailable-versus-zero presentation, form and interface wiring, accessibility semantics, logger-redacted mutation metadata, source-contract disclosure, and bounded product error feedback. The existing PayD CSV packet advanced with committed-preview filename and FileReader cleanup lifetime corrections. These are source packets for retained owners, not application, browser, runtime, upstream acceptance, deployment, payment, revenue, or cash receipts.
+
+The existing Qloo deterministic planner advanced with a runnable three-scenario offline demo. Python compilation, **4/4 focused tests**, and the launch fixture CLI passed locally; the fixtures remain synthetic, with no Qloo credential, live API call, hosted demo, Devpost entry, submission, award, payment, revenue, or cash action.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-noon-delta-20261006-1204.json). No nonduplicative build order remained: every landed implementation is complete under its retained owner, while PRs #32127 and #31930 remain actively owned and excluded. Repeated custody renewals and generated board/projection churn were not counted as resources. Existing holds, no-resend, open-door/no-auth, private-data and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Late-morning PayD notification-reference and Stellar PR394 backlog-error delta — 2026-10-06 09:30 EDT
 
 The canonical graph now contains **589 resources**, with **271 producing** and **137 append-only evidence records**. The existing PayD reference resource now includes the complete four-method notification context/provider surface, retained consumer ordering, and explicit display-host, error, lifetime, and configuration limits. This is documentation, not notification delivery, browser/runtime behavior, deployment, or upstream acceptance.
