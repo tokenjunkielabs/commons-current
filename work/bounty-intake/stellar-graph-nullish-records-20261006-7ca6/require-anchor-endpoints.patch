@@ -1,0 +1,15 @@
+diff --git a/src/app/api/network-graph/route.ts b/src/app/api/network-graph/route.ts
+--- a/src/app/api/network-graph/route.ts
++++ b/src/app/api/network-graph/route.ts
+@@ -75,6 +75,11 @@
+       corridors.forEach((corridor: CorridorRecord) => {
+         if (corridor == null) return;
+         if (corridor.source_anchor_id && corridor.destination_anchor_id) {
++          if (
++            nodesMap.get(corridor.source_anchor_id)?.type !== 'anchor' ||
++            nodesMap.get(corridor.destination_anchor_id)?.type !== 'anchor'
++          ) return;
++
+           // Create asset node if it doesn't exist
+           const assetId = `${corridor.source_asset_code}_${corridor.source_asset_issuer}`;
+           if (!nodesMap.has(assetId)) {
