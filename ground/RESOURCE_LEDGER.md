@@ -14,6 +14,14 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Deferred source, bounded research and entrant-review delta — 2026-10-06 03:37 EDT
+
+The canonical graph now contains **508 resources**, with **255 producing** and **134 append-only evidence records**. Five bounded revenue-facing source packets advance existing owners: Stellar notification read-transition timestamps, Stellar React 19 nullable chart refs, PayD fixed-name favicon revalidation, Stellar first-render theme hydration, and PayD CSP fingerprint expiry. They are **AVAILABLE / CONSTRAINED** source, not application, compiler, browser, Nginx, deployment, upstream-acceptance, payment, revenue or cash evidence.
+
+PPL031 adds a **PRODUCING / CONSTRAINED** analytic note proving the common constant-two positive-quadrature consequence and the exact right-Radau nodal constant while explicitly leaving the sharper Gauss equality unproved. PPL120 adds a **PRODUCING / CONSTRAINED** saved finite collision certificate and count/rank/select navigator for two fixed offset palettes; it is not an unrestricted prime-conjecture result. The Vesuvius October packet is **AVAILABLE / HELD** for authorized entrant review only. Its sponsor-merged contribution and successful public-data UI evidence do not establish identity, eligibility, terms acceptance, submission, award, receivable, payment, revenue or cash; Bryce retains every entrant-controlled action.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-deferred-delta-20261006-0337.json). No duplicate build order or owner-only handoff was created. Existing holds, no-resend, open-door/no-auth, private-data and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Late Stellar CSV and Army IIIAC RFI delta — 2026-10-06 03:28 EDT
 
 The canonical graph now contains **500 resources**, with **253 producing** and
