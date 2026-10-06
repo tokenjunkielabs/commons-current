@@ -1,0 +1,83 @@
+diff --git a/src/lib/soroban-api.ts b/src/lib/soroban-api.ts
+--- a/src/lib/soroban-api.ts
++++ b/src/lib/soroban-api.ts
+@@ -73,6 +73,8 @@
+ export interface SorobanActiveContractsResponse {
+   /** Total count of active contracts. */
+   count: number;
++  /** True when a failed request supplied a placeholder count. */
++  unavailable?: boolean;
+   /** Optional time window label (e.g., "7d", "30d"). */
+   window?: string;
+   /** Optional trend percentage vs previous period. */
+@@ -249,7 +251,7 @@
+ 
+ /**
+  * Active contracts count (backend#21).
+- * Returns zero count when backend is unavailable.
++ * Marks the placeholder count unavailable when the request fails.
+  */
+ export async function fetchSorobanActiveContracts(
+   window = "7d",
+@@ -271,6 +273,6 @@
+     if (!isNetworkError) {
+       logger.error("Failed to fetch Soroban active contracts:", error);
+     }
+-    return { count: 0, window };
++    return { count: 0, window, unavailable: true };
+   }
+ }
+diff --git a/src/app/[locale]/soroban/page.tsx b/src/app/[locale]/soroban/page.tsx
+--- a/src/app/[locale]/soroban/page.tsx
++++ b/src/app/[locale]/soroban/page.tsx
+@@ -81,7 +81,7 @@
+       });
+       setContractCalls({ points: [], metric: "events" });
+       setGasUsage({ total_gas: 0, window: "7d", coming_soon: true });
+-      setActiveContracts({ count: 0, window: "7d" });
++      setActiveContracts({ count: 0, window: "7d", unavailable: true });
+     } finally {
+       setLoading(false);
+       setRefreshing(false);
+@@ -134,6 +134,7 @@
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+         <ActiveContractsPanel
+           count={activeContracts?.count ?? 0}
++          unavailable={activeContracts?.unavailable}
+           window={activeContracts?.window}
+           trend={activeContracts?.trend}
+           loading={loading}
+diff --git a/src/components/soroban/ActiveContractsPanel.tsx b/src/components/soroban/ActiveContractsPanel.tsx
+--- a/src/components/soroban/ActiveContractsPanel.tsx
++++ b/src/components/soroban/ActiveContractsPanel.tsx
+@@ -6,6 +6,7 @@
+ 
+ interface ActiveContractsPanelProps {
+   count: number;
++  unavailable?: boolean;
+   window?: string;
+   trend?: number;
+   loading?: boolean;
+@@ -20,6 +21,7 @@
+ 
+ export function ActiveContractsPanel({
+   count,
++  unavailable = false,
+   window = "7d",
+   trend,
+   loading = false,
+@@ -41,10 +43,10 @@
+   return (
+     <MetricCard
+       label="Active Contracts"
+-      value={formatCount(count)}
+-      subLabel={`Active in ${window.toUpperCase()}`}
+-      trend={trend !== undefined ? Math.abs(trend) : undefined}
+-      trendDirection={trendDirection}
++      value={unavailable ? "Unavailable" : formatCount(count)}
++      subLabel={unavailable ? "Unable to load the count" : `Active in ${window.toUpperCase()}`}
++      trend={!unavailable && trend !== undefined ? Math.abs(trend) : undefined}
++      trendDirection={unavailable ? undefined : trendDirection}
+     />
+   );
+ }
