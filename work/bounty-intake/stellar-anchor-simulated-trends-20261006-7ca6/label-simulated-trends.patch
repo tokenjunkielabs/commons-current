@@ -1,0 +1,26 @@
+diff --git a/src/app/[locale]/anchors/components/AnchorTable.tsx b/src/app/[locale]/anchors/components/AnchorTable.tsx
+index 58a190c..f34f8fd 100644
+--- a/src/app/[locale]/anchors/components/AnchorTable.tsx
++++ b/src/app/[locale]/anchors/components/AnchorTable.tsx
+@@ -96,7 +96,7 @@
+               </button>
+             </th>
+             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+-              30-Day Trend
++              Simulated trend
+             </th>
+             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+               Actions
+diff --git a/src/app/[locale]/anchors/components/AnchorCards.tsx b/src/app/[locale]/anchors/components/AnchorCards.tsx
+index d28c319..4804580 100644
+--- a/src/app/[locale]/anchors/components/AnchorCards.tsx
++++ b/src/app/[locale]/anchors/components/AnchorCards.tsx
+@@ -108,7 +108,7 @@
+               <div className="flex items-center gap-2">
+                 <BarChart3 aria-hidden="true" className="w-4 h-4 text-gray-400" />
+                 <span className="text-xs text-gray-500 dark:text-gray-400">
+-                  30-day trend
++                  Simulated trend
+                 </span>
+                 <div className="w-16 h-6">
+                   <ResponsiveContainer width="100%" height="100%">
