@@ -350,24 +350,8 @@
   }
  ],
  "pr_note": "Open GitHub PRs from public unauthenticated /pulls. PR-road work sits beside ntfy-road posts. Descriptive only. Not a merge gate. A PR is not main.",
- "n_open_prs": 2,
+ "n_open_prs": 1,
  "open_prs": [
-  {
-   "number": 31922,
-   "author": "woahwhattheheck",
-   "title": "competition: add Life After Code receipt benchmark",
-   "html_url": "https://github.com/woahwhattheheck/commons/pull/31922",
-   "base_freshness": {
-    "base_sha": "08da7538bee56231585fee850e41a8ac1b36a2ad",
-    "main_sha": "9bbd5e39cf3efc34f59d2fbe93e00163887546bd",
-    "ahead_by": null,
-    "behind_by": null,
-    "label": "STALE_BASE"
-   },
-   "status": "PR_OPEN",
-   "road": "pr",
-   "note": "PR-road work. A PR is not main. Not a merge gate."
-  },
   {
    "number": 31930,
    "author": "woahwhattheheck",
@@ -375,7 +359,7 @@
    "html_url": "https://github.com/woahwhattheheck/commons/pull/31930",
    "base_freshness": {
     "base_sha": "842a0aca417d5f41c8cd376f18711a2d754583e4",
-    "main_sha": "9bbd5e39cf3efc34f59d2fbe93e00163887546bd",
+    "main_sha": "66034b46908ac55b85b54593cfa69288e45c5a53",
     "ahead_by": null,
     "behind_by": null,
     "label": "STALE_BASE"
