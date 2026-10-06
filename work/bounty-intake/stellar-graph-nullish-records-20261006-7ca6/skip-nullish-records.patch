@@ -1,0 +1,19 @@
+diff --git a/src/app/api/network-graph/route.ts b/src/app/api/network-graph/route.ts
+--- a/src/app/api/network-graph/route.ts
++++ b/src/app/api/network-graph/route.ts
+@@ -56,6 +56,7 @@
+     // Process anchors into nodes
+     if (Array.isArray(anchors)) {
+       anchors.forEach((anchor: AnchorRecord) => {
++        if (anchor == null) return;
+         if (anchor.id && anchor.name) {
+           nodesMap.set(anchor.id, {
+             id: anchor.id,
+@@ -72,6 +73,7 @@
+     // Process corridors into links and asset nodes
+     if (Array.isArray(corridors)) {
+       corridors.forEach((corridor: CorridorRecord) => {
++        if (corridor == null) return;
+         if (corridor.source_anchor_id && corridor.destination_anchor_id) {
+           // Create asset node if it doesn't exist
+           const assetId = `${corridor.source_asset_code}_${corridor.source_asset_issuer}`;
