@@ -1,0 +1,12 @@
+diff --git a/backend/src/distributed_lock/redis_store.rs b/backend/src/distributed_lock/redis_store.rs
+--- a/backend/src/distributed_lock/redis_store.rs
++++ b/backend/src/distributed_lock/redis_store.rs
+@@ -83,7 +83,7 @@
+     /// Create a new `RedisLockStore` with the given configuration
+     pub fn new(config: RedisLockConfig) -> Result<Self> {
+         let client = redis::Client::open(config.url.as_str())
+-            .map_err(|e| LockError::StorageError(format!("Invalid Redis URL {}: {}", config.url, e)))?;
++            .map_err(|_| LockError::StorageError("Invalid Redis connection URL".to_string()))?;
+ 
+         // Lua scripts compiled once for atomicity
+         let acquire_script = redis::Script::new(r#"
