@@ -1,0 +1,81 @@
+diff --git a/src/app/[locale]/quests/page.tsx b/src/app/[locale]/quests/page.tsx
+index ea55ab2..5b8101b 100644
+--- a/src/app/[locale]/quests/page.tsx
++++ b/src/app/[locale]/quests/page.tsx
+@@ -16,10 +16,11 @@
+   getLeaderboard,
+   checkPathCompletion,
+ } from '@/lib/quests';
++import type { QuestProgress } from '@/lib/quests';
+ 
+ export default function QuestsPage() {
+   const pathname = usePathname();
+-  const [progress, setProgress] = useState(getProgress());
++  const [progress, setProgress] = useState<QuestProgress[]>([]);
+   const [showLeaderboard, setShowLeaderboard] = useState(true);
+ 
+   useEffect(() => {
+@@ -30,10 +31,10 @@
+     );
+   }, [pathname]);
+ 
+-  const completedCount = getCompletedCount();
+-  const totalXP = getTotalXP();
+-  const achievements = getUnlockedAchievements();
+-  const leaderboard = getLeaderboard();
++  const completedCount = getCompletedCount(progress);
++  const totalXP = getTotalXP(progress);
++  const achievements = getUnlockedAchievements(progress);
++  const leaderboard = getLeaderboard(progress);
+ 
+   return (
+     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+diff --git a/src/lib/quests.ts b/src/lib/quests.ts
+index be3ef45..f6c177e 100644
+--- a/src/lib/quests.ts
++++ b/src/lib/quests.ts
+@@ -175,25 +175,24 @@
+   }
+ }
+ 
+-export function getCompletedCount(): number {
+-  return getProgress().length;
++export function getCompletedCount(progress: QuestProgress[] = getProgress()): number {
++  return progress.length;
+ }
+ 
+-export function getTotalXP(): number {
+-  const progress = getProgress();
++export function getTotalXP(progress: QuestProgress[] = getProgress()): number {
+   return progress.reduce((sum, p) => {
+     const q = QUESTS.find((x) => x.id === p.questId);
+     return sum + (q?.xp ?? 0);
+   }, 0);
+ }
+ 
+-export function getUnlockedAchievements(): Achievement[] {
+-  const completed = getCompletedCount();
++export function getUnlockedAchievements(progress: QuestProgress[] = getProgress()): Achievement[] {
++  const completed = getCompletedCount(progress);
+   return ACHIEVEMENTS.filter((a) => {
+     if (a.condition === "quests") return completed >= a.threshold;
+     if (a.condition === "explorer") {
+       const defiQuests = QUESTS.filter((q) => q.category === "defi");
+-      const defiCompleted = getProgress().filter((p) =>
++      const defiCompleted = progress.filter((p) =>
+         defiQuests.some((q) => q.id === p.questId),
+       ).length;
+       return defiCompleted >= a.threshold;
+@@ -211,9 +210,9 @@
+   avatar: string;
+ }
+ 
+-export function getLeaderboard(): LeaderboardEntry[] {
+-  const userXP = getTotalXP();
+-  const userCompleted = getCompletedCount();
++export function getLeaderboard(progress: QuestProgress[] = getProgress()): LeaderboardEntry[] {
++  const userXP = getTotalXP(progress);
++  const userCompleted = getCompletedCount(progress);
+   const mock: LeaderboardEntry[] = [
+     { rank: 1, name: "StellarPro", xp: 650, completed: 10, avatar: "🌟" },
+     { rank: 2, name: "DeFiDegen", xp: 500, completed: 8, avatar: "💎" },

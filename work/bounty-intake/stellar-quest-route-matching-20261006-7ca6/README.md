@@ -1,4 +1,4 @@
-# Match quest progress to the actual localized route
+# Quest route matching and initial progress rendering
 
 The locale layout mounts QuestProgressTracker, which passes Next.js usePathname directly into checkPathCompletion. The actual routing configuration always prefixes en, es or zh, while quest definitions contain locale-free paths. The matcher also treats the dashboard's root entry "/" as a prefix of every path. These two source conditions prevent intended localized matches and can attribute an unrelated visit to the dashboard quest.
 
@@ -48,3 +48,28 @@ The full donor tree exposed no AGENTS/RULES path. Retained EventSource-specific 
 This is a forward routing correction. Existing incorrectly recorded progress is not removed, migrated or re-awarded. The localStorage schema/availability/concurrency behavior and the source's explicit mock leaderboard remain unchanged. Repeated locale-only navigation now resolves to the same locale-free pathname; the tracker continues to react to that pathname, not to a separate locale preference. No new locale/path mapping, trailing-slash normalization or query-string policy is introduced.
 
 No compiler, tests, fixtures, browser, navigation, storage access, quest completion, wallet/account/chain/payment action, upstream submission or full-feature acceptance was performed.
+
+## Additive continuation: restore one progress snapshot after hydration
+
+The actual `src/app/[locale]/quests/page.tsx` at native blob `ea55ab2602a0f36d9dd0e8b7f9a744bc647b4dd2` initializes state with getProgress() and separately calls four storage-backed metric getters during render. The helper returns an empty array on the server but reads browser localStorage on the client. Saved progress can therefore alter the initial cards, counts, XP, achievements and leaderboard output before hydration. QuestCard `5e3ceb655d66b9924a40a016cbbacfbf14b6ae48` receives completed from the page and already uses the localized Link; it is unchanged.
+
+The additional patch initializes the page's typed progress state to an empty array. Its existing pathname effect still checks the current path, loads getProgress(), and retains its JSON equality check before updating state. That effect is the existing restoration/update point; no storage write, schema or progress migration is introduced.
+
+The four helpers now accept an optional `progress: QuestProgress[] = getProgress()` argument. The page supplies the same progress array to completed-count, XP, achievements and leaderboard calculations. Nested count/XP/DeFi calculations forward that array even when empty; none falls back to another storage read. No helper mutates the supplied array. The mock leaderboard remains a newly created array sorted with the existing comparator.
+
+No-argument callers retain their API and load persisted progress by default. The page's render avoids those defaults, making its first empty snapshot deterministic and later saved-progress output consistent across cards and metrics. All existing numeric formulas, thresholds, quest definitions, completed-ID handling, mock rows, displayed copy and JSX remain exact. The source change is not a new reward calculation.
+
+The already-read primary [React hydrateRoot contract](https://react.dev/reference/react-dom/client/hydrateRoot) requires matching initial rendered output and describes an effect-driven subsequent render for client-dependent content. The [Next.js Server and Client Components documentation](https://nextjs.org/docs/app/getting-started/server-and-client-components) establishes that client components participate in initial HTML prerendering. These contracts apply to the acquired locale route and its localStorage-dependent source; no hydration run was performed.
+
+Apply `restore-quest-progress-after-hydration.patch` after `match-localized-quest-routes.patch`:
+
+| Changed source | Preimage Git blob / bytes | Postimage Git blob / bytes |
+| --- | --- | --- |
+| `src/app/[locale]/quests/page.tsx` | `ea55ab2602a0f36d9dd0e8b7f9a744bc647b4dd2` / 8054 | `5b8101b247dc4fc495b54bedfaa2c442c24b9ae4` / 8143 |
+| `src/lib/quests.ts` | `be3ef45ab09aa97cd29956df3f22fa36e94c7729` / 6597 | `f6c177ed9768aacfd1cae45e583e24feb866066b` / 6741 |
+
+The additional serialized patch contains four hunks, +15/-15. Each complete forward reconstruction matches its postimage and each inverse matches its preimage. The original route patch is unchanged, and the new helper postimage preserves its corrected route predicate exactly. These are source-text integrity checks, not executed tests or computed quest results.
+
+A bounded exact QuestsPage public search returned zero/native END; the Commons PR query for quests plus hydration returned zero/incomplete_results:false. No global absence or whole-build result is inferred.
+
+The initial empty-progress presentation may briefly precede saved progress after the effect runs. There is no claim of flash-free rendering, malformed-storage validation, cross-tab live synchronization, atomic storage snapshots or whole-page/application hydration success. Metric calculations now deliberately use the page snapshot rather than opportunistically rereading storage on unrelated renders; the existing pathname effect remains the update trigger. Existing correctly or incorrectly saved progress is preserved without removal/re-awarding. No browser, storage/user data, fixture, runtime, compiler, test, navigation, account, chain, payment or upstream operation was performed.
