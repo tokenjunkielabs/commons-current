@@ -1,0 +1,79 @@
+diff --git a/frontend/src/components/EmployeeList.tsx b/frontend/src/components/EmployeeList.tsx
+--- a/frontend/src/components/EmployeeList.tsx
++++ b/frontend/src/components/EmployeeList.tsx
+@@ -147,35 +147,50 @@
+         <table className="w-full text-left border-collapse">
+           <thead>
+             <tr className="border-b border-hi">
+-              <th
+-                className="p-6 text-xs font-bold uppercase tracking-widest text-muted cursor-pointer"
+-                onClick={() => handleSort('name')}
+-              >
+-                Name {sortKey === 'name' && (sortAsc ? '▲' : '▼')}
++              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++                <button
++                  type="button"
++                  onClick={() => handleSort('name')}
++                  className="cursor-pointer text-left"
++                >
++                  Name {sortKey === 'name' && (sortAsc ? '▲' : '▼')}
++                </button>
+               </th>
+-              <th
+-                className="p-6 text-xs font-bold uppercase tracking-widest text-muted cursor-pointer"
+-                onClick={() => handleSort('position')}
+-              >
+-                Role {sortKey === 'position' && (sortAsc ? '▲' : '▼')}
++              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++                <button
++                  type="button"
++                  onClick={() => handleSort('position')}
++                  className="cursor-pointer text-left"
++                >
++                  Role {sortKey === 'position' && (sortAsc ? '▲' : '▼')}
++                </button>
+               </th>
+-              <th
+-                className="p-6 text-xs font-bold uppercase tracking-widest text-muted cursor-pointer"
+-                onClick={() => handleSort('wallet')}
+-              >
+-                Wallet {sortKey === 'wallet' && (sortAsc ? '▲' : '▼')}
++              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++                <button
++                  type="button"
++                  onClick={() => handleSort('wallet')}
++                  className="cursor-pointer text-left"
++                >
++                  Wallet {sortKey === 'wallet' && (sortAsc ? '▲' : '▼')}
++                </button>
+               </th>
+-              <th
+-                className="p-6 text-xs font-bold uppercase tracking-widest text-muted cursor-pointer"
+-                onClick={() => handleSort('salary')}
+-              >
+-                Salary {sortKey === 'salary' && (sortAsc ? '▲' : '▼')}
++              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++                <button
++                  type="button"
++                  onClick={() => handleSort('salary')}
++                  className="cursor-pointer text-left"
++                >
++                  Salary {sortKey === 'salary' && (sortAsc ? '▲' : '▼')}
++                </button>
+               </th>
+-              <th
+-                className="p-6 text-xs font-bold uppercase tracking-widest text-muted cursor-pointer"
+-                onClick={() => handleSort('status')}
+-              >
+-                Status {sortKey === 'status' && (sortAsc ? '▲' : '▼')}
++              <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
++                <button
++                  type="button"
++                  onClick={() => handleSort('status')}
++                  className="cursor-pointer text-left"
++                >
++                  Status {sortKey === 'status' && (sortAsc ? '▲' : '▼')}
++                </button>
+               </th>
+               <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted">
+                 Actions
