@@ -1,0 +1,32 @@
+diff --git a/src/app/[locale]/trustlines/page.tsx b/src/app/[locale]/trustlines/page.tsx
+--- a/src/app/[locale]/trustlines/page.tsx
++++ b/src/app/[locale]/trustlines/page.tsx
+@@ -339,21 +339,23 @@
+                     <div
+                       className="h-full bg-emerald-400"
+                       style={{
+-                        width: `${(selectedAsset.authorized_trustlines / selectedAsset.total_trustlines) * 100}%`,
++                        width: `${selectedAsset.total_trustlines === 0 ? 0 : (selectedAsset.authorized_trustlines / selectedAsset.total_trustlines) * 100}%`,
+                       }}
+                     />
+                     <div
+                       className="h-full bg-rose-400"
+                       style={{
+-                        width: `${(selectedAsset.unauthorized_trustlines / selectedAsset.total_trustlines) * 100}%`,
++                        width: `${selectedAsset.total_trustlines === 0 ? 0 : (selectedAsset.unauthorized_trustlines / selectedAsset.total_trustlines) * 100}%`,
+                       }}
+                     />
+                   </div>
+ 
+                   <p className="text-[10px] font-mono text-muted-foreground uppercase text-center mt-2">
+-                    {selectedAsset.unauthorized_trustlines > 0
+-                      ? "Includes trustlines pending authorization or revoked"
+-                      : "All trustlines are fully authorized"}
++                    {selectedAsset.total_trustlines === 0
++                      ? "No trustlines reported for this asset"
++                      : selectedAsset.unauthorized_trustlines > 0
++                        ? "Includes trustlines pending authorization or revoked"
++                        : "All trustlines are fully authorized"}
+                   </p>
+                 </div>
+               </div>
