@@ -1,0 +1,26 @@
+diff --git a/src/components/dashboard/CorridorHealth.tsx b/src/components/dashboard/CorridorHealth.tsx
+--- a/src/components/dashboard/CorridorHealth.tsx
++++ b/src/components/dashboard/CorridorHealth.tsx
+@@ -1,5 +1,4 @@
+ import React from 'react';
+-import { Badge } from '../ui/badge';
+ import { Activity, ShieldCheck, AlertTriangle } from 'lucide-react';
+ 
+ interface Corridor {
+@@ -28,7 +27,6 @@
+         <div className="p-6 h-full">
+             <div className="flex items-center justify-between mb-6">
+                 <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Corridor Analytics</h3>
+-                <Badge variant="outline" className="text-[10px] font-mono border-border/50">ACTIVE_MONITORING</Badge>
+             </div>
+             <div className="space-y-4">
+                 {corridors.map((corridor) => (
+@@ -38,7 +36,7 @@
+                                 {getStatusIcon(corridor.status)}
+                                 <span className="font-bold text-sm tracking-tight">{corridor.name}</span>
+                             </div>
+-                            <span className="text-[10px] font-mono text-muted-foreground uppercase">{corridor.uptime}% UP</span>
++                            <span className="text-[10px] font-mono text-muted-foreground uppercase">{corridor.uptime}% SUCCESS</span>
+                         </div>
+ 
+                         <div className="flex items-end justify-between">
