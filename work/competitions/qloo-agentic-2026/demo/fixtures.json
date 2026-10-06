@@ -1,0 +1,76 @@
+{
+  "launch": {
+    "success": true,
+    "duration": 9.5,
+    "results": {
+      "entities": [
+        {
+          "entity_id": "brand-pace",
+          "name": "Pace Works",
+          "type": "urn:entity:brand",
+          "properties": {"available": true, "segment": "performance"},
+          "query": {"affinity": 0.78, "explainability": {"signal": "independent running"}}
+        },
+        {
+          "entity_id": "brand-field",
+          "name": "Field Supply",
+          "type": "urn:entity:brand",
+          "properties": {"available": true, "segment": "lifestyle"},
+          "query": {"affinity": 0.79, "explainability": {"signal": "independent running"}}
+        },
+        {
+          "entity_id": "brand-unavailable",
+          "name": "Unavailable Co",
+          "type": "urn:entity:brand",
+          "properties": {"available": false, "segment": "performance"},
+          "query": {"affinity": 0.99, "explainability": {"signal": "independent running"}}
+        }
+      ]
+    },
+    "query": {"explainability": {}}
+  },
+  "adjacency": {
+    "success": true,
+    "results": {
+      "entities": [
+        {
+          "entity_id": "brand-outdoor",
+          "name": "Outdoor Neighbor",
+          "type": "urn:entity:brand",
+          "properties": {"segment": "outdoor"},
+          "query": {"affinity": 0.71, "explainability": {"signal": "shared audience"}}
+        },
+        {
+          "entity_id": "brand-blocked",
+          "name": "Blocked Neighbor",
+          "type": "urn:entity:brand",
+          "properties": {"segment": "outdoor"},
+          "query": {"affinity": 0.97, "explainability": {"signal": "shared audience"}}
+        }
+      ]
+    },
+    "query": {}
+  },
+  "travel": {
+    "success": true,
+    "results": {
+      "entities": [
+        {
+          "entity_id": "place-alfama",
+          "name": "Alfama Table",
+          "type": "urn:entity:place",
+          "properties": {"open": true, "neighborhood": "Alfama"},
+          "query": {"affinity": 0.83, "explainability": {"signal": "food and design"}}
+        },
+        {
+          "entity_id": "place-closed",
+          "name": "Closed Gallery",
+          "type": "urn:entity:place",
+          "properties": {"open": false, "neighborhood": "Alfama"},
+          "query": {"affinity": 0.95, "explainability": {"signal": "food and design"}}
+        }
+      ]
+    },
+    "query": {}
+  }
+}
