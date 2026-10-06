@@ -1,0 +1,32 @@
+diff --git a/src/app/[locale]/corridors/[pair]/page.tsx b/src/app/[locale]/corridors/[pair]/page.tsx
+index 45724baef4ac084737cc578088f0273356411ff7..1517325bfad37ae5b7abc112a713870a4ed2b956
+--- a/src/app/[locale]/corridors/[pair]/page.tsx
++++ b/src/app/[locale]/corridors/[pair]/page.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import { useEffect, useState } from "react";
++import { useEffect, useMemo, useState } from "react";
+ import { useParams } from "next/navigation";
+ import {
+   TrendingUp,
+@@ -38,6 +38,10 @@
+ export default function CorridorDetailPage() {
+   const params = useParams();
+   const corridorPair = params.pair as string;
++  const corridorKeys = useMemo(
++    () => (corridorPair ? [corridorPair] : []),
++    [corridorPair],
++  );
+ 
+   const [data, setData] = useState<CorridorDetailData | null>(null);
+   const [loading, setLoading] = useState(true);
+@@ -52,7 +56,7 @@
+     recentPayments,
+     reconnect,
+   } = useRealtimeCorridors({
+-    corridorKeys: corridorPair ? [corridorPair] : [],
++    corridorKeys,
+     enablePaymentStream: true,
+     onCorridorUpdate: (update) => {
+       logger.debug("Received real-time corridor update:", update as unknown as Record<string, unknown>);
