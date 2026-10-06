@@ -1,0 +1,58 @@
+diff --git a/frontend/src/components/ContractErrorPanel.tsx b/frontend/src/components/ContractErrorPanel.tsx
+--- a/frontend/src/components/ContractErrorPanel.tsx
++++ b/frontend/src/components/ContractErrorPanel.tsx
+@@ -23,16 +23,21 @@
+ 
+   return (
+     <div className={`${styles.panel} ${className} ${isExpanded ? styles.expanded : ''}`}>
+-      <div className={styles.header} onClick={() => setIsExpanded(!isExpanded)}>
+-        <div className={styles.headerLeft}>
++      <button
++        type="button"
++        className={styles.header}
++        onClick={() => setIsExpanded(!isExpanded)}
++        aria-expanded={isExpanded}
++      >
++        <span className={styles.headerLeft}>
+           <AlertTriangle className={styles.errorIcon} size={18} />
+           <span className={styles.title}>Contract Invocation Failed</span>
+-        </div>
+-        <div className={styles.headerRight}>
++        </span>
++        <span className={styles.headerRight}>
+           <span className={styles.errorCode}>{error.code}</span>
+           {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+-        </div>
+-      </div>
++        </span>
++      </button>
+ 
+       {isExpanded && (
+         <div className={styles.content}>
+diff --git a/frontend/src/components/ContractErrorPanel.module.css b/frontend/src/components/ContractErrorPanel.module.css
+--- a/frontend/src/components/ContractErrorPanel.module.css
++++ b/frontend/src/components/ContractErrorPanel.module.css
+@@ -14,12 +14,23 @@
+ }
+ 
+ .header {
++  width: 100%;
++  border: 0;
++  background: transparent;
++  color: inherit;
++  font: inherit;
++  text-align: inherit;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 1rem 1.25rem;
+   cursor: pointer;
+   user-select: none;
++}
++
++.header:focus-visible {
++  outline: 2px solid #fca5a5;
++  outline-offset: -2px;
+ }
+ 
+ .header:hover {
