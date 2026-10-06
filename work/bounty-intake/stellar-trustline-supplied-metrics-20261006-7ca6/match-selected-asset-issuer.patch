@@ -1,0 +1,14 @@
+diff --git a/src/app/[locale]/trustlines/page.tsx b/src/app/[locale]/trustlines/page.tsx
+--- a/src/app/[locale]/trustlines/page.tsx
++++ b/src/app/[locale]/trustlines/page.tsx
+@@ -194,7 +194,9 @@
+ 
+           <div className="overflow-y-auto flex-1 p-2 space-y-1 custom-scrollbar">
+             {rankings.map((asset, index) => {
+-              const isSelected = selectedAsset?.asset_code === asset.asset_code;
++              const isSelected =
++                selectedAsset?.asset_code === asset.asset_code &&
++                selectedAsset?.asset_issuer === asset.asset_issuer;
+               return (
+                 <button
+                   key={`${asset.asset_code}-${asset.asset_issuer}`}
