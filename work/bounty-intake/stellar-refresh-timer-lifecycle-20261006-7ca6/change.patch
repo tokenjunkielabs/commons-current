@@ -1,0 +1,63 @@
+diff --git a/src/hooks/useDataRefresh.ts b/src/hooks/useDataRefresh.ts
+--- a/src/hooks/useDataRefresh.ts
++++ b/src/hooks/useDataRefresh.ts
+@@ -38,6 +38,7 @@
+   // Tracks elapsed seconds since the last countdown reset so we can rebuild
+   // the countdown even when the component-level interval is re-created.
+   const elapsedRef = useRef(0);
++  const countdownOwnerRef = useRef<object | null>(null);
+   const countdownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+     null,
+   );
+@@ -56,7 +57,8 @@
+     }
+   }, []);
+ 
+-  const startCountdown = useCallback(() => {
++  const startCountdown = useCallback((owner: object | null) => {
++    if (owner === null || countdownOwnerRef.current !== owner) return;
+     clearTimers();
+     elapsedRef.current = 0;
+     setSecondsUntilRefresh(refreshIntervalSec);
+@@ -81,15 +83,20 @@
+           setIsRefreshing(false);
+         }
+       }
+-      // Restart the countdown after the refresh completes
+-      startCountdown();
++      // Restart only while this effect still owns the countdown.
++      startCountdown(owner);
+     }, refreshIntervalMs);
+   }, [clearTimers, onRefresh, refreshIntervalMs, refreshIntervalSec]);
+ 
+   // Bootstrap: kick off the countdown on mount (and whenever the interval changes)
+   useEffect(() => {
+-    startCountdown();
+-    return clearTimers;
++    const owner = {};
++    countdownOwnerRef.current = owner;
++    startCountdown(owner);
++    return () => {
++      countdownOwnerRef.current = null;
++      clearTimers();
++    };
+   }, [startCountdown, clearTimers]);
+ 
+   // Optional: fire an immediate refresh on mount
+@@ -112,6 +119,7 @@
+   /** Manually trigger a refresh, reset the countdown. */
+   const triggerRefresh = useCallback(async () => {
+     if (isRefreshing) return;
++    const owner = countdownOwnerRef.current;
+     setIsRefreshing(true);
+     try {
+       if (onRefresh) await onRefresh();
+@@ -121,7 +129,7 @@
+     } finally {
+       setIsRefreshing(false);
+     }
+-    startCountdown();
++    startCountdown(owner);
+   }, [isRefreshing, onRefresh, startCountdown]);
+ 
+   /** Push a lastUpdated timestamp without triggering a full refresh cycle. */
