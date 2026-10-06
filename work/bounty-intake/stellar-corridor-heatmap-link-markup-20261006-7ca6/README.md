@@ -67,3 +67,38 @@ Bounded exact-component/legacyBehavior queries returned zero Commons rows and ze
 | upstream-license-de-wet.md | 4a766e268772888af5df56c3f6c608f68558b789 | 1080 |
 
 This is an attributed Commons source proposal. Publication requires all five complete immutable artifact bodies with native plus independent identities, followed by exact PR/files/head/merge/parents/tree/main metadata. A fresh main commit exactly equal to the verified merge may reuse those bodies under an explicit alias receipt. Otherwise each artifact is read once at the observed immutable main pin. Actual publication identities belong in the separate release and grouped index.
+
+## Continuation: metric-control names and active state
+
+The preceding sections document #32043. This continuation consumes its retained complete component postimage and preserves the supported localized Link markup.
+
+The mounted heatmap has four native buttons that set activeMetric to health, success_rate, volume or latency. The same state controls both metric rendering and the selected button's styling. Each button's text is inside a span with hidden sm:inline; there is no explicit button name independent of that responsive visibility, and no programmatic pressed-state attribute.
+
+The new patch adds a stable aria-label matching each existing text label and an aria-pressed boolean using the same comparison already used for selected styling:
+
+| Existing metric state | Explicit name | Pressed state |
+| --- | --- | --- |
+| health | Health | activeMetric equals health |
+| success_rate | Success | activeMetric equals success_rate |
+| volume | Volume | activeMetric equals volume |
+| latency | Latency | activeMetric equals latency |
+
+The existing initial state selects health. Each existing handler sets one member of the same four-value union, so the corresponding button exposes true while the others expose false under that source state model. Labels remain stable when selection changes. Re-selecting the current metric retains the existing state; the patch does not add a no-selection mode.
+
+The [W3C APG button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/) supports explicit button names through aria-label and communicates a button's pressed state through aria-pressed with stable labels. This supports the added semantics. It does not establish full accessibility conformance or a tested assistive-technology announcement.
+
+Only eight attributes are added. Native button roles, handlers, keyboard behavior, focus, visual labels, icons, class expressions, state initialization, metric calculations and every other source byte remain exact. No tab/radio roles, arrow-key navigation, live region, new callback or changed selection policy is introduced. The surrounding chart and tooltip accessibility are unchanged.
+
+| Metric-control continuation item | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Source after #32043, before attributes | f532cc2e9149d0569faf014cad188c2f31a0bd69 | 20450 |
+| Source after metric attributes | ebdadd15b4f027e2cddc256447f3934f117fe8e8 | 20799 |
+| name-and-expose-metric-controls.patch | 82122104bd29409b2cbb34a9333e04ea1e3fa5c1 | 2258 |
+
+The serialized incremental patch contains 4 hunks and 32 rows, with 8 additions and no deletions. Complete forward and inverse reconstruction matched the source identities. Removing the eight attributes restores every prior byte, including the corrected cell links.
+
+Apply supported-link-markup.patch first, then name-and-expose-metric-controls.patch. No button event, metric computation, component, browser, assistive technology, compiler, fixture, tests or workflow was executed. Responsive visual behavior and spoken output were not observed.
+
+Separate bounded component/aria-pressed and component/aria-label overlap queries returned zero Commons rows and zero Slack rows with native END. These queries do not establish global absence or upstream acceptance.
+
+This continuation writes only the new patch and an exact-preimage-guarded guide update. The existing Link patch and three MIT notices stay unchanged, with accepted checks inherited without replay. Both complete newly written immutable bodies require native and independent identity matches, followed by exact final PR/files/head/merge/parents/tree/main metadata. An explicit main alias requires fresh exact commit equality; otherwise both changed artifacts are read once at the observed immutable main pin.
