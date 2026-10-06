@@ -1,0 +1,24 @@
+diff --git a/src/components/charts/ChartExportButton.tsx b/src/components/charts/ChartExportButton.tsx
+--- a/src/components/charts/ChartExportButton.tsx
++++ b/src/components/charts/ChartExportButton.tsx
+@@ -37,7 +37,7 @@
+ 
+     try {
+       const filename = `${chartName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}`;
+-      await exportChart(chartRef.current, { filename, format });
++      await exportChart(chartRef.current, filename, format);
+     } catch (error) {
+       logger.error('Export failed:', error instanceof Error ? error : new Error(String(error)));
+     } finally {
+diff --git a/src/hooks/useChartExport.ts b/src/hooks/useChartExport.ts
+--- a/src/hooks/useChartExport.ts
++++ b/src/hooks/useChartExport.ts
+@@ -18,7 +18,7 @@
+ 
+       try {
+         const filename = `${chartName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}`;
+-        await exportChart(chartRef.current, { filename, format });
++        await exportChart(chartRef.current, filename, format);
+       } catch (error) {
+         logger.error('Chart export failed', error);
+         throw error;
