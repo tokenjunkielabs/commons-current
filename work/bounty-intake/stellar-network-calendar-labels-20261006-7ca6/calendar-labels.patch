@@ -1,0 +1,70 @@
+diff --git a/src/components/charts/PaymentVolumeChart.tsx b/src/components/charts/PaymentVolumeChart.tsx
+--- a/src/components/charts/PaymentVolumeChart.tsx
++++ b/src/components/charts/PaymentVolumeChart.tsx
+@@ -38,6 +38,10 @@
+     label: new Date(point.date).toLocaleDateString("en-US", {
+       month: "short",
+       day: "numeric",
++      timeZone:
++        point.date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(point.date)
++          ? "UTC"
++          : undefined,
+     }),
+     date: point.date,
+     volume: point.volume,
+diff --git a/src/components/charts/DailyActiveAccountsChart.tsx b/src/components/charts/DailyActiveAccountsChart.tsx
+--- a/src/components/charts/DailyActiveAccountsChart.tsx
++++ b/src/components/charts/DailyActiveAccountsChart.tsx
+@@ -36,6 +36,10 @@
+     label: new Date(point.date).toLocaleDateString("en-US", {
+       month: "short",
+       day: "numeric",
++      timeZone:
++        point.date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(point.date)
++          ? "UTC"
++          : undefined,
+     }),
+     date: point.date,
+     count: point.count,
+diff --git a/src/components/charts/TransactionsPerDayChart.tsx b/src/components/charts/TransactionsPerDayChart.tsx
+--- a/src/components/charts/TransactionsPerDayChart.tsx
++++ b/src/components/charts/TransactionsPerDayChart.tsx
+@@ -36,6 +36,10 @@
+     label: new Date(point.date).toLocaleDateString("en-US", {
+       month: "short",
+       day: "numeric",
++      timeZone:
++        point.date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(point.date)
++          ? "UTC"
++          : undefined,
+     }),
+     date: point.date,
+     count: point.count,
+diff --git a/src/components/charts/NewAccountsChart.tsx b/src/components/charts/NewAccountsChart.tsx
+--- a/src/components/charts/NewAccountsChart.tsx
++++ b/src/components/charts/NewAccountsChart.tsx
+@@ -36,6 +36,10 @@
+     label: new Date(point.date).toLocaleDateString("en-US", {
+       month: "short",
+       day: "numeric",
++      timeZone:
++        point.date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(point.date)
++          ? "UTC"
++          : undefined,
+     }),
+     date: point.date,
+     count: point.count,
+diff --git a/src/components/charts/FeeTrendsChart.tsx b/src/components/charts/FeeTrendsChart.tsx
+--- a/src/components/charts/FeeTrendsChart.tsx
++++ b/src/components/charts/FeeTrendsChart.tsx
+@@ -34,6 +34,10 @@
+     label: new Date(point.date).toLocaleDateString("en-US", {
+       month: "short",
+       day: "numeric",
++      timeZone:
++        point.date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(point.date)
++          ? "UTC"
++          : undefined,
+     }),
+     date: point.date,
+     avgFeeStroops: point.avgFeeStroops,
