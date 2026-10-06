@@ -1,0 +1,26 @@
+diff --git a/src/components/StateProvider.tsx b/src/components/StateProvider.tsx
+--- a/src/components/StateProvider.tsx
++++ b/src/components/StateProvider.tsx
+@@ -29,7 +29,7 @@
+   React.useEffect(() => {
+     if (process.env.NODE_ENV === 'development') {
+       // Expose debugging functions to window
+-      (window as any).__stateDevtools = {
++      const debugTools = {
+         // Store debugging
+         store,
+         logState: () => logger.debug('Store State', { state: store.getState() }),
+@@ -61,6 +61,13 @@
+             averageStaleTime: queries.reduce((acc: number, q: any) => acc + q.state.staleTime, 0) / queries.length,
+           };
+         },
+       };
++      (window as any).__stateDevtools = debugTools;
++
++      return () => {
++        if ((window as any).__stateDevtools === debugTools) {
++          delete (window as any).__stateDevtools;
++        }
++      };
+     }
+   }, [store, queryClient]);
