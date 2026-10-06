@@ -57,3 +57,40 @@ Apply default-export.patch at the donor repository root to the exact caller prei
 This is an attributed Commons source proposal. It does not modify upstream, deploy a site or establish acceptance, ownership or reward eligibility. Bounded exact-name Commons and Slack overlap queries returned zero results, with native END for Slack. Internal custody supplied no exact export-link completion or hold; these bounded observations do not certify global absence.
 
 Publication requires complete immutable artifact bodies and native plus independent blob identities, followed by final PR, changed-file, merge and main metadata. The preselected main-equals-merge shortcut applies only when the observed main commit exactly equals the merge. Otherwise every artifact is read once at the observed immutable main pin. The actual publication outcome belongs in its separate release and grouped index.
+
+## Continuation: align graph descriptions with supplied data
+
+This continuation preserves #31997 and batches two related presentation corrections in the actual mounted network page and its graph child. The page postimage, complete graph component and complete API route are retained; no graph or data acquisition was executed.
+
+The page's old help text described larger nodes as high-volume or multi-trustline objects, corridor edges as asset-to-asset links with liquidity-depth width, and hover details as performance metrics for any element. The actual source supports a narrower description:
+
+| Visible subject | Actual retained implementation | New page wording |
+| --- | --- | --- |
+| Nodes | Custom paintNode draws a fixed 12-by-12 rounded square for anchors and radius-4 circle for assets. It does not use node.val for geometry. | Rounded squares represent anchors. Circles represent assets. |
+| Connections and width | The API emits source-anchor to asset issuance links, then asset to destination-anchor corridor links. Corridor value comes from volume_usd; the graph passes corridor value to linkWidth. Issuance width stays 1. | Links connect anchors and assets. Corridor line width reflects reported USD volume. |
+| Corridor color | API health comes from success_rate; the color accessor uses that value when defined, with unchanged thresholds and fallback. liquidity is not used by that accessor. | Color reflects the available success rate. |
+| Hover details | onNodeHover controls a panel containing name, type, and available address or fullName. | Hover over a node to see its name and available identifying details. |
+
+The first card heading becomes "Nodes". Existing drag and wheel instructions remain exact. The correction does not introduce a time window, a measured geometry result or a new scaling policy.
+
+The asset hover panel also always rendered a green dot and "Trading Active", without checking any field. The API's asset-node constructor supplies id, name, type, val, fullName and issuer; it supplies no trading-activity field. Node.status is optional but the badge did not consult it. The patch removes this six-line constant badge. The asset name/fullName and anchor address display remain unchanged. No inactive status is substituted and no trading or account operation is performed.
+
+The [react-force-graph API reference](https://github.com/vasturiano/react-force-graph/blob/master/README.md) documents nodeCanvasObject as the custom painter, its default replacement mode, and linkWidth as a numeric/accessor width. The declared dependency is react-force-graph-2d 1.29.1; the consulted reference is current master, not an inspection of an installed runtime. The visible-copy correction is grounded in the complete application source and these API contracts; browser rendering was not observed.
+
+| Input or output | Git blob | UTF-8 bytes |
+| --- | --- | ---: |
+| Network page after #31997 | c3086b28a2d054fba51840150e13d2d585c7d227 | 12419 |
+| Network page with corrected help text | 0bcb0b952bb70725d604f515f8a69f3f0d054b09 | 12288 |
+| Original graph child | 635255e9533f791528bf1280fcf59016f8ab039b | 7880 |
+| Graph child without constant activity badge | 5adf1a0dc8a7bc2a91259c173f47c21b64bc2bf9 | 7589 |
+| Canonical API route, source qualification only | d78b81ee03f4f0de3590d18cc26fc028568bc368 | 3858 |
+| Retained API route after independent #32000 nullish guards | 99957f284bae1b382811ece47f4699bce725ee4a | 3932 |
+| align-graph-descriptions.patch | feb7af4e40e112972a2ad5e9ba1a05961a7921d4 | 2611 |
+
+The source packet changes two files: page +5/-8 across three hunks, graph child +0/-6 in one hunk. The final combined serialized patch has four hunks and 46 rows, +5/-14 overall. Complete forward and inverse reconstruction matched both file identities. The page's four exact text replacements and the graph's exact badge removal account for every changed byte. The earlier page-only draft was superseded before publication.
+
+The graph data, node painter, link accessors, dimensions, hover state/handlers, controls, styles outside the removed badge, API route, fetchers and chart panels are unchanged. Width normalization, unknown data, graph accessibility, the truth of upstream records and broader chart claims remain outside this change.
+
+Apply default-export.patch first, then align-graph-descriptions.patch. #32000 is a separate API-file correction and its qualification is inherited without replay. A bounded NetworkGraph/caption Commons query returned only the existing grouped index and Slack returned zero rows with native END. Separate NetworkGraph/"Trading Active" queries returned zero Commons and Slack rows, with native END for Slack. These are bounded overlap checks, not global absence claims.
+
+Only the new patch and this exact-preimage-guarded README update are written. Original default-export patch and three MIT notices remain unchanged. No graph, component, canvas, browser, compiler, fixture, tests, workflow or upstream action was executed. Both complete newly written immutable artifacts require native/text/independent identities plus exact PR/files/head/merge/parents/tree/main metadata. An explicit main alias requires fresh exact commit equality; otherwise both changed artifacts are read once at the observed immutable main commit.
