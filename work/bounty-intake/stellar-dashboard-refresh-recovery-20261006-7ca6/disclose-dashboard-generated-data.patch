@@ -1,0 +1,37 @@
+diff --git a/src/app/[locale]/dashboard/page.tsx b/src/app/[locale]/dashboard/page.tsx
+--- a/src/app/[locale]/dashboard/page.tsx
++++ b/src/app/[locale]/dashboard/page.tsx
+@@ -314,6 +314,10 @@
+         </div>
+       </div>
+ 
++      <p className="text-sm text-muted-foreground">
++        {t("dataNotice")}
++      </p>
++
+       {/* KPI Cards */}
+       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+         <MetricCard
+diff --git a/messages/en.json b/messages/en.json
+--- a/messages/en.json
++++ b/messages/en.json
+@@ -187,2 +187,3 @@
+     "intelligenceTerminal": "Intelligence Terminal // 01",
++    "dataNotice": "This dashboard includes simulated trend comparisons, chart histories and live-tick animations. Demo data may be shown when the backend is unavailable; refresh times and connection indicators do not certify measured values.",
+     "loading": "Initialising Terminal... // System Handshake",
+diff --git a/messages/es.json b/messages/es.json
+--- a/messages/es.json
++++ b/messages/es.json
+@@ -8,3 +8,3 @@
+   "trustlines": {"title":"Inteligencia de Activos","subtitle":"Distribución de titulares, señales de adopción y actividad de transferencias","loading":"Sincronizando estados del libro mayor...","insightsTitle":"Perspectivas del Activo","noInsights":"Datos insuficientes para generar perspectivas para este activo.","selectPrompt":"Seleccione un activo del ranking para ver perspectivas detalladas"},
+-  "dashboard": {"title":"Terminal","successRate":"Tasa de Éxito","activeCorridors":"Corredores Activos","liquidityDepth":"Profundidad de Liquidez","settlementSpeed":"Velocidad de Liquidación","paymentSuccessRate":"Tasa de Éxito de Pagos","avgSettlementSpeed":"Velocidad Promedio de Liquidación","topAssets":"Principales Activos","topCorridors":"Principales Corredores","networkOverview":"Resumen de Red","intelligenceTerminal":"Terminal de Inteligencia // 01","loading":"Inicializando Terminal... // Handshake del Sistema","error":"Error del Terminal","refresh":"Actualizar","refreshing":"Actualizando","lastUpdated":"Última actualización","lastUpdate":"Última Actualización","nextRefreshIn":"Siguiente actualización en","noDataYet":"Sin datos aún","refreshNow":"Actualizar ahora","reconnect":"Reconectar","connecting":"Conectando","connected":"Conectado","disconnected":"Desconectado","attempts":"intentos","failedToFetch":"Error al obtener datos del panel","waitingLiquidity":"Esperando datos de liquidez...","waitingAsset":"Esperando datos de activos...","waitingCorridor":"Esperando datos de corredores...","waitingSettlement":"Esperando datos de liquidación..."}
++  "dashboard": {"title":"Terminal","successRate":"Tasa de Éxito","activeCorridors":"Corredores Activos","liquidityDepth":"Profundidad de Liquidez","settlementSpeed":"Velocidad de Liquidación","paymentSuccessRate":"Tasa de Éxito de Pagos","avgSettlementSpeed":"Velocidad Promedio de Liquidación","topAssets":"Principales Activos","topCorridors":"Principales Corredores","networkOverview":"Resumen de Red","intelligenceTerminal":"Terminal de Inteligencia // 01","dataNotice":"Este panel incluye comparaciones de tendencias, historiales de gráficos y animaciones de actualización simulados. Si el servidor no está disponible, pueden mostrarse datos de demostración; las horas de actualización y los indicadores de conexión no certifican que los valores sean mediciones reales.","loading":"Inicializando Terminal... // Handshake del Sistema","error":"Error del Terminal","refresh":"Actualizar","refreshing":"Actualizando","lastUpdated":"Última actualización","lastUpdate":"Última Actualización","nextRefreshIn":"Siguiente actualización en","noDataYet":"Sin datos aún","refreshNow":"Actualizar ahora","reconnect":"Reconectar","connecting":"Conectando","connected":"Conectado","disconnected":"Desconectado","attempts":"intentos","failedToFetch":"Error al obtener datos del panel","waitingLiquidity":"Esperando datos de liquidez...","waitingAsset":"Esperando datos de activos...","waitingCorridor":"Esperando datos de corredores...","waitingSettlement":"Esperando datos de liquidación..."}
+ }
+diff --git a/messages/zh.json b/messages/zh.json
+--- a/messages/zh.json
++++ b/messages/zh.json
+@@ -8,3 +8,3 @@
+   "trustlines": {"title":"资产智能","subtitle":"持有者分布、采用信号与转账活动","loading":"正在同步账本状态...","insightsTitle":"资产洞察","noInsights":"该资产数据不足，无法生成洞察。","selectPrompt":"从排行榜选择资产以查看详细洞察"},
+-  "dashboard": {"title":"终端","successRate":"成功率","activeCorridors":"活跃走廊","liquidityDepth":"流动性深度","settlementSpeed":"结算速度","paymentSuccessRate":"支付成功率","avgSettlementSpeed":"平均结算速度","topAssets":"热门资产","topCorridors":"热门走廊","networkOverview":"网络概览","intelligenceTerminal":"智能终端 // 01","loading":"正在初始化终端... // 系统握手","error":"终端错误","refresh":"刷新","refreshing":"刷新中","lastUpdated":"最后更新","lastUpdate":"最后更新","nextRefreshIn":"下次刷新","noDataYet":"尚无数据","refreshNow":"立即刷新","reconnect":"重新连接","connecting":"连接中","connected":"已连接","disconnected":"已断开","attempts":"次尝试","failedToFetch":"获取仪表板数据失败","waitingLiquidity":"等待流动性数据...","waitingAsset":"等待资产数据...","waitingCorridor":"等待走廊数据...","waitingSettlement":"等待结算数据..."}
++  "dashboard": {"title":"终端","successRate":"成功率","activeCorridors":"活跃走廊","liquidityDepth":"流动性深度","settlementSpeed":"结算速度","paymentSuccessRate":"支付成功率","avgSettlementSpeed":"平均结算速度","topAssets":"热门资产","topCorridors":"热门走廊","networkOverview":"网络概览","intelligenceTerminal":"智能终端 // 01","dataNotice":"此仪表盘包含模拟的趋势对比、图表历史和动态数值变化。后端不可用时可能显示演示数据；刷新时间和连接指示器不能证明这些数值来自实际观测。","loading":"正在初始化终端... // 系统握手","error":"终端错误","refresh":"刷新","refreshing":"刷新中","lastUpdated":"最后更新","lastUpdate":"最后更新","nextRefreshIn":"下次刷新","noDataYet":"尚无数据","refreshNow":"立即刷新","reconnect":"重新连接","connecting":"连接中","connected":"已连接","disconnected":"已断开","attempts":"次尝试","failedToFetch":"获取仪表板数据失败","waitingLiquidity":"等待流动性数据...","waitingAsset":"等待资产数据...","waitingCorridor":"等待走廊数据...","waitingSettlement":"等待结算数据..."}
+ }
