@@ -1,0 +1,32 @@
+diff --git a/frontend/src/pages/Settings.tsx b/frontend/src/pages/Settings.tsx
+--- a/frontend/src/pages/Settings.tsx
++++ b/frontend/src/pages/Settings.tsx
+@@ -1,9 +1,12 @@
++import { useId } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { Link } from 'react-router-dom';
+ import { Webhook } from 'lucide-react';
+ 
+ export default function Settings() {
+   const { t, i18n } = useTranslation();
++  const languageId = useId();
++  const languageDescriptionId = `${languageId}-description`;
+ 
+   const handleChangeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+     void i18n.changeLanguage(event.target.value);
+@@ -19,11 +22,13 @@
+ 
+       <div className="w-full card glass noise p-4 sm:p-6 lg:p-8">
+         <div className="flex flex-col gap-3">
+-          <label className="block text-xs font-bold uppercase tracking-widest text-muted">
++          <label htmlFor={languageId} className="block text-xs font-bold uppercase tracking-widest text-muted">
+             {t('settings.languageLabel')}
+           </label>
+-          <p className="text-sm text-muted">{t('settings.languageDescription')}</p>
++          <p id={languageDescriptionId} className="text-sm text-muted">{t('settings.languageDescription')}</p>
+           <select
++            id={languageId}
++            aria-describedby={languageDescriptionId}
+             value={i18n.language}
+             onChange={handleChangeLanguage}
+             className="w-full bg-black/20 border border-hi rounded-xl p-4 text-text outline-none focus:border-accent/50 focus:bg-accent/5 transition-all"
