@@ -1,0 +1,184 @@
+diff --git a/src/lib/soroban-api.ts b/src/lib/soroban-api.ts
+--- a/src/lib/soroban-api.ts
++++ b/src/lib/soroban-api.ts
+@@ -28,6 +28,8 @@
+ export interface SorobanTopContractsResponse {
+   window: string;
+   contracts: SorobanTopContract[];
++  /** True when a failed request supplied a placeholder list. */
++  unavailable?: boolean;
+ }
+ 
+ export interface SorobanDeployment {
+@@ -53,6 +55,8 @@
+ 
+ export interface SorobanContractCallsResponse {
+   points: SorobanContractCallPoint[];
++  /** True when a failed request supplied a placeholder series. */
++  unavailable?: boolean;
+   /** Documented definition: event rows, not distinct transactions. */
+   metric: "events";
+ }
+@@ -123,7 +127,7 @@
+ 
+ /**
+  * Daily contract-call (event) counts over a window.
+- * Returns an empty series when the backend is unavailable.
++ * Marks the placeholder series unavailable when the request fails.
+  */
+ export async function fetchSorobanContractCalls(
+   days = 30,
+@@ -143,14 +147,14 @@
+     if (!isNetworkError) {
+       logger.error("Failed to fetch Soroban contract calls:", error);
+     }
+-    return { points: [], metric: "events" };
++    return { points: [], metric: "events", unavailable: true };
+   }
+ }
+ 
+ /**
+  * Top contracts by call/event count over a window.
+- * Returns an empty list (not mock data) when the backend is unavailable
+- * so the dashboard can show a real empty state.
++ * Marks the placeholder list unavailable when the request fails
++ * so the dashboard can distinguish it from an empty response.
+  */
+ export async function fetchSorobanTopContracts(
+   limit = 20,
+@@ -171,7 +175,7 @@
+     if (!isNetworkError) {
+       logger.error("Failed to fetch Soroban top contracts:", error);
+     }
+-    return { window, contracts: [] };
++    return { window, contracts: [], unavailable: true };
+   }
+ }
+ 
+diff --git a/src/app/[locale]/soroban/page.tsx b/src/app/[locale]/soroban/page.tsx
+--- a/src/app/[locale]/soroban/page.tsx
++++ b/src/app/[locale]/soroban/page.tsx
+@@ -72,14 +72,14 @@
+       setActiveContracts(activeData);
+     } catch (error) {
+       logger.error("Failed to load Soroban dashboard panels:", error);
+-      setTopContracts({ window: "7d", contracts: [] });
++      setTopContracts({ window: "7d", contracts: [], unavailable: true });
+       setDeployments({
+         partial: true,
+         deployments: [],
+         notice:
+           "New deployments data is unavailable or incomplete until contract deployment/init events are fully ingested.",
+       });
+-      setContractCalls({ points: [], metric: "events" });
++      setContractCalls({ points: [], metric: "events", unavailable: true });
+       setGasUsage({ total_gas: 0, window: "7d", coming_soon: true });
+       setActiveContracts({ count: 0, window: "7d", unavailable: true });
+     } finally {
+@@ -127,6 +127,7 @@
+       {/* Panel 1: Contract Calls Chart */}
+       <ContractCallsChart
+         data={contractCalls?.points ?? []}
++        unavailable={contractCalls?.unavailable}
+         loading={loading}
+       />
+ 
+@@ -153,6 +154,7 @@
+       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+         <TopContractsTable
+           contracts={topContracts?.contracts ?? []}
++          unavailable={topContracts?.unavailable}
+           windowLabel={topContracts?.window ?? "7d"}
+           loading={loading}
+         />
+diff --git a/src/components/soroban/TopContractsTable.tsx b/src/components/soroban/TopContractsTable.tsx
+--- a/src/components/soroban/TopContractsTable.tsx
++++ b/src/components/soroban/TopContractsTable.tsx
+@@ -7,6 +7,7 @@
+ 
+ interface TopContractsTableProps {
+   contracts: SorobanTopContract[];
++  unavailable?: boolean;
+   windowLabel?: string;
+   loading?: boolean;
+ }
+@@ -20,6 +21,7 @@
+ 
+ export function TopContractsTable({
+   contracts,
++  unavailable = false,
+   windowLabel = "7d",
+   loading = false,
+ }: TopContractsTableProps) {
+@@ -44,7 +46,7 @@
+           variant="outline"
+           className="text-[10px] font-mono border-border/50 min-h-0 min-w-0 px-2 py-0.5"
+         >
+-          TOP_{contracts.length || 0}
++          {unavailable ? "UNAVAILABLE" : `TOP_${contracts.length || 0}`}
+         </Badge>
+       </div>
+ 
+@@ -54,16 +56,18 @@
+             <div key={i} className="h-12 rounded-xl bg-white/5" />
+           ))}
+         </div>
+-      ) : contracts.length === 0 ? (
++      ) : unavailable || contracts.length === 0 ? (
+         <div
+           className="rounded-xl border border-dashed border-border/60 px-4 py-10 text-center"
+           role="status"
+         >
+           <p className="text-sm font-mono uppercase tracking-widest text-muted-foreground">
+-            No contract activity in this window
++            {unavailable ? "Top contracts unavailable" : "No contract activity in this window"}
+           </p>
+           <p className="text-xs text-muted-foreground/70 mt-2 max-w-md mx-auto">
+-            Top contracts will appear once Soroban call events are available from the backend.
++            {unavailable
++              ? "The top-contract list could not be loaded. Use Refresh to try again."
++              : "Top contracts will appear once Soroban call events are available from the backend."}
+           </p>
+         </div>
+       ) : (
+diff --git a/src/components/charts/ContractCallsChart.tsx b/src/components/charts/ContractCallsChart.tsx
+--- a/src/components/charts/ContractCallsChart.tsx
++++ b/src/components/charts/ContractCallsChart.tsx
+@@ -16,6 +16,7 @@
+ 
+ interface ContractCallsChartProps {
+   data: SorobanContractCallPoint[];
++  unavailable?: boolean;
+   loading?: boolean;
+ }
+ 
+@@ -28,6 +29,7 @@
+ 
+ export function ContractCallsChart({
+   data,
++  unavailable = false,
+   loading = false,
+ }: ContractCallsChartProps) {
+   const chartRef = useRef<HTMLDivElement>(null);
+@@ -60,7 +62,7 @@
+     );
+   }
+ 
+-  if (chartData.length === 0) {
++  if (unavailable || chartData.length === 0) {
+     return (
+       <div className="glass-card rounded-2xl p-6 border border-border/50 flex flex-col items-center justify-center h-[420px]">
+         <div className="text-[10px] font-mono text-accent uppercase tracking-[0.2em] mb-2">
+@@ -70,9 +72,9 @@
+           Contract Calls
+         </h2>
+         <p className="text-sm font-mono text-muted-foreground uppercase tracking-widest text-center max-w-md">
+-          No contract-call time series yet. Data appears once{" "}
+-          <code className="text-accent">/api/v1/soroban/contract-calls</code>{" "}
+-          returns daily event counts.
++          {unavailable
++            ? "Contract-call data could not be loaded. Use Refresh to try again."
++            : "No daily event counts were returned for this period."}
+         </p>
+       </div>
+     );
