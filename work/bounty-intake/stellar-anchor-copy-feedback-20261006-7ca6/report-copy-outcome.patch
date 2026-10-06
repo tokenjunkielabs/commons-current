@@ -1,0 +1,67 @@
+diff --git a/src/components/anchors/AnchorHeader.tsx b/src/components/anchors/AnchorHeader.tsx
+--- a/src/components/anchors/AnchorHeader.tsx
++++ b/src/components/anchors/AnchorHeader.tsx
+@@ -1,3 +1,4 @@
++import { useRef, useState } from 'react';
+ import { AnchorMetrics } from '@/lib/api/types';
+ import { Shield, ShieldAlert, ShieldCheck, Copy, ExternalLink } from 'lucide-react';
+ 
+@@ -6,6 +7,37 @@
+ }
+ 
+ export function AnchorHeader({ anchor }: AnchorHeaderProps) {
++    const [copyResult, setCopyResult] = useState<{
++        address: string;
++        status: 'copied' | 'error';
++    } | null>(null);
++
++    const copyRequest = useRef<object | null>(null);
++
++    const handleCopy = async () => {
++        const request = {};
++        copyRequest.current = request;
++        const address = anchor.stellar_account;
++        setCopyResult(null);
++        try {
++            await navigator.clipboard.writeText(address);
++        } catch {
++            if (copyRequest.current === request) {
++                setCopyResult({ address, status: 'error' });
++            }
++            return;
++        }
++        if (copyRequest.current === request) {
++            setCopyResult({ address, status: 'copied' });
++        }
++    };
++
++    const copyMessage = copyResult && copyResult.address === anchor.stellar_account
++        ? copyResult.status === 'copied'
++            ? 'Address copied.'
++            : 'Could not copy address. Please try again.'
++        : null;
++
+     const getStatusColor = (status: string) => {
+         switch (status.toLowerCase()) {
+             case 'healthy':
+@@ -52,7 +84,7 @@
+                             className="p-1 hover:text-white transition-colors"
+                             title="Copy Address"
+                             aria-label="Copy Stellar address to clipboard"
+-                            onClick={() => navigator.clipboard.writeText(anchor.stellar_account)}
++                            onClick={handleCopy}
+                         >
+                             <Copy className="w-3.5 h-3.5" />
+                         </button>
+@@ -66,6 +98,11 @@
+                             <ExternalLink className="w-3.5 h-3.5" />
+                         </a>
+                     </div>
++                    {copyMessage && (
++                        <p role="status" className="mt-2 text-xs text-slate-400">
++                            {copyMessage}
++                        </p>
++                    )}
+                 </div>
+ 
+                 <div className="flex items-center gap-6">
