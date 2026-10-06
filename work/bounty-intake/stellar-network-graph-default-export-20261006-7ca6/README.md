@@ -94,3 +94,50 @@ The graph data, node painter, link accessors, dimensions, hover state/handlers, 
 Apply default-export.patch first, then align-graph-descriptions.patch. #32000 is a separate API-file correction and its qualification is inherited without replay. A bounded NetworkGraph/caption Commons query returned only the existing grouped index and Slack returned zero rows with native END. Separate NetworkGraph/"Trading Active" queries returned zero Commons and Slack rows, with native END for Slack. These are bounded overlap checks, not global absence claims.
 
 Only the new patch and this exact-preimage-guarded README update are written. Original default-export patch and three MIT notices remain unchanged. No graph, component, canvas, browser, compiler, fixture, tests, workflow or upstream action was executed. Both complete newly written immutable artifacts require native/text/independent identities plus exact PR/files/head/merge/parents/tree/main metadata. An explicit main alias requires fresh exact commit equality; otherwise both changed artifacts are read once at the observed immutable main commit.
+
+
+## Continuation: bound volume-based corridor line widths
+
+This incremental `bound-volume-link-width.patch` starts from the two retained #32061 postimages below. The original loader patch and the description/badge correction remain intact. Their completed applications are not replayed.
+
+### Actual source and renderer contract
+
+The graph route supplies each corridor link's value from its reported USD volume, with the existing fallback to zero. NetworkGraph previously returned that number directly from its line-width accessor. This mixes a monetary magnitude with a drawing width and provides no upper limit. The issue follows from the producer/accessor/renderer chain; no live oversized payload or rendering incident was observed.
+
+The pinned [force-graph v1.51.4 renderer](https://github.com/vasturiano/force-graph/blob/v1.51.4/src/canvas-force-graph.js), complete blob `a6f7cdd7ace541f7793f75513daf55f25a96a32c` (22712 UTF-8 bytes), groups links by the returned width and assigns the width divided by global scale to the canvas context for ordinary drawing. It adds separate padding for its shadow canvas. The retained lockfile `7ecba249d1b7cd41e629e2fff2782ed6805186f5` pins this version through react-force-graph-2d 1.29.1.
+
+[MDN's canvas lineWidth documentation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth) describes a width in coordinate-space units and states that nonpositive and nonfinite assignments are ignored. Therefore a zero or invalid accessor value must not be described as a reliable way to hide an edge. The new fallback deliberately supplies a valid baseline width.
+
+The current route source is retained at canonical donor `482ee456369418ef82c4056718cb82d3468f762b`, blob `d78b81ee03f4f0de3590d18cc26fc028568bc368`, with the separate #32000 and #32068 graph-record proposals. Neither changes the USD-value producer used for this analysis. This continuation does not modify the API.
+
+### Chosen visual scale
+
+For ordinary non-corridor links, the accessor returns its existing width of 1 without reading the volume property. For corridor links, it uses the existing local Link type instead of an any assertion and selects:
+
+- Baseline width 1 for zero, negative or nonfinite values, including runtime values that are not numbers.
+- For a finite positive volume v, width min(6, 1 + log10(1 + v)).
+
+The baseline and cap are explicit presentation choices for readability, not financial thresholds or changes to the reported value. The positive branch is nondecreasing and bounded between 1 and 6 accessor units; very large volumes share the cap. Floating-point rounding may also make nearby values share a width. The logarithm compresses magnitude rather than promising proportional dollar-to-width ratios. No numerical case runner, formula execution or renderer measurement was used to make this source proposal.
+
+The graph-page explanation now identifies the capped logarithmic volume scale, so readers are not invited to interpret width as a linear dollar scale. The existing color explanation remains based on available success rate.
+
+This changes visual width selection, including the baseline handling of nonpositive or invalid corridor values. It does not normalize, rewrite, filter or validate the source data, infer activity or liquidity from width, or claim accurate volume ranking above the cap. Other node/link fields, positions, painter code, hover state, controls, geometry settings, colors, requests and source fallbacks are unchanged.
+
+### Complete incremental identities
+
+| Source | Retained input blob / bytes | New output blob / bytes |
+| --- | --- | --- |
+| src/components/charts/NetworkGraph.tsx | 5adf1a0dc8a7bc2a91259c173f47c21b64bc2bf9 / 7589 | 1d3d89e31095231f4f1c4868deb480b1941f2aed / 7751 |
+| src/app/[locale]/network/page.tsx | 0bcb0b952bb70725d604f515f8a69f3f0d054b09 / 12288 | 94e2979c47e93e9724a47fb511401e87c13beaa1 / 12323 |
+
+The serialized patch is `a457d5c2d5edea09d05c3ac557dd6b5614dba25d`, 1530 UTF-8 bytes. It contains two hunks and twenty-six rows, with nine additions and five deletions. The complete serialized multi-file patch applies forward to both stated outputs and inversely restores both retained inputs. Reversing the exact two selected replacements restores every other source byte.
+
+Consumer application order is the original default-export correction, the description/badge correction, then this new incremental patch, each against its stated input. This instruction is not evidence of repeating an accepted application or executing the application.
+
+### Publication scope
+
+The bounded Commons PR and public Slack queries for NetworkGraph plus linkWidth returned zero rows; Slack reported native END. These observations do not prove global absence, ownership or upstream acceptance. The retained earlier root packets cover other exact hunks and remain protected.
+
+This continuation writes only the new patch and this exact-preimage README continuation. Original patches, source attribution and all three MIT notices remain unchanged. Complete immutable artifact identities and final PR/path/parent/tree observations are required by the publication plan. If an observed main equals the immutable merge readback, the preplanned alias can be used; otherwise both complete files are checked once at that observed main commit.
+
+No application, canvas, graph layout, browser, fixture, compiler, tests, workflow, benchmark or upstream operation was performed. This is a Commons source proposal with a documented visual-scale decision, not a claim of measured throughput, rendered usability, deployment or reward.

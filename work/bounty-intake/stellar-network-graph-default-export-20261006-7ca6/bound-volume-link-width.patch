@@ -1,0 +1,34 @@
+diff --git a/src/components/charts/NetworkGraph.tsx b/src/components/charts/NetworkGraph.tsx
+--- a/src/components/charts/NetworkGraph.tsx
++++ b/src/components/charts/NetworkGraph.tsx
+@@ -139,9 +139,12 @@
+         linkDirectionalArrowLength={3}
+         linkDirectionalArrowRelPos={1}
+         linkCurvature={0.25}
+-        linkWidth={(link) =>
+-          link.type === "corridor" ? (link as any).value : 1
+-        }
++        linkWidth={(link) => {
++          if (link.type !== "corridor") return 1;
++          const volume = (link as Link).value;
++          if (!Number.isFinite(volume) || volume <= 0) return 1;
++          return Math.min(6, 1 + Math.log10(1 + volume));
++        }}
+         onNodeHover={setHoverNode}
+         cooldownTicks={100}
+       />
+diff --git a/src/app/[locale]/network/page.tsx b/src/app/[locale]/network/page.tsx
+--- a/src/app/[locale]/network/page.tsx
++++ b/src/app/[locale]/network/page.tsx
+@@ -335,8 +335,9 @@
+               </h3>
+             </div>
+             <p className="text-xs text-muted-foreground leading-relaxed">
+-              Links connect anchors and assets. Corridor line width reflects
+-              reported USD volume, while color reflects the available success rate.
++              Links connect anchors and assets. Corridor line widths use a capped
++              logarithmic scale for reported USD volume. Color reflects the
++              available success rate.
+             </p>
+           </div>
+           <div className="p-6 glass border border-white/5 rounded-2xl">
