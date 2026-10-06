@@ -1,0 +1,38 @@
+diff --git a/backend/src/ingestion/mod.rs b/backend/src/ingestion/mod.rs
+index 6c70e179c12e8ab2965a968237b5ae39280297e3..24a7e0cd6754a397221ffb8133228c8ed8a4c03c 100644
+--- a/backend/src/ingestion/mod.rs
++++ b/backend/src/ingestion/mod.rs
+@@ -145,6 +145,16 @@
+             return Ok(IngestOutcome::Idle);
+         };
+ 
++        if fetched.sequence != next_sequence {
++            return Err(IngestionError::Fetch {
++                sequence: next_sequence,
++                message: format!(
++                    "ledger source returned sequence {}; expected {}",
++                    fetched.sequence, next_sequence
++                ),
++            });
++        }
++
+         if let Some(watermark) = &current {
+             if fetched.prev_hash != watermark.hash {
+                 return self.handle_reorg(watermark.clone()).await;
+@@ -186,6 +196,16 @@
+             },
+         )?;
+ 
++        if anchor.sequence != rollback_target {
++            return Err(IngestionError::Fetch {
++                sequence: rollback_target,
++                message: format!(
++                    "ledger source returned sequence {}; expected {}",
++                    anchor.sequence, rollback_target
++                ),
++            });
++        }
++
+         self.derived.invalidate_from(rollback_target + 1).await?;
+         self.watermark
+             .save(Watermark {
