@@ -1,0 +1,30 @@
+diff --git a/src/components/charts/SettlementLatencyChart.tsx b/src/components/charts/SettlementLatencyChart.tsx
+--- a/src/components/charts/SettlementLatencyChart.tsx
++++ b/src/components/charts/SettlementLatencyChart.tsx
+@@ -60,7 +60,7 @@
+             Median
+           </p>
+           <p className="text-xl font-black font-mono tracking-tighter text-foreground">
+-            {formatLatency(Math.round(latestPoint?.median_latency_ms || 0))}
++            {data.length === 0 ? 'N/A' : formatLatency(Math.round(latestPoint?.median_latency_ms || 0))}
+           </p>
+         </div>
+         <div className="p-3 rounded-xl bg-slate-900/30 border border-white/5">
+@@ -68,7 +68,7 @@
+             P95
+           </p>
+           <p className="text-xl font-black font-mono tracking-tighter text-amber-400">
+-            {formatLatency(Math.round(latestPoint?.p95_latency_ms || 0))}
++            {data.length === 0 ? 'N/A' : formatLatency(Math.round(latestPoint?.p95_latency_ms || 0))}
+           </p>
+         </div>
+         <div className="p-3 rounded-xl bg-slate-900/30 border border-white/5">
+@@ -76,7 +76,7 @@
+             P99
+           </p>
+           <p className="text-xl font-black font-mono tracking-tighter text-red-400">
+-            {formatLatency(Math.round(latestPoint?.p99_latency_ms || 0))}
++            {data.length === 0 ? 'N/A' : formatLatency(Math.round(latestPoint?.p99_latency_ms || 0))}
+           </p>
+         </div>
+       </div>
