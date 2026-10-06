@@ -60,3 +60,24 @@ The [primary React event-object reference](https://react.dev/reference/react-dom
 The complete retained preimages were inputs to this new correction, not replayed accepted-source validation. Serialized forward/inverse application reconstructs both complete identities. A fresh Commons lexical AnchorTable/keyboard PR query returned zero; public Slack returned only this packet's own earlier release header. Neither is a global absence claim. Original source attribution and instructions above remain.
 
 This correction concerns only these parents' key handling. It does not redesign nested interactive markup, establish table/card or whole-page accessibility, implement localized routes, change modified-key handling on the parent itself, add focus management, control other ancestor handlers, or guarantee browser/assistive-technology behavior. No runtime, keyboard simulation, test, browser, navigation request, API, upstream action, author assignment, acceptance or payment claim is made.
+
+## Separate continuation: use the existing locale-aware navigation wrapper
+
+The same mounted views sit under the `[locale]` Anchors route, but originally import `Link` from `next/link` and `useRouter` from `next/navigation`. Both their Details hrefs and row/card router calls use the unprefixed `/anchors/` path plus the existing Stellar account value.
+
+`localize-anchor-navigation.patch` replaces those two imports in each view with the existing named `Link` and `useRouter` exports from `@/i18n/navigation`. It changes **+2/-4 in two hunks**. Every href argument, router call, event handler, guard, JSX child and data calculation remains byte-for-byte unchanged.
+
+The full retained `src/i18n/navigation.ts` module (blob `fd8ba9aa80bb0d0dd56eb76a3891caa0afe0c803`, 182 B) exports both APIs from `createNavigation(routing)`. The full retained `src/i18n/routing.ts` (blob `7a1c19fa17133fa33179f3381d115f8d2ee542f7`, 175 B) specifies en/es/zh, default en, `localePrefix: "always"`, and no pathnames map. These were complete root-to-lane source transfers, independently matched to their immutable identities, not reconstructed modules.
+
+[The primary next-intl navigation documentation](https://next-intl.dev/docs/routing/navigation) states that these wrappers incorporate the current locale and routing configuration. It explicitly supports final dynamic string paths when no pathnames map is configured, both for Link and router.push. The existing account-derived string therefore keeps its shape while receiving the configured locale behavior. No manual prefix, locale switch, cookie policy or additional route is introduced.
+
+| Production path | After #32005 / before this patch | After this patch | Bytes before → after |
+| --- | --- | --- | --- |
+| `src/app/[locale]/anchors/components/AnchorTable.tsx` | `30aa2abab512ed808301fd9d91a892289722292a` | `a37be6e2e162e211841ae1ddf6b2681d627833b0` | 10192 → 10170 |
+| `src/app/[locale]/anchors/components/AnchorCards.tsx` | `ac3648cb3d41d7c88cccc3747097015d8447b866` | `e4a122f2550d43f822a8544c129872135a75d945` | 6258 → 6236 |
+
+Apply this incremental patch after the trend-label patch and the nested-key patch from [Commons #32005](https://github.com/woahwhattheheck/commons/pull/32005). Those changes remain exact. Serialized forward and inverse reconstruction match the complete preimages and postimages, including their lack of final newline.
+
+Current bounded Commons anchors/locale PR and public Slack AnchorTable/locale searches both returned zero. This supplies no global uniqueness or upstream acceptance claim. The retained donor package metadata declares next-intl ^4.13.2 and Next16.2.10; no installed dependency or full compilation is asserted.
+
+The correction makes these actual navigation consumers use the application's existing locale contract. It does not claim that every prior unprefixed request necessarily selected the wrong locale: middleware and cookies were not exercised. It does not translate page copy, validate or encode the account value, change query/hash preservation, implement new destinations, fix zero-denominator displays, redesign nested markup or establish browser/accessibility/whole-build readiness. All prior authorship, source-custody, no-runtime/no-tests and no-upstream/payment boundaries remain.
