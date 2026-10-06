@@ -1,0 +1,63 @@
+diff --git a/src/app/[locale]/analytics/api/page.tsx b/src/app/[locale]/analytics/api/page.tsx
+--- a/src/app/[locale]/analytics/api/page.tsx
++++ b/src/app/[locale]/analytics/api/page.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import React, { useEffect, useState } from "react";
++import React, { useEffect, useRef, useState } from "react";
+ import { RefreshCw, Activity, ChevronLeft } from "lucide-react";
+ import { Link } from "@/i18n/navigation";
+ import { fetchApiUsageOverview, ApiUsageOverview } from "@/lib/analytics-api";
+@@ -12,24 +12,33 @@
+     const [error, setError] = useState<string | null>(null);
+     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+ 
++    const latestRequest = useRef<object | null>(null);
++
+     const loadData = async () => {
++        const request = {};
++        latestRequest.current = request;
+         try {
+             setLoading(true);
+             setError(null);
+             const overview = await fetchApiUsageOverview();
++            if (latestRequest.current !== request) return;
+             setData(overview);
+             setLastUpdated(new Date());
+         } catch (err) {
++            if (latestRequest.current !== request) return;
+             setError(err instanceof Error ? err.message : "Failed to load API analytics");
+         } finally {
+-            setLoading(false);
++            if (latestRequest.current === request) setLoading(false);
+         }
+     };
+ 
+     useEffect(() => {
+         loadData();
+         const interval = setInterval(loadData, 30000); // Auto-refresh every 30 seconds
+-        return () => clearInterval(interval);
++        return () => {
++            clearInterval(interval);
++            latestRequest.current = null;
++        };
+     }, []);
+ 
+     return (
+@@ -50,10 +59,14 @@
+                         <Activity className="w-8 h-8 text-blue-500" />
+                         API Usage Metrics
+                     </h2>
++                    <p className="mt-2 text-xs text-muted-foreground">
++                        If the API request fails, this view may show built-in sample metrics.
++                        Last refresh records when this view received a result.
++                    </p>
+                 </div>
+                 <div className="flex items-center gap-3">
+                     <div className="px-4 py-2 glass rounded-lg text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+-                        Last Scan: {lastUpdated?.toLocaleTimeString()}
++                        Last Refresh: {lastUpdated?.toLocaleTimeString()}
+                     </div>
+                     <button
+                         onClick={loadData}
