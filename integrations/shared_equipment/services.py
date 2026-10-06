@@ -297,6 +297,13 @@ TOOLS = [
     _schema("github_update_pull_request", "Update PR title/body through the existing account publishing service. Optional actor selects an existing named GitHub account; omission keeps the current default. Reads expected_head before publication and returns after-write head readback; it does not lock the branch. Reuse operation_id for retries.", {"repository": "string", "pull_number": "integer", "expected_head": "string", "operation_id": "string"}, {"title": "string", "body": "string", "actor": "string"}),
     _schema("github_create_branch", "Create a branch from base_ref (default main), resolving its commit internally. base_sha remains a compatible override and also accepts a ref. Returns an existing branch only when its head matches the resolved base; never moves an existing branch. Publication runs through the existing account publishing service; reuse operation_id for retries.", {"repository": "string", "branch": "string", "operation_id": "string"}, {"base_ref": {"type": "string", "default": "main", "description": "Source branch, tag, ref, or commit; resolved internally. Defaults to main."}, "base_sha": {"type": "string", "description": "Compatibility override for base_ref: an existing commit SHA or ref."}}),
     _schema("github_commit_files", "Commit UTF-8 files to an existing branch through the existing account publishing service, comparing expected_head first and again inside the named operation. Supply full file contents. Reuse operation_id for retries.", {"repository": "string", "branch": "string", "expected_head": "string", "message": "string", "operation_id": "string"}, {"files": {"type": "array", "items": {"type": "object", "properties": {"path": {"type": "string"}, "content": {"type": "string"}}, "required": ["path", "content"]}}}),
+    _schema("github_edit_files", "Commit compact exact replacements using files read at expected_head. Each path and expected_blob_sha must match; each nonempty old anchor must occur exactly once. Delegates the complete atomic files to github_commit_files and its existing named-account publisher. Reuse operation_id for retries.",
+            {"repository": "string", "branch": "string", "expected_head": "string", "message": "string", "operation_id": "string",
+             "edits": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+                       "properties": {"path": {"type": "string", "minLength": 1}, "expected_blob_sha": {"type": "string", "pattern": "^[0-9a-fA-F]{40}$"},
+                                      "replacements": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+                                                       "properties": {"old": {"type": "string", "minLength": 1}, "new": {"type": "string"}}, "required": ["old", "new"]}}},
+                       "required": ["path", "expected_blob_sha", "replacements"]}}}),
     _schema("github_create_pull_request", "Open a useful PR for existing task work through the existing account publishing service. Returns an existing open PR for the same head/base on retry. Reuse operation_id for retries; head_repo is the short repository name (e.g. wavelum-frontend), never owner/name; omit when it matches the target repo name. maintainer_can_modify and transport ('graphql') pass through to the named operation.", {"repository": "string", "head": "string", "base": "string", "title": "string", "body": "string", "operation_id": "string"}, {"draft": "boolean", "head_repo": {"type": "string", "minLength": 1, "maxLength": 100, "pattern": "^(?!\\.$|\\.\\.$)[A-Za-z0-9_.-]+$", "description": "Short head repository name, not owner/name. Omit when it matches the target repo name."}, "maintainer_can_modify": "boolean", "transport": "string"}),
     _schema("github_merge_pull_request", "Merge an authorized reviewed PR through the existing account publishing service. Reads the pull head, commit identities and base branch head first and supplies head and base compare-and-swap inside the named operation; GitHub still enforces branch rules. Reuse operation_id for retries.", {"repository": "string", "pull_number": "integer", "expected_head": "string", "operation_id": "string"}, {"merge_method": "string"}),
     _schema("cua_s1_form", "Score a form in one already-open Chrome tab with the official CUA-S1-FORMS checkpoint. Defaults to a dry run; execute and submit are separate explicit booleans. Reports observed actions and failures, and never opens a tab.",
@@ -669,6 +676,33 @@ class ServiceEquipment(GitHubSlackEquipment):
             return publish("branch.create",
                            {"owner": owner, "repo": repository_name, "branch": branch, "sha": sha},
                            _string(a, "operation_id"), actor=owner)
+        if name == "github_edit_files":
+            from .file_edits import prepare_file_edits, require_sha, validate_file_edits
+            edits = validate_file_edits(a.get("edits"))
+            branch = _string(a, "branch")
+            expected = require_sha(a.get("expected_head"), "expected_head")
+            message, operation_id = _string(a, "message"), _string(a, "operation_id")
+            _require_outbound_identity({"branch": branch, "message": message})
+            ref = self.github(root + "/git/ref/heads/" + _quote(branch))
+            if ref["object"]["sha"] != expected:
+                raise EquipmentError("branch head changed; read current head and reconcile edits")
+            sources = {}
+            for edit in edits:
+                path = "/".join(_quote(part) for part in edit["path"].split("/"))
+                value = self.github(root + "/contents/" + path + "?ref=" + _quote(expected))
+                if (not isinstance(value, dict) or value.get("type") != "file"
+                        or value.get("path") != edit["path"] or value.get("sha") != edit["expected_blob_sha"]):
+                    raise EquipmentError("pinned file path or blob SHA changed: " + edit["path"])
+                if value.get("encoding") == "none":
+                    blob = self.github(root + "/git/blobs/" + _quote(edit["expected_blob_sha"]))
+                    if not isinstance(blob, dict) or blob.get("sha") != edit["expected_blob_sha"]:
+                        raise EquipmentError("GitHub returned an invalid resolved blob")
+                    value = {**blob, "path": edit["path"]}
+                sources[edit["path"]] = value
+            files = prepare_file_edits(edits, sources)
+            return self._call("github_commit_files", {"repository": repo, "branch": branch,
+                              "expected_head": expected, "message": message,
+                              "operation_id": operation_id, "files": files})
         if name == "github_commit_files":
             branch, expected = _string(a, "branch"), _string(a, "expected_head")
             message = _string(a, "message")
