@@ -1,0 +1,118 @@
+diff --git a/src/app/[locale]/contact/page.tsx b/src/app/[locale]/contact/page.tsx
+--- a/src/app/[locale]/contact/page.tsx
++++ b/src/app/[locale]/contact/page.tsx
+@@ -2,7 +2,7 @@
+ 
+ import React, { useState } from "react";
+ import { useTranslations } from "next-intl";
+-import { Mail, ExternalLink as Github, ExternalLink as Twitter, Send, CheckCircle2, Loader2 } from "lucide-react";
++import { Mail, ExternalLink as Github, ExternalLink as Twitter, Send } from "lucide-react";
+ 
+ const channelsConfig = [
+   { icon: Mail, key: "email", value: "hello@stellarinsights.io", href: "mailto:hello@stellarinsights.io", hintKey: "emailHint" },
+@@ -10,23 +10,16 @@
+   { icon: Twitter, key: "twitter", value: "@StellarInsights", href: "https://twitter.com/StellarInsights", hintKey: "twitterHint" },
+ ];
+ 
+-type FormState = "idle" | "sending" | "sent" | "error";
+-
+ export default function ContactPage() {
+   const t = useTranslations("contact");
+   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+-  const [status, setStatus] = useState<FormState>("idle");
+ 
+   const handleChange = (
+     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+   ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+ 
+-  const handleSubmit = async (e: React.FormEvent) => {
++  const handleSubmit = (e: React.FormEvent) => {
+     e.preventDefault();
+-    setStatus("sending");
+-
+-    await new Promise((r) => setTimeout(r, 1600));
+-    setStatus("sent");
+   };
+ 
+   return (
+@@ -76,23 +69,9 @@
+         </aside>
+ 
+         <div className="lg:col-span-3 glass-card rounded-2xl p-7 border border-border">
+-          {status === "sent" ? (
+-            <div className="h-full flex flex-col items-center justify-center text-center gap-4 py-12">
+-              <CheckCircle2 className="w-14 h-14 text-green-400" />
+-              <h2 className="text-xl font-bold text-foreground">{t("form.messageSent")}</h2>
+-              <p className="text-muted-foreground text-sm max-w-xs">
+-                {t("form.thanks")}
+-              </p>
+-              <button
+-                onClick={() => { setStatus("idle"); setForm({ name: "", email: "", subject: "", message: "" }); }}
+-                className="mt-2 text-accent text-sm font-semibold hover:underline"
+-              >
+-                {t("form.sendAnother")}
+-              </button>
+-            </div>
+-          ) : (
+             <form onSubmit={handleSubmit} className="space-y-5">
+               <h2 className="text-lg font-bold text-foreground mb-1">{t("form.sectionTitle")}</h2>
++              <p className="text-sm text-muted-foreground">{t("form.unavailable")}</p>
+ 
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 <div className="space-y-1.5">
+@@ -157,23 +136,13 @@
+ 
+               <button
+                 type="submit"
+-                disabled={status === "sending"}
++                disabled
+                 className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-bold text-sm tracking-wide hover:bg-accent/90 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(215, 168, 75,0.3)]"
+               >
+-                {status === "sending" ? (
+-                  <>
+-                    <Loader2 className="w-4 h-4 animate-spin" />
+-                    {t("form.sending")}
+-                  </>
+-                ) : (
+-                  <>
+-                    <Send className="w-4 h-4" />
+-                    {t("form.sendMessage")}
+-                  </>
+-                )}
++                <Send className="w-4 h-4" />
++                {t("form.unavailableButton")}
+               </button>
+             </form>
+-          )}
+         </div>
+       </div>
+ 
+diff --git a/messages/en.json b/messages/en.json
+--- a/messages/en.json
++++ b/messages/en.json
+@@ -130,3 +130,3 @@
+     "headingHighlight": "Hear From You",
+-    "subtitle": "Have a question, found a bug, or want to partner with us? Reach out via the form below or any of our channels.",
++    "subtitle": "Have a question, found a bug, or want to partner with us? Use one of the contact channels below. The message form is currently unavailable.",
+     "otherChannels": "Other Channels",
+@@ -152,2 +152,4 @@
+       "sectionTitle": "Send a Message",
++      "unavailable": "This form is not connected to a delivery service and will not send your message. Please use one of the contact channels listed here.",
++      "unavailableButton": "Form unavailable",
+       "selectTopic": "Select a topic…",
+diff --git a/messages/es.json b/messages/es.json
+--- a/messages/es.json
++++ b/messages/es.json
+@@ -6,3 +6,3 @@
+   "home": {"hero":{"liveBadge":"Inteligencia de Red en Vivo Activa","title":"CUANTIFICANDO","titleHighlight":"LA CONFIANZA DE LA RED STELLAR","subtitle":"Stellar Analysis proporciona telemetría de nivel institucional para la red de pagos Stellar. Más allá del conteo de transacciones; analice la profundidad de liquidez, la confiabilidad de los corredores y la finalidad de liquidación en tiempo real.","enterTerminal":"Entrar al Terminal","connectIdentity":"Conectar Identidad","initializing":"Inicializando..."},"tickers":{"usdcBrl":"USDC/BRL","xlmEur":"XLM/EUR","networkTvl":"TVL de Red","successRate":"Tasa de Éxito"},"topMovers":{"title":"MOVIMIENTO 24H","heading":"Los Más Activos (24h)","live":"En Vivo","loading":"Cargando los más activos…","empty":"Aún no hay datos de movimiento disponibles."},"capabilities":{"globalCorridors":"Corredores Globales","globalCorridorsDesc":"Análisis detallado de salud de rutas de pago transfronterizas. Monitoree el tiempo de actividad, cuellos de botella de liquidez y rendimiento de anclas en más de 50 pares fiat.","deepTelemetry":"Telemetría Profunda","deepTelemetryDesc":"Más allá del TPS superficial. Analizamos datos de liquidación a nivel de libro mayor para proporcionar la distribución real de velocidad a finalidad para operaciones de pago.","predictiveTrust":"Confianza Predictiva","predictiveTrustDesc":"Nuestro motor de ML predice la probabilidad de éxito del corredor, ayudándole a enrutar pagos de alto valor a través de los nodos de red más resilientes."},"cta":{"title":"¿Listo para integrar inteligencia de red?","subtitle":"Únase a las anclas y billeteras que ya usan Stellar Analysis para optimizar su gestión de liquidez y confiabilidad de pagos.","launchTerminal":"Lanzar Terminal","readSpec":"Leer Especificación"},"footer":{"stellarInsights":"Stellar Analysis","networkStatus":"Estado de Red","apiKeys":"Claves API","governance":"Gobernanza","copyright":"© 2026 STELLAR_INSIGHTS // v1.4.0-STABLE","tagline":"Diseñado específicamente para la red Stellar."}},
+-  "contact": {"title":"Contacto","heading":"Nos Encantaría Saber de Usted","headingBefore":"Nos Encantaría ","headingHighlight":"Saber de Usted","subtitle":"¿Tiene una pregunta, encontró un error o desea asociarse con nosotros? Contáctenos a través del formulario o cualquiera de nuestros canales.","otherChannels":"Otros Canales","channels":{"email":"Correo","github":"GitHub","twitter":"Twitter / X"},"emailHint":"Respuesta en 24 horas","githubHint":"Problemas y solicitudes de funciones","twitterHint":"Noticias y soporte rápido","form":{"name":"Nombre","email":"Correo electrónico","subject":"Asunto","message":"Mensaje","send":"Enviar Mensaje","sendAnother":"Enviar otro mensaje","messageSent":"¡Mensaje Enviado!","thanks":"Gracias por contactarnos. Le responderemos en 24 horas.","sending":"Enviando…","sendMessage":"Enviar Mensaje","sectionTitle":"Enviar un Mensaje","selectTopic":"Seleccione un tema…","placeholders":{"name":"Juan Pérez","email":"juan@ejemplo.com","message":"Cuéntenos cómo podemos ayudarle…"},"options":{"support":"Soporte Técnico","bug":"Reporte de Error","feature":"Solicitud de Función","partnership":"Asociación","other":"Otro"}}},
++  "contact": {"title":"Contacto","heading":"Nos Encantaría Saber de Usted","headingBefore":"Nos Encantaría ","headingHighlight":"Saber de Usted","subtitle":"¿Tiene una pregunta, encontró un error o desea asociarse con nosotros? Utilice uno de los canales de contacto que aparecen abajo. El formulario de mensajes no está disponible actualmente.","otherChannels":"Otros Canales","channels":{"email":"Correo","github":"GitHub","twitter":"Twitter / X"},"emailHint":"Respuesta en 24 horas","githubHint":"Problemas y solicitudes de funciones","twitterHint":"Noticias y soporte rápido","form":{"name":"Nombre","email":"Correo electrónico","subject":"Asunto","message":"Mensaje","send":"Enviar Mensaje","sendAnother":"Enviar otro mensaje","messageSent":"¡Mensaje Enviado!","thanks":"Gracias por contactarnos. Le responderemos en 24 horas.","sending":"Enviando…","sendMessage":"Enviar Mensaje","sectionTitle":"Enviar un Mensaje","unavailable":"Este formulario no está conectado a un servicio de envío y no enviará su mensaje. Utilice uno de los canales de contacto que aparecen aquí.","unavailableButton":"Formulario no disponible","selectTopic":"Seleccione un tema…","placeholders":{"name":"Juan Pérez","email":"juan@ejemplo.com","message":"Cuéntenos cómo podemos ayudarle…"},"options":{"support":"Soporte Técnico","bug":"Reporte de Error","feature":"Solicitud de Función","partnership":"Asociación","other":"Otro"}}},
+   "trustlines": {"title":"Inteligencia de Activos","subtitle":"Distribución de titulares, señales de adopción y actividad de transferencias","loading":"Sincronizando estados del libro mayor...","insightsTitle":"Perspectivas del Activo","noInsights":"Datos insuficientes para generar perspectivas para este activo.","selectPrompt":"Seleccione un activo del ranking para ver perspectivas detalladas"},
+diff --git a/messages/zh.json b/messages/zh.json
+--- a/messages/zh.json
++++ b/messages/zh.json
+@@ -6,3 +6,3 @@
+   "home": {"hero":{"liveBadge":"实时网络智能已启用","title":"量化","titleHighlight":"Stellar 网络信任","subtitle":"Stellar Analysis 为 Stellar 支付网络提供机构级遥测。超越交易计数；实时分析流动性深度、走廊可靠性和结算终局性。","enterTerminal":"进入终端","connectIdentity":"连接身份","initializing":"初始化中..."},"tickers":{"usdcBrl":"USDC/BRL","xlmEur":"XLM/EUR","networkTvl":"网络 TVL","successRate":"成功率"},"topMovers":{"title":"24小时涨跌","heading":"24小时热门变动","live":"实时","loading":"正在加载热门变动…","empty":"暂无变动数据。"},"capabilities":{"globalCorridors":"全球走廊","globalCorridorsDesc":"跨境支付路径的详细健康分析。监控 50+ 法币对的正常运行时间、流动性瓶颈和锚点表现。","deepTelemetry":"深度遥测","deepTelemetryDesc":"超越表面级 TPS。我们分析账本级结算数据，为支付操作提供真正的速度到终局性分布。","predictiveTrust":"预测性信任","predictiveTrustDesc":"我们的 ML 引擎预测走廊成功概率，帮助您通过最具弹性的网络节点路由高价值支付。"},"cta":{"title":"准备好集成网络智能了吗？","subtitle":"加入已使用 Stellar Analysis 优化流动性管理和支付可靠性的前瞻性锚点和钱包。","launchTerminal":"启动终端","readSpec":"阅读规范"},"footer":{"stellarInsights":"Stellar Analysis","networkStatus":"网络状态","apiKeys":"API 密钥","governance":"治理","copyright":"© 2026 STELLAR_INSIGHTS // v1.4.0-STABLE","tagline":"专为 Stellar 网络打造。"}},
+-  "contact": {"title":"联系我们","heading":"我们期待您的消息","headingBefore":"我们期待","headingHighlight":"您的消息","subtitle":"有问题、发现错误或想与我们合作？请通过下方表单或任一渠道联系我们。","otherChannels":"其他渠道","channels":{"email":"邮箱","github":"GitHub","twitter":"Twitter / X"},"emailHint":"24 小时内回复","githubHint":"问题与功能请求","twitterHint":"新闻与快速支持","form":{"name":"姓名","email":"邮箱","subject":"主题","message":"消息","send":"发送消息","sendAnother":"再发一条消息","messageSent":"消息已发送！","thanks":"感谢您的来信。我们将在 24 小时内回复。","sending":"发送中…","sendMessage":"发送消息","sectionTitle":"发送消息","selectTopic":"选择主题…","placeholders":{"name":"张三","email":"zhangsan@example.com","message":"请告诉我们您需要什么帮助…"},"options":{"support":"技术支持","bug":"错误报告","feature":"功能请求","partnership":"合作","other":"其他"}}},
++  "contact": {"title":"联系我们","heading":"我们期待您的消息","headingBefore":"我们期待","headingHighlight":"您的消息","subtitle":"有问题、发现错误或想与我们合作？请使用下方列出的联系渠道。消息表单目前不可用。","otherChannels":"其他渠道","channels":{"email":"邮箱","github":"GitHub","twitter":"Twitter / X"},"emailHint":"24 小时内回复","githubHint":"问题与功能请求","twitterHint":"新闻与快速支持","form":{"name":"姓名","email":"邮箱","subject":"主题","message":"消息","send":"发送消息","sendAnother":"再发一条消息","messageSent":"消息已发送！","thanks":"感谢您的来信。我们将在 24 小时内回复。","sending":"发送中…","sendMessage":"发送消息","sectionTitle":"发送消息","unavailable":"此表单未连接到发送服务，不会发送您的消息。请使用此处列出的联系渠道。","unavailableButton":"表单不可用","selectTopic":"选择主题…","placeholders":{"name":"张三","email":"zhangsan@example.com","message":"请告诉我们您需要什么帮助…"},"options":{"support":"技术支持","bug":"错误报告","feature":"功能请求","partnership":"合作","other":"其他"}}},
+   "trustlines": {"title":"资产智能","subtitle":"持有者分布、采用信号与转账活动","loading":"正在同步账本状态...","insightsTitle":"资产洞察","noInsights":"该资产数据不足，无法生成洞察。","selectPrompt":"从排行榜选择资产以查看详细洞察"},
