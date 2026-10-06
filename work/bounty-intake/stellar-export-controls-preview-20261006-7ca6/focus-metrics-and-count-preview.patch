@@ -1,0 +1,59 @@
+diff --git a/src/app/[locale]/analytics/export/components/MetricSelector.tsx b/src/app/[locale]/analytics/export/components/MetricSelector.tsx
+--- a/src/app/[locale]/analytics/export/components/MetricSelector.tsx
++++ b/src/app/[locale]/analytics/export/components/MetricSelector.tsx
+@@ -41,7 +41,7 @@
+               {metric.label}
+             </span>
+             <div
+-              className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
++              className={`w-5 h-5 rounded border flex items-center justify-center transition-colors focus-within:ring-2 focus-within:ring-blue-500 ${
+                 metric.checked
+                   ? "bg-blue-500 border-blue-500 text-white"
+                   : "bg-white border-gray-400 dark:bg-slate-700 dark:border-slate-600"
+@@ -49,7 +49,7 @@
+             >
+               <input
+                 type="checkbox"
+-                className="hidden"
++                className="sr-only"
+                 checked={metric.checked}
+                 onChange={(e) => onChange(metric.id, e.target.checked)}
+               />
+diff --git a/src/app/[locale]/analytics/export/components/ExportPreview.tsx b/src/app/[locale]/analytics/export/components/ExportPreview.tsx
+--- a/src/app/[locale]/analytics/export/components/ExportPreview.tsx
++++ b/src/app/[locale]/analytics/export/components/ExportPreview.tsx
+@@ -13,6 +13,7 @@
+ 
+ export function ExportPreview({ metrics, data }: ExportPreviewProps) {
+   const activeMetrics = metrics.filter((m) => m.checked);
++  const previewRows = data.slice(0, 5);
+ 
+   if (activeMetrics.length === 0) {
+     return (
+@@ -28,7 +29,7 @@
+         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+           Preview
+         </h3>
+-        <p className="text-xs text-muted-foreground">First 5 rows of export</p>
++        <p className="text-xs text-muted-foreground">Up to 5 rows of export</p>
+       </div>
+       <div className="overflow-x-auto flex-1">
+         <table className="w-full text-sm text-left">
+@@ -45,7 +46,7 @@
+             </tr>
+           </thead>
+           <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
+-            {data.slice(0, 5).map((row, idx) => (
++            {previewRows.map((row, idx) => (
+               <tr
+                 key={idx}
+                 className="hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
+@@ -82,7 +83,7 @@
+         </table>
+       </div>
+       <div className="p-3 border-t border-gray-200 dark:border-slate-700 text-xs text-center text-muted-foreground bg-gray-50 dark:bg-slate-800">
+-        Showing 5 of {data.length} records
++        Showing {previewRows.length} of {data.length} records
+       </div>
+     </div>
+   );
