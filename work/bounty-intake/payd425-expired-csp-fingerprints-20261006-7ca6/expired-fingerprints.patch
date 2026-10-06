@@ -1,0 +1,16 @@
+diff --git a/backend/src/services/cspReport.service.ts b/backend/src/services/cspReport.service.ts
+--- a/backend/src/services/cspReport.service.ts
++++ b/backend/src/services/cspReport.service.ts
+@@ -43,6 +43,12 @@
+   const report = extractReport(rawReport);
+   const now = Date.now();
+ 
++  for (const [key, lastSeen] of lastSeenByFingerprint) {
++    if (now - lastSeen >= DEDUPE_WINDOW_MS) {
++      lastSeenByFingerprint.delete(key);
++    }
++  }
++
+   if (isDuplicate(report.violatedDirective, report.blockedUri, now)) {
+     return { deduped: true };
+   }
