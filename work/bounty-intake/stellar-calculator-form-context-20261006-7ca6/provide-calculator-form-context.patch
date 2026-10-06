@@ -1,0 +1,170 @@
+diff --git a/src/components/CostCalculator.tsx b/src/components/CostCalculator.tsx
+--- a/src/components/CostCalculator.tsx
++++ b/src/components/CostCalculator.tsx
+@@ -1,7 +1,7 @@
+ "use client";
+ 
+ import React, { useMemo, useState } from "react";
+-import { useForm, SubmitHandler } from "react-hook-form";
++import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
+ import { zodResolver } from "@hookform/resolvers/zod";
+ import { AlertCircle, Calculator, Loader2, Route, TrendingUp } from "lucide-react";
+ import { FormField, FormSelect, FormCheckboxGroup } from "@/components/ui/FormField";
+@@ -80,14 +80,7 @@
+   const [error, setError] = useState<string | null>(null);
+   const [result, setResult] = useState<CostCalculationResponse | null>(null);
+ 
+-  const {
+-    register,
+-    handleSubmit,
+-    formState: { errors, isValid, isDirty },
+-    setValue,
+-    watch,
+-    trigger,
+-  } = useForm<CostCalculatorForm>({
++  const methods = useForm<CostCalculatorForm>({
+     resolver: zodResolver(costCalculatorSchema),
+     mode: "onChange",
+     defaultValues: {
+@@ -99,6 +92,15 @@
+     },
+   });
+ 
++  const {
++    register,
++    handleSubmit,
++    formState: { errors, isValid, isDirty },
++    setValue,
++    watch,
++    trigger,
++  } = methods;
++
+   // Watch form values for real-time updates
+   const sourceCurrency = watch("sourceCurrency");
+   const destinationCurrency = watch("destinationCurrency");
+@@ -172,67 +174,69 @@
+ 
+   return (
+     <div className="space-y-6">
+-      <form
+-        onSubmit={handleSubmit(handleCalculate)}
+-        className="glass rounded-2xl border border-border/60 p-6 space-y-6"
+-      >
+-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+-          <FormSelect
+-            name="sourceCurrency"
+-            label="Source Currency"
+-            options={CURRENCIES.map((currency) => ({ value: currency, label: currency }))}
+-            required
+-          />
++      <FormProvider {...methods}>
++        <form
++          onSubmit={handleSubmit(handleCalculate)}
++          className="glass rounded-2xl border border-border/60 p-6 space-y-6"
++        >
++          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
++            <FormSelect
++              name="sourceCurrency"
++              label="Source Currency"
++              options={CURRENCIES.map((currency) => ({ value: currency, label: currency }))}
++              required
++            />
+ 
+-          <FormSelect
+-            name="destinationCurrency"
+-            label="Destination Currency"
+-            options={CURRENCIES.map((currency) => ({ value: currency, label: currency }))}
+-            required
+-          />
++            <FormSelect
++              name="destinationCurrency"
++              label="Destination Currency"
++              options={CURRENCIES.map((currency) => ({ value: currency, label: currency }))}
++              required
++            />
+ 
+-          <FormField
+-            name="sourceAmount"
+-            label="Source Amount"
+-            type="number"
+-            placeholder="1000"
+-            required
+-          />
++            <FormField
++              name="sourceAmount"
++              label="Source Amount"
++              type="number"
++              placeholder="1000"
++              required
++            />
+ 
+-          <FormField
+-            name="destinationAmount"
+-            label="Target Destination Amount (Optional)"
+-            type="number"
+-            placeholder="Leave empty for estimate only"
+-            description="If specified, calculator will determine required source amount"
+-          />
+-        </div>
++            <FormField
++              name="destinationAmount"
++              label="Target Destination Amount (Optional)"
++              type="number"
++              placeholder="Leave empty for estimate only"
++              description="If specified, calculator will determine required source amount"
++            />
++          </div>
+ 
+-        <FormCheckboxGroup
+-          name="routes"
+-          label="Compare Routes"
+-          options={ROUTE_OPTIONS}
+-          required
+-        />
++          <FormCheckboxGroup
++            name="routes"
++            label="Compare Routes"
++            options={ROUTE_OPTIONS}
++            required
++          />
+ 
+-        <button
+-          type="submit"
+-          disabled={!canSubmit || loading}
+-          className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+-        >
+-          {loading ? (
+-            <>
+-              <Loader2 className="h-4 w-4 animate-spin" />
+-              Calculating...
+-            </>
+-          ) : (
+-            <>
+-              <Calculator className="h-4 w-4" />
+-              Calculate Total Cost
+-            </>
+-          )}
+-        </button>
+-      </form>
++          <button
++            type="submit"
++            disabled={!canSubmit || loading}
++            className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
++          >
++            {loading ? (
++              <>
++                <Loader2 className="h-4 w-4 animate-spin" />
++                Calculating...
++              </>
++            ) : (
++              <>
++                <Calculator className="h-4 w-4" />
++                Calculate Total Cost
++              </>
++            )}
++          </button>
++        </form>
++      </FormProvider>
+ 
+       {error ? (
+         <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200">
