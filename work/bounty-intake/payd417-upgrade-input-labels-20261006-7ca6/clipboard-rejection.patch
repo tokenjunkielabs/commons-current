@@ -1,0 +1,21 @@
+diff --git a/frontend/src/components/UpgradeConfirmModal.tsx b/frontend/src/components/UpgradeConfirmModal.tsx
+--- a/frontend/src/components/UpgradeConfirmModal.tsx
++++ b/frontend/src/components/UpgradeConfirmModal.tsx
+@@ -386,9 +386,14 @@
+   // ── Copy to clipboard helper ─────────────────────────────────────────────
+ 
+   function copyToClipboard(text: string) {
+-    void navigator.clipboard.writeText(text).then(() => {
+-      notifySuccess('Copied', 'Copied to clipboard.');
+-    });
++    void navigator.clipboard.writeText(text).then(
++      () => {
++        notifySuccess('Copied', 'Copied to clipboard.');
++      },
++      () => {
++        notifyError('Copy failed', 'Could not copy the transaction hash.');
++      }
++    );
+   }
+ 
+   // ── Backdrop click only closes in non-executing, non-simulating states ───
