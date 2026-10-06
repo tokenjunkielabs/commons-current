@@ -1,0 +1,44 @@
+diff --git a/frontend/src/pages/EmployeeEntry.tsx b/frontend/src/pages/EmployeeEntry.tsx
+--- a/frontend/src/pages/EmployeeEntry.tsx
++++ b/frontend/src/pages/EmployeeEntry.tsx
+@@ -1,5 +1,5 @@
+ import * as React from 'react';
+-import { useState, useEffect, useCallback } from 'react';
++import { useState, useEffect, useCallback, useRef } from 'react';
+ import { Icon, Button, Card, Input, Select, Alert } from '@stellar/design-system';
+ import { EmployeeList } from '../components/EmployeeList';
+ import { AutosaveIndicator } from '../components/AutosaveIndicator';
+@@ -54,6 +54,7 @@
+   const [employees, setEmployees] = useState<EmployeeItem[]>([]);
+   const [loading, setLoading] = useState(false);
+   const [loadError, setLoadError] = useState(false);
++  const latestLoadTokenRef = useRef<object | null>(null);
+   const [notification, setNotification] = useState<{
+     message: string;
+     secretKey?: string;
+@@ -69,9 +70,12 @@
+   const { t } = useTranslation();
+ 
+   const fetchEmployees = useCallback(async () => {
++    const loadToken = {};
++    latestLoadTokenRef.current = loadToken;
+     try {
+       setLoading(true);
+       const response = await api.get<{ data: BackendEmployee[] }>('/employees');
++      if (latestLoadTokenRef.current !== loadToken) return;
+       const employeeRows = Array.isArray(response.data?.data) ? response.data.data : [];
+       const mapped: EmployeeItem[] = employeeRows.map((emp: BackendEmployee) => ({
+         id: String(emp.id),
+@@ -84,10 +88,10 @@
+       setEmployees(mapped);
+       setLoadError(false);
+     } catch (err) {
+-      setLoadError(true);
++      if (latestLoadTokenRef.current === loadToken) setLoadError(true);
+       console.error('Failed to fetch employees:', err);
+     } finally {
+-      setLoading(false);
++      if (latestLoadTokenRef.current === loadToken) setLoading(false);
+     }
+   }, []);
+ 
