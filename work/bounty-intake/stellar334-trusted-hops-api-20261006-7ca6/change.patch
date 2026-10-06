@@ -1,0 +1,21 @@
+diff --git a/backend/ip_allowlist/resolve.rs b/backend/ip_allowlist/resolve.rs
+--- a/backend/ip_allowlist/resolve.rs
++++ b/backend/ip_allowlist/resolve.rs
+@@ -28,7 +28,7 @@
+     forwarded_for: Option<&str>,
+     trusted_hops: TrustedHops,
+ ) -> IpAddr {
+-    if !trusted_hops.is_trusted() {
++    if !trusted_hops.trusts_any_proxy() {
+         return peer;
+     }
+ 
+@@ -50,7 +50,7 @@
+     // most recent proxy (rightmost). The rightmost `trusted_hops` entries
+     // were appended by trusted proxies; the entry immediately to their left
+     // is the address the outermost trusted proxy observed, i.e. the client.
+-    let hops = trusted_hops.count() as usize;
++    let hops = trusted_hops.get() as usize;
+     if chain.len() <= hops {
+         // Fewer forwarded entries than trusted hops: the chain is shorter
+         // than the configured topology, so it cannot be trusted. Fall back to
