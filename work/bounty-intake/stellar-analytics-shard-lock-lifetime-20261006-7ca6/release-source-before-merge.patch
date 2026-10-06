@@ -1,0 +1,49 @@
+diff --git a/backend/src/analytics/engine.rs b/backend/src/analytics/engine.rs
+--- a/backend/src/analytics/engine.rs
++++ b/backend/src/analytics/engine.rs
+@@ -54,10 +54,10 @@
+         tracker.ingest(event)
+     }
+ 
+-    /// Ingests a burst of payment events with optimized throughput and backpressure safety.
++    /// Ingests a batch of payment events in their supplied order.
+     ///
+-    /// Batch ingestion sorts events by event-time to minimize internal state transitions
+-    /// while preserving exact out-of-order and late-event semantics.
++    /// Batch ingestion processes events in their supplied order under one write lock.
++    /// It uses the same per-event watermark and late-event handling as single ingestion.
+     pub fn ingest_batch(&self, events: Vec<PaymentEvent>) -> BatchIngestResult {
+         let mut tracker = self.inner.write().expect("analytics lock poisoned");
+ 
+@@ -125,8 +125,13 @@
+     }
+ 
+     /// Merges metrics from another engine instance or parallel shard.
++    ///
++    /// Clones the source state before taking this engine's write lock.
+     pub fn merge_shard(&self, shard: &PaymentAnalyticsEngine) {
+-        let other_tracker = shard.inner.read().expect("analytics lock poisoned");
++        let other_tracker = {
++            let tracker = shard.inner.read().expect("analytics lock poisoned");
++            tracker.clone()
++        };
+         let mut tracker = self.inner.write().expect("analytics lock poisoned");
+         tracker.merge(&other_tracker);
+     }
+diff --git a/backend/src/analytics/mod.rs b/backend/src/analytics/mod.rs
+--- a/backend/src/analytics/mod.rs
++++ b/backend/src/analytics/mod.rs
+@@ -22,9 +22,10 @@
+ //!    Integrates directly with the `reconciliation` subsystem via [`WatermarkedAggregateStore`], ensuring
+ //!    that `reconcilable_periods()` strictly aligns with watermarked finalized windows.
+ //!
+-//! 5. **Ingestion Burst Resilience ([`engine`])**:
+-//!    $O(1)$ sample insertion, lock-free batch ingestion, and bounded memory retention guarantee
+-//!    stability under sudden backlog sync bursts (e.g. 50,000+ events).
++//! 5. **Batch and Shard Ingestion ([`engine`])**:
++//!    Batches preserve supplied event order while holding an engine write lock.
++//!    Shard merges clone source state under a read lock before taking the destination write lock.
++//!    Copy cost scales with retained source state; this is not a lock-free or constant-memory API.
+ 
+ pub mod clock;
+ pub mod engine;
