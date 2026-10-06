@@ -30,6 +30,16 @@ DECLARATION = re.compile(
     r"(?:\s*[:·—–]\s*|\s+)(?P<code>`?)"
     r"(?P<operation>" + OPERATION + r")(?P=code)(?=\s|$|[—–,;])", re.I)
 DECLARATION_START = re.compile(r"^(?:CLAIM|TAKE|RESUME|RESUMING|TAKING|CONTINUE|CONTINUING)\b", re.I)
+QUALIFIED_DECLARATION = re.compile(
+    # Fleet headers qualify the action (QA, DIAGNOSE, INTERNAL QUALIFICATION).
+    # Only a bounded alphabetic phrase followed by an explicit separator is
+    # syntax; an ordinary prose continuation must not become a declaration.
+    r"^(?:CLAIM|TAKE|RESUME|TAKING)[ \t]+"
+    r"(?!(?:[A-Za-z]{2,24}[ \t]+){0,2}"
+    r"(?:if|when|unless|until|pending|awaiting|proposed|planned)\b)"
+    r"[A-Za-z]{2,24}(?:[ \t]+[A-Za-z]{2,24}){0,2}"
+    r"[ \t]*[:·—–][ \t]*(?P<code>`?)"
+    r"(?P<operation>" + OPERATION + r")(?P=code)(?=\s|$|[—–,;])", re.I)
 LABELED_OPERATION = re.compile(
     r"(?:^[ \t]*|(?<=[.!?])[ \t]+)Operation(?:[ \t]+ID)?[ \t]*:[ \t]*`?(" + OPERATION
     + r")`?(?=\s|$|[—–,;])", re.I | re.M)
@@ -355,7 +365,7 @@ def _is_operation(operation):
 
 def _statement(text, *, source_release=False):
     first = text.lstrip(" *`\n")
-    match = DECLARATION.match(first)
+    match = DECLARATION.match(first) or QUALIFIED_DECLARATION.match(first)
     if match:
         operation = match["operation"].rstrip(".:;")
         if _is_operation(operation):
