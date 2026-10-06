@@ -1043,6 +1043,20 @@ quota reset feedback apply to every alias of the same domain. Reconcile an
 accepted or uncertain write before another delivery attempt. Direct existing
 tool access remains available. Passive telemetry does not dispatch or gate work.
 
+Automatic fallback uses sustainable free routes. `one_time_free` and
+`conditional_free` grants, trials, promotional credits, and funded usage are
+excluded even when a balance remains. `recurring_free` and `free_tier` routes
+need `zero_net_spend_verified: true` from the actual account and exact method
+contract: exhaustion stops or resets free use without paid overage, top-up, or
+upgrade. Missing cost facts remain unverified. `no_key_free` and
+`unmetered_free` still require the existing verified Free route, binding and
+quota facts. This selection policy does not revoke connected services,
+credential access, or separately authorized funded optional tools.
+Free economics also stay bound to the observed `native_tool` or
+`native_tools` methods. A different runtime method loses those verified
+Free cost facts for automatic fallback; it cannot inherit free Search/Fetch
+pricing for a paid browser/agent method.
+
 The existing provider extension adds `jina_public_read` (no-key public URLs)
 and `parallel_anonymous_tools`, `parallel_anonymous_search`,
 `parallel_anonymous_fetch` (anonymous light-use MCP). Calls retain provider

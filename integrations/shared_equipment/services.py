@@ -104,11 +104,14 @@ def _token_pool_status_tool() -> dict:
 
 
 def plan_capability_fallback(arguments: dict) -> dict:
-    """Suggest distinct usable quota domains; never invoke, retry or gate work.
+    """Suggest sustainable free quota domains; never invoke, retry or gate work.
 
     Route facts come from the existing connected-capability observations, not a
     second registry. Published free pricing is separate from the actual account
-    plan and binding. Consumption is descriptive, never an admission rule.
+    plan and binding. Temporary grants and funded usage are not fleet fallback
+    capacity. Metered recurring free routes need verified zero net spend;
+    direct authorized tools and credentials remain available. Consumption is
+    descriptive, never an admission rule.
     """
     capability = _string(arguments, "capability")
     operation_id = _string(arguments, "operation_id")
@@ -212,13 +215,12 @@ def plan_capability_fallback(arguments: dict) -> dict:
         if capability not in row["capabilities"]:
             continue
         reasons = []
-        recurring = row["allowance_type"] in {"recurring_free", "free_tier", "unmetered_free", "no_key_free"}
-        bounded = row["allowance_type"] in {"one_time_free", "conditional_free"}
-        if not recurring and not bounded:
+        sustainable = row["allowance_type"] in {"recurring_free", "free_tier", "unmetered_free", "no_key_free"}
+        if row["allowance_type"] in {"one_time_free", "conditional_free"}:
+            reasons.append("TEMPORARY_ALLOWANCE_NOT_SUSTAINABLE")
+        elif not sustainable:
             reasons.append("FREE_ALLOWANCE_TYPE_UNSUPPORTED")
-        if bounded and (row.get("quota_remaining") is None or row["quota_remaining"] <= 0):
-            reasons.append("BOUNDED_FREE_BALANCE_UNMEASURED_OR_EMPTY")
-        if row["allowance_type"] == "conditional_free" and row.get("zero_net_spend_verified") is not True:
+        if row["allowance_type"] in {"recurring_free", "free_tier"} and row.get("zero_net_spend_verified") is not True:
             reasons.append("ZERO_NET_SPEND_UNVERIFIED")
         allowance_expiry = timestamp(row.get("allowance_expires_at"), "allowance_expires_at")
         if allowance_expiry and allowance_expiry <= now:
