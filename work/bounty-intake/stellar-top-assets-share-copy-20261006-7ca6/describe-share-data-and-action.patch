@@ -1,0 +1,21 @@
+diff --git a/src/components/dashboard/TopAssetsTable.tsx b/src/components/dashboard/TopAssetsTable.tsx
+--- a/src/components/dashboard/TopAssetsTable.tsx
++++ b/src/components/dashboard/TopAssetsTable.tsx
+@@ -21,7 +21,7 @@
+ function buildShareText(asset: Asset): string {
+     const changeText = typeof asset.change24h === 'number'
+         ? `is ${asset.change24h >= 0 ? 'up' : 'down'} ${Math.abs(asset.change24h)}%`
+-        : "hasn't moved much";
++        : "has no available 24-hour change data";
+     return `${asset.symbol} ${changeText} on Stellar today. Price: $${asset.price < 1 ? asset.price.toFixed(4) : asset.price.toLocaleString(undefined, { minimumFractionDigits: 2 })} — via Stellar Analysis`;
+ }
+ 
+@@ -115,7 +115,7 @@
+                                         variant="ghost"
+                                         size="icon"
+                                         onClick={() => handleShare(asset)}
+-                                        aria-label={`Share ${asset.symbol} on X/Twitter`}
++                                        aria-label={`Share ${asset.symbol}`}
+                                         className="h-8 w-8 hover:bg-accent/20"
+                                     >
+                                         <Share2 className="h-4 w-4" />
