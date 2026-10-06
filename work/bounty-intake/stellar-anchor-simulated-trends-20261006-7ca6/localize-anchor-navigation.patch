@@ -1,0 +1,28 @@
+diff --git a/src/app/[locale]/anchors/components/AnchorTable.tsx b/src/app/[locale]/anchors/components/AnchorTable.tsx
+index 30aa2ab..a37be6e 100644
+--- a/src/app/[locale]/anchors/components/AnchorTable.tsx
++++ b/src/app/[locale]/anchors/components/AnchorTable.tsx
+@@ -1,8 +1,7 @@
+ import { Home as AnchorIcon, ExternalLink } from "lucide-react";
+ import { formatNumber, generateMockHistoricalData, getHealthStatusColor, getHealthStatusIcon, handleSort, SortIndicator, truncateAddress } from "./helpers";
+ import { Line, LineChart, ResponsiveContainer } from "recharts";
+-import Link from "next/link";
+-import { useRouter } from "next/navigation";
++import { Link, useRouter } from "@/i18n/navigation";
+ 
+ const AnchorList = ({
+   sortBy,
+diff --git a/src/app/[locale]/anchors/components/AnchorCards.tsx b/src/app/[locale]/anchors/components/AnchorCards.tsx
+index ac3648c..e4a122f 100644
+--- a/src/app/[locale]/anchors/components/AnchorCards.tsx
++++ b/src/app/[locale]/anchors/components/AnchorCards.tsx
+@@ -1,8 +1,7 @@
+ import { formatNumber, generateMockHistoricalData, getHealthStatusColor, getHealthStatusIcon, truncateAddress } from "./helpers";
+ import { Line, LineChart, ResponsiveContainer } from "recharts";
+ import { Home as AnchorIcon, BarChart3, ExternalLink } from "lucide-react";
+-import Link from "next/link";
+-import { useRouter } from "next/navigation";
++import { Link, useRouter } from "@/i18n/navigation";
+ const AnchorCards = ({
+   paginatedAnchors
+ }) => {
