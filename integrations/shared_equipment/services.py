@@ -297,7 +297,7 @@ TOOLS = [
     _schema("github_update_pull_request", "Update PR title/body through the existing account publishing service. Reads expected_head before publication and returns after-write head readback; it does not lock the branch. Reuse operation_id for retries.", {"repository": "string", "pull_number": "integer", "expected_head": "string", "operation_id": "string"}, {"title": "string", "body": "string"}),
     _schema("github_create_branch", "Create a branch from base_ref (default main), resolving its commit internally. base_sha remains a compatible override and also accepts a ref. Returns an existing branch only when its head matches the resolved base; never moves an existing branch. Publication runs through the existing account publishing service; reuse operation_id for retries.", {"repository": "string", "branch": "string", "operation_id": "string"}, {"base_ref": {"type": "string", "default": "main", "description": "Source branch, tag, ref, or commit; resolved internally. Defaults to main."}, "base_sha": {"type": "string", "description": "Compatibility override for base_ref: an existing commit SHA or ref."}}),
     _schema("github_commit_files", "Commit UTF-8 files to an existing branch through the existing account publishing service, comparing expected_head first and again inside the named operation. Supply full file contents. Reuse operation_id for retries.", {"repository": "string", "branch": "string", "expected_head": "string", "message": "string", "operation_id": "string"}, {"files": {"type": "array", "items": {"type": "object", "properties": {"path": {"type": "string"}, "content": {"type": "string"}}, "required": ["path", "content"]}}}),
-    _schema("github_create_pull_request", "Open a useful PR for existing task work through the existing account publishing service. Returns an existing open PR for the same head/base on retry. Reuse operation_id for retries; head_repo, maintainer_can_modify and transport ('graphql') pass through to the named operation.", {"repository": "string", "head": "string", "base": "string", "title": "string", "body": "string", "operation_id": "string"}, {"draft": "boolean", "head_repo": "string", "maintainer_can_modify": "boolean", "transport": "string"}),
+    _schema("github_create_pull_request", "Open a useful PR for existing task work through the existing account publishing service. Returns an existing open PR for the same head/base on retry. Reuse operation_id for retries; head_repo is the short repository name (e.g. wavelum-frontend), never owner/name; omit when it matches the target repo name. maintainer_can_modify and transport ('graphql') pass through to the named operation.", {"repository": "string", "head": "string", "base": "string", "title": "string", "body": "string", "operation_id": "string"}, {"draft": "boolean", "head_repo": {"type": "string", "minLength": 1, "maxLength": 100, "pattern": "^(?!\\.$|\\.\\.$)[A-Za-z0-9_.-]+$", "description": "Short head repository name, not owner/name. Omit when it matches the target repo name."}, "maintainer_can_modify": "boolean", "transport": "string"}),
     _schema("github_merge_pull_request", "Merge an authorized reviewed PR through the existing account publishing service. Reads the pull head, commit identities and base branch head first and supplies head and base compare-and-swap inside the named operation; GitHub still enforces branch rules. Reuse operation_id for retries.", {"repository": "string", "pull_number": "integer", "expected_head": "string", "operation_id": "string"}, {"merge_method": "string"}),
     _schema("cua_s1_form", "Score a form in one already-open Chrome tab with the official CUA-S1-FORMS checkpoint. Defaults to a dry run; execute and submit are separate explicit booleans. Reports observed actions and failures, and never opens a tab.",
             {"url": "string", "form_title": "string", "entities": {"type": "array", "items": {"type": "object", "properties": {"label": {"type": "string"}, "value": {"type": "string"}}, "required": ["label", "value"]}}},
@@ -700,14 +700,23 @@ class ServiceEquipment(GitHubSlackEquipment):
                 "title": title,
                 "body": body,
             })
+            head_repo = None
+            if "head_repo" in a:
+                head_repo = _string(a, "head_repo")
+                if (re.fullmatch(r"[A-Za-z0-9_.-]{1,100}", head_repo) is None
+                        or head_repo in {".", ".."}):
+                    raise EquipmentError(
+                        "head_repo must be a short repository name, not owner/name",
+                        code="invalid_head_repo", uncertain=False,
+                    )
             query = urllib.parse.urlencode({"state": "open", "head": head if ":" in head else owner + ":" + head, "base": base})
             existing = self.github(root + "/pulls?" + query)
             if existing:
                 return {"created": False, "pull_request": existing[0]}
             outgoing = {"owner": owner, "repo": repo.split("/")[1], "head": head, "base": base,
                         "title": title, "body": body, "draft": bool(a.get("draft", False))}
-            if "head_repo" in a:
-                outgoing["head_repo"] = _string(a, "head_repo")
+            if head_repo is not None:
+                outgoing["head_repo"] = head_repo
             if "maintainer_can_modify" in a:
                 outgoing["maintainer_can_modify"] = bool(a["maintainer_can_modify"])
             if "transport" in a:
