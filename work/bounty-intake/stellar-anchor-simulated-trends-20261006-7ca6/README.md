@@ -81,3 +81,24 @@ Apply this incremental patch after the trend-label patch and the nested-key patc
 Current bounded Commons anchors/locale PR and public Slack AnchorTable/locale searches both returned zero. This supplies no global uniqueness or upstream acceptance claim. The retained donor package metadata declares next-intl ^4.13.2 and Next16.2.10; no installed dependency or full compilation is asserted.
 
 The correction makes these actual navigation consumers use the application's existing locale contract. It does not claim that every prior unprefixed request necessarily selected the wrong locale: middleware and cookies were not exercised. It does not translate page copy, validate or encode the account value, change query/hash preservation, implement new destinations, fix zero-denominator displays, redesign nested markup or establish browser/accessibility/whole-build readiness. All prior authorship, source-custody, no-runtime/no-tests and no-upstream/payment boundaries remain.
+
+## Separate continuation: distinguish an absent success-rate denominator
+
+Both actual mounted views compute successful_transactions / total_transactions × 100 and unconditionally display the result to one decimal place. A zero transaction total supplies no denominator for an observed success percentage. In particular, ordinary zero/zero counts would otherwise be presented as `NaN%`.
+
+The actual source contract permits this branch. Complete `src/lib/api/types.ts` (blob `eb5891a5f04e33eb29757cf57c623f9b7d4ab3b5`, 3,140 B) declares both counts as numbers without a positive-total restriction. The complete `fetchAnchors` adapter recorded above returns the parsed typed response. Complete `src/app/[locale]/anchors/components/useAnchorPage.ts` (blob `07daa182ff8167ac3d9740ff26ab2e893bc2bf4f`, 3,067 B) stores `response.anchors` directly. Its name/account filter, numeric sorting and slicing do not exclude an anchor because its total is zero. The acquired page content passes those anchors to both views.
+
+These two additional immutable source inputs were acquired and independently matched solely to qualify this new data/display boundary. No pagination implementation or previously accepted behavior was rerun or changed. No live response was requested, so this is an allowed source-input case, not a claim that a particular production record currently has zero transactions.
+
+`show-unavailable-zero-total-rate.patch` changes only the two percentage expressions, **+2/-2 in two hunks**. They display `N/A` exactly when `anchor.total_transactions === 0`; otherwise they preserve the existing one-decimal percentage output. A zero successful count with a nonzero total still displays the existing 0.0%. Raw successful/total counts remain visible unchanged.
+
+| Production path | After #32006 / before this patch | After this patch | Bytes before → after |
+| --- | --- | --- | --- |
+| `src/app/[locale]/anchors/components/AnchorTable.tsx` | `a37be6e2e162e211841ae1ddf6b2681d627833b0` | `09e3d8d6cb2f42e3d66e6cc59c6becc450acd863` | 10170 → 10217 |
+| `src/app/[locale]/anchors/components/AnchorCards.tsx` | `e4a122f2550d43f822a8544c129872135a75d945` | `6e7eba7406fea4981dd0ac7b9b28309e49022504` | 6236 → 6283 |
+
+Apply the patch after the three preceding incremental patches, most recently [Commons #32006](https://github.com/woahwhattheheck/commons/pull/32006). Their imports, event guards and simulated-trend captions remain exact. The existing ratio expression is also unchanged; this correction concerns the displayed observation, not numerical validation or prevention of an unused non-finite intermediate calculation. All nonzero-total behavior, API/loading/error paths, sorting, pagination, charts and navigation remain as before.
+
+Complete serialized forward/inverse reconstruction matches the two recorded postimages/preimages and preserves their absence of final newline. The bounded Commons AnchorTable/“N/A” overlap query returned zero; the public Slack AnchorTable/zero search returned only the already-known original release header, whose body was not expanded again. No global coverage is asserted.
+
+This introduces no positive-count, negative-count, finite-value, malformed-payload or backend validation policy. It does not fix other summaries or percentages outside these two complete consumers, assert a statistical observation where there are no transactions, or claim UI/browser/test/runtime acceptance. Original attribution, source custody, upstream assignment and payment boundaries above remain unchanged.
