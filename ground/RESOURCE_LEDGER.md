@@ -14,6 +14,14 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Afternoon product, competition, rail-health and connected-equipment delta — 2026-10-06 17:56 EDT
+
+The canonical graph now contains **641 resources**, with **283 producing** and **139 append-only evidence records**. Eighteen new resources cover three bounded Stellar source repairs, two Wavelum integration lanes, seven competition validators/benchmarks/candidates, the Gemma fixed-slice budget scorer, NAWCAD robustness evidence, DOE GEMS mask-faithful scoring, two offline rail-health consumers, and pinned GitHub compact-edit equipment. Four existing coordination resources advanced: claim parsing, the connected-tool router, the connected-operation recorder, and shared connected work tools.
+
+Focused receipts remain exact about their limits. Synthetic or local evaluation is not official-data performance, authenticated provider execution, leaderboard acceptance, award, payment, revenue, or cash. Source packets are not donor runtime or upstream acceptance. The active ARC questions and revenue-qualification lanes remain with their existing owners; repeated custody renewals and generated board/manual/projection churn minted no resource.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-afternoon-delta-20261006-1756.json). No nonduplicative build order remained because every landed implementation is complete under a retained owner and the remaining project/data/provider gates are existing-owner execution. Existing holds, no-resend, open-door/no-auth, private-data and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Noon product-source and Qloo offline-demo delta — 2026-10-06 12:13 EDT
 
 The canonical graph now contains **623 resources**, with **271 producing** and **138 append-only evidence records**. Thirty-four new PayD/Stellar packets preserve exact, attributed corrections across request lifetime and ownership, unavailable-versus-zero presentation, form and interface wiring, accessibility semantics, logger-redacted mutation metadata, source-contract disclosure, and bounded product error feedback. The existing PayD CSV packet advanced with committed-preview filename and FileReader cleanup lifetime corrections. These are source packets for retained owners, not application, browser, runtime, upstream acceptance, deployment, payment, revenue, or cash receipts.
