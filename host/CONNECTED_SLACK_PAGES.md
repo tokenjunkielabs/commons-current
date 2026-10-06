@@ -875,6 +875,95 @@ option is accepted only when the actual response has the supported messages
 format. Unknown argument fields, invalid argument types and invalid options
 throw `TypeError`.
 
+### Opt into bounded rendered channel labels
+
+A header-only search overview already returns channel IDs and exact header
+ranges. Repeated real tooling intake needed the channel text printed in that
+header as well, and callers were reopening the retained JSON and slicing those
+ranges manually. The existing search projector can now expose that text with an
+explicit opt-in:
+
+~~~javascript
+const overview = projectSlackCollectedSearchResults(retainedCollection, {
+  page_index: 0,
+  projection: {
+    max_results: 20,
+    max_body_chars: 0,
+    max_total_body_chars: 0,
+    include_channel_labels: true,
+    max_channel_label_chars: 512,
+    max_total_channel_label_chars: 32768,
+  },
+});
+~~~
+
+The same options work directly with `projectSlackSearchResults`. The
+`include_channel_labels` flag must be boolean and defaults to false. Omitted
+or false leaves the existing output shape unchanged. The two label budgets are
+accepted only with the flag set to true; otherwise they remain a `TypeError`
+with an explanation of that required mode. Unknown options remain errors.
+
+For selected results, the opt-in adds:
+
+- `rendered_channel_label_range`: the complete half-open range of text after
+  the recognized `Channel: ` prefix and before its trailing ID suffix, in the
+  original decoded native results string.
+- `rendered_channel_label`: a bounded verbatim prefix of that range, including
+  any displayed `#` or other literal characters. It is not trimmed, decoded,
+  normalized, looked up or substituted from the channel ID.
+- `channel_label_chars`, `returned_channel_label_chars` and
+  `channel_label_truncated`: complete and returned UTF-16 lengths and explicit
+  clipping status.
+
+Label limits are independent of body budgets. Their defaults are 512 per label
+and 32,768 combined; accepted ranges are 0–65,536 and 0–262,144 respectively.
+Only selected entries consume the output budget, in selected source order.
+Clipping preserves complete surrogate pairs. A zero budget returns an empty
+prefix with the original range/count and truncation status, not an absent label.
+The existing native-input budget and at-most-20-result limit still apply.
+
+Successful opt-in projection adds `coverage.channel_labels`, containing
+`scope: 'selected_rendered_result_headers'`,
+`interpretation: 'rendered_text_only'`,
+`authentication: 'not_performed'`, and `selected_chars`, `returned_chars`
+and `truncated_labels`. These counts describe labels only. Existing body
+coverage, result identities, context ranges, pagination and END/cursor fields
+retain their separate meanings. Refusals emit no completed label observation.
+
+A channel label is rendered text, not proof of visibility, membership, authorship,
+topic permission, ownership or source authority. It can help a caller recognize
+an already held channel without expanding message bodies, but it cannot clear
+any hold or replace full source context where that is needed. A truncated label
+must not be treated as a complete name. The caller still selects any subsequent
+body projection explicitly. No provider call, retry, alternate reader, channel
+lookup, privacy classifier or automatic body expansion is added.
+
+The existing detailed-header grammar is unchanged. Label ranges are derived
+only after that grammar and the header/permalink identity checks succeed.
+All collector, channel/thread, suppression-observer and collection-handoff
+function bodies remain byte-exact; only the existing search projector changes.
+No new export or dependency is introduced.
+
+#### First actual new intake consumer
+
+The source was frozen and acknowledged as Git blob
+`be4e4adf1b0a182a7789a110dece31d768cccc30` (76,529 UTF-8 bytes)
+before first use. One genuinely new public search for `tooling on:2026-09-13`
+then returned 20 detailed matches under its actual 20-result/page-one request.
+One opt-in projection returned all 20 labels, 309 UTF-16 label characters,
+zero truncated labels and zero body characters. Each label prefix and complete
+range/count matched the new retained rendering. The collection and options
+remained JSON-identical.
+
+The native page stopped at its one-page budget with a next cursor, not END.
+The projector made zero provider calls; the one new search and the one earlier
+source-blob bank are separate operations. No prior search or projection was
+replayed, and no private response, body or raw journal was published.
+This is a success-path observation only: zero budgets, clipping, surrogate
+boundaries, sparse/context-enabled selection, invalid options and refusal paths
+were source-inspected but not exercised for this addition. No synthetic fixture,
+suite, executor, provider timing or quota-saving claim is included.
+
 ### Reuse a context-enabled capture
 
 The projector returns each rendered match's text while preserving its surrounding
@@ -968,6 +1057,9 @@ native arguments and may itself contain private search terms.
 | `max_body_chars` | 800 | 0–65536 | Maximum verbatim content prefix per result. |
 | `max_total_body_chars` | 6400 | 0–262144 | Combined returned content budget. |
 | `max_input_chars` | 1048576 | 1–8388608 | Combined processed request and native payload text budget. |
+| `include_channel_labels` | false | boolean | Add bounded literal channel labels from recognized selected search headers. |
+| `max_channel_label_chars` | 512 | 0–65536 | Per-label prefix budget; accepted only with `include_channel_labels: true`. |
+| `max_total_channel_label_chars` | 32768 | 0–262144 | Combined label-prefix budget; accepted only with `include_channel_labels: true`. |
 
 All counts and ranges use UTF-16 code units. Prefix clipping preserves a complete
 surrogate pair. The input budget charges serialized native arguments and then
