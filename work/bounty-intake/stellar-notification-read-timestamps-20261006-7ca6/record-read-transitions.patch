@@ -1,0 +1,45 @@
+diff --git a/src/contexts/NotificationContext.tsx b/src/contexts/NotificationContext.tsx
+index 8a05dbf..128f95e 100644
+--- a/src/contexts/NotificationContext.tsx
++++ b/src/contexts/NotificationContext.tsx
+@@ -218,15 +218,25 @@
+ 
+   const markAsRead = useCallback(
+     (id: string) => {
++      const readAt = new Date().toISOString();
+       setNotifications((prev) =>
+-        prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
++        prev.map((n) =>
++          n.id === id && !n.read
++            ? { ...n, read: true, metadata: { ...n.metadata, readAt } }
++            : n,
++        ),
+       );
+     },
+     [setNotifications],
+   );
+ 
+   const markAllAsRead = useCallback(() => {
+-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
++    const readAt = new Date().toISOString();
++    setNotifications((prev) =>
++      prev.map((n) =>
++        n.read ? n : { ...n, read: true, metadata: { ...n.metadata, readAt } },
++      ),
++    );
+   }, [setNotifications]);
+ 
+   const clearNotification = useCallback(
+diff --git a/src/components/notifications/NotificationCenter/AnalyticsTab.tsx b/src/components/notifications/NotificationCenter/AnalyticsTab.tsx
+index 229ac9c..e3f32b9 100644
+--- a/src/components/notifications/NotificationCenter/AnalyticsTab.tsx
++++ b/src/components/notifications/NotificationCenter/AnalyticsTab.tsx
+@@ -46,7 +46,7 @@
+             <div>
+               <p className="text-sm text-muted-foreground dark:text-muted-foreground">Avg Response Time</p>
+               <p className="text-2xl font-bold text-gray-900 dark:text-white">
+-                {analytics.averageResponseTime ? `${Math.round(analytics.averageResponseTime)}m` : 'N/A'}
++                {analytics.averageResponseTime !== undefined ? `${Math.round(analytics.averageResponseTime)}m` : 'N/A'}
+               </p>
+             </div>
+             <Clock className="h-8 w-8 text-purple-500" />
