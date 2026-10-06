@@ -1,0 +1,111 @@
+diff --git a/src/components/Sep24Flow.tsx b/src/components/Sep24Flow.tsx
+--- a/src/components/Sep24Flow.tsx
++++ b/src/components/Sep24Flow.tsx
+@@ -1,7 +1,7 @@
+ "use client";
+ 
+-import React, { useCallback, useEffect, useMemo } from "react";
+-import { useForm, SubmitHandler } from "react-hook-form";
++import React, { useCallback, useEffect, useMemo, useState } from "react";
++import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
+ import { zodResolver } from "@hookform/resolvers/zod";
+ import { z } from "zod";
+ import {
+@@ -17,6 +17,7 @@
+ } from "lucide-react";
+ import { FormField, FormSelect } from "@/components/ui/FormField";
+ import { sep24FlowSchema, type Sep24FlowForm } from "@/lib/schemas";
++import type { Sep24AnchorInfo, Sep24Transaction } from "@/services/sep24";
+ import {
+   useSep24Anchors,
+   useSep24Info,
+@@ -29,11 +30,6 @@
+ type FlowKind = "deposit" | "withdraw";
+ 
+ export function Sep24Flow() {
+-  // React Query hooks
+-  const { data: anchors, isLoading: loadingAnchors, error: anchorsError } = useSep24Anchors();
+-  const { data: info, isLoading: loadingInfo } = useSep24Info(transferServer);
+-  const { data: transactions, isLoading: loadingTx } = useSep24Transactions(transferServer, jwt);
+-
+   // Mutation hooks
+   const startDepositMutation = useStartDepositFlow();
+   const startWithdrawMutation = useStartWithdrawFlow();
+@@ -47,6 +43,12 @@
+   const [interactiveUrl, setInteractiveUrl] = useState<string | null>(null);
+   const [selectedAnchor, setSelectedAnchor] = useState<Sep24AnchorInfo | null>(null);
+ 
++  const methods = useForm<Sep24FlowForm>({
++    resolver: zodResolver(sep24FlowSchema),
++    mode: "onChange",
++    defaultValues: formData,
++  });
++
+   const {
+     register,
+     handleSubmit,
+@@ -55,11 +57,7 @@
+     watch,
+     trigger,
+     resetField,
+-  } = useForm<Sep24FlowForm>({
+-    resolver: zodResolver(sep24FlowSchema),
+-    mode: "onChange",
+-    defaultValues: formData,
+-  });
++  } = methods;
+ 
+   // Watch form values for real-time updates
+   const transferServer = watch("transferServer");
+@@ -68,6 +66,17 @@
+   const account = watch("account");
+   const jwt = watch("jwt");
+ 
++  // React Query hooks consume the initialized form values.
++  const { data: anchorsResponse, isLoading: loadingAnchors, error: anchorsError } = useSep24Anchors();
++  const { data: info, isLoading: loadingInfo } = useSep24Info(transferServer);
++  const { data: transactionsResponse, isLoading: loadingTx, refetch: refetchTransactions } = useSep24Transactions(transferServer, jwt);
++  const anchors = anchorsResponse?.anchors ?? [];
++  const transactions = transactionsResponse?.transactions ?? [];
++
++  const loadTransactions = () => {
++    void refetchTransactions();
++  };
++
+   // Update selected anchor when transfer server changes
+   useEffect(() => {
+     if (transferServer && anchors) {
+@@ -103,7 +112,7 @@
+     : null;
+   const assetCodes = assets ? Object.keys(assets) : [];
+ 
+-  const startFlow: SubmitHandler<Sep24Form> = async (data) => {
++  const startFlow: SubmitHandler<Sep24FlowForm> = async (data) => {
+     if (!isFormValid) {
+       return;
+     }
+@@ -137,7 +146,7 @@
+     return "text-muted-foreground";
+   };
+ 
+-  return (
++  const flow = (
+     <div className="space-y-8">
+       {/* Anchor selection */}
+       <section className="glass-card rounded-2xl p-6">
+@@ -392,4 +401,6 @@
+       </section>
+     </div>
+   );
++
++  return <FormProvider {...methods}>{flow}</FormProvider>;
+ }
+diff --git a/src/hooks/useSep24.ts b/src/hooks/useSep24.ts
+--- a/src/hooks/useSep24.ts
++++ b/src/hooks/useSep24.ts
+@@ -1,4 +1,4 @@
+-import { useQuery, useMutation } from '@tanstack/react-query';
++import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+ import { queryKeys, useApiQuery, useApiMutation } from '@/lib/react-query/hooks';
+ import {
+   getSep24Info,
