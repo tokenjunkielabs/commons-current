@@ -26,6 +26,8 @@ on:
       - 'commercial.html'
       - 'land/fixed-diagnostic-payment-links-*.md'
       - '.github/workflows/pages-deploy.yml'
+  # Recovery note (2026-10-07): editing this workflow deliberately re-arms the
+  # revenue publisher after scheduled runs stopped while other repo schedules continued.
   schedule:
     - cron: '7,17,27,37,47,57 * * * *'
   # GitHub-managed "pages build and deployment" (dynamic/pages/pages-build-deployment)
