@@ -1,4 +1,5 @@
 name: pages-deploy
+# R42 source-only recovery trigger: preserve deploy semantics; no Pages settings mutation.
 
 on:
   workflow_dispatch:
