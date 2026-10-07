@@ -14,6 +14,17 @@ products, while a library documentation request may need Context7. Use
 specifies how to invoke a tool; a dispatch is an invocation request and does not
 prove that the provider accepted it.
 
+`host/connected_tool_request.py` prepares discovered search and URL-read
+bindings from a logical task. Search keeps the complete main `query` up to
+2,000 characters for TinyFish, Tavily, Firecrawl and Exa. The optional
+`search_queries` list belongs to Parallel's separate contract: one to eight
+nonempty queries, at most 500 characters each. If that list is omitted, a main
+query of at most 500 characters also supplies Parallel's default subquery;
+a longer main query prepares the other discovered bindings unchanged. To use
+Parallel with a longer main query, provide explicit bounded `search_queries`
+and the existing `session_id`. The adapter never truncates either field or
+changes route eligibility. Explicit malformed subqueries remain an input error.
+
 A request contains the existing `operation_id`, `capability`, `effect`
 (`read`, `inference` or `write`), `input_sensitivity`, and `bindings`. Each binding
 maps a route ID to `tool`, provider-specific `arguments`, and optional
