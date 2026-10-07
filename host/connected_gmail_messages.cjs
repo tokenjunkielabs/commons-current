@@ -95,7 +95,8 @@ function projectNativeMetadata(item, source) {
 /**
  * Project native read_email / batch_read_email full MIME CallToolResults only.
  * Supported envelopes: structuredContent.{id,thread_id,payload}, or
- * structuredContent.responses[] containing those full message objects.
+ * structuredContent.responses[] containing those full message objects, or
+ * structuredContent.{id,messages[]} from the native full-MIME thread reader.
  * bodies[].text is plain text or explicitly labelled, unrendered HTML data.
  * Missing decoded content / external attachment_id bodies remain unavailable.
  * Encoded bodies and snippets are never substituted for exact body.content.
@@ -124,11 +125,19 @@ function projectGmailMessages(response, options = {}) {
     fail('GMAIL_ERROR_RESPONSE', '$.structuredContent', 'error responses cannot be projected as messages');
   }
   const batch = own(structured, 'responses');
-  if (batch && !Array.isArray(structured.responses)) {
-    fail('UNSUPPORTED_GMAIL_RESPONSE', '$.structuredContent.responses', 'expected an array of full messages');
+  const thread = own(structured, 'messages');
+  if (batch && thread) {
+    fail('UNSUPPORTED_GMAIL_RESPONSE', '$.structuredContent', 'multiple message collections are ambiguous');
   }
-  const inputs = batch ? structured.responses : [structured];
-  const sourceOf = index => batch ? `$.structuredContent.responses[${index}]` : '$.structuredContent';
+  if (thread && (typeof structured.id !== 'string' || !structured.id || structured.id.length > 1024)) {
+    fail('UNSUPPORTED_GMAIL_THREAD', '$.structuredContent.id', 'expected the native thread id');
+  }
+  const collection = batch ? 'responses' : thread ? 'messages' : null;
+  if (collection && !Array.isArray(structured[collection])) {
+    fail('UNSUPPORTED_GMAIL_RESPONSE', '$.structuredContent.' + collection, 'expected an array of full messages');
+  }
+  const inputs = collection ? structured[collection] : [structured];
+  const sourceOf = index => collection ? `$.structuredContent.${collection}[${index}]` : '$.structuredContent';
   // Validate even omitted message envelopes, so raw/search/error entries are explicit failures.
   for (let index = 0; index < inputs.length; index += 1) {
     const item = inputs[index];
@@ -137,6 +146,9 @@ function projectGmailMessages(response, options = {}) {
       || typeof item.thread_id !== 'string' || !item.thread_id || item.thread_id.length > 1024
       || !record(item.payload) || typeof item.payload.mime_type !== 'string') {
       fail('UNSUPPORTED_GMAIL_MESSAGE', sourceOf(index), 'expected id, thread_id and a full MIME payload, without an error');
+    }
+    if (thread && item.thread_id !== structured.id) {
+      fail('UNSUPPORTED_GMAIL_THREAD', sourceOf(index) + '.thread_id', 'message does not identify the retained native thread');
     }
   }
 
@@ -167,12 +179,15 @@ function projectGmailMessages(response, options = {}) {
   }
   const result = {
     format: 'gmail-mime-projection-v1',
-    source_shape: batch ? 'batch' : 'single',
+    source_shape: batch ? 'batch' : thread ? 'thread' : 'single',
     message_count: inputs.length,
     messages: [],
     omitted: { messages: inputs.length - indices.length, body_chars: 0, header_chars: 0, body_parts: 0 },
     limits,
   };
+  if (thread) {
+    result.thread = { id: structured.id, source_path: '$.structuredContent.id' };
+  }
   if (sparse) {
     const omittedRanges = [];
     let next = 0;
@@ -293,3 +308,4 @@ function projectGmailMessages(response, options = {}) {
 }
 
 module.exports = { projectGmailMessages };
+
