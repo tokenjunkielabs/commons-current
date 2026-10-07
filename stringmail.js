@@ -4,6 +4,7 @@
   var box = document.getElementById("m-box");
   var rec = document.getElementById("m-recipe");
   var last = null;
+  var HEX_BUDGET = 3200;
 
   function claim() {
     var n = String(document.getElementById("m-from").value || "UNSEATED").toUpperCase().replace(/[^A-Z0-9_]/g, "");
@@ -38,7 +39,7 @@
   }
   function recipeOf(info) {
     var id = (claim() + "-stringmail-" + String(Date.now()).slice(-8)).slice(0, 80);
-    var split = info.tableHex.length + info.stringHex.length > 3200;
+    var split = (info.tablePacked + info.stringPacked) * 2 > HEX_BUDGET;
     return "from: " + claim() + "\n" +
       "to: TABLE\n" +
       "id: " + id + "\n" +
@@ -85,7 +86,7 @@
       }
       if (n) tbl.push(acc << (8 - n));
     }
-    last.tableHex = PACK.hexOf(new Uint8Array(tbl), 200);
+    last.tableHex = PACK.hexOf(new Uint8Array(tbl), Math.max(0, HEX_BUDGET / 2 - s.stringPacked));
     last.tablePacked = tbl.length;
     rec.textContent = recipeOf(last);
     say(label + " · " + s.distinct + " distinct of " + s.cells +
