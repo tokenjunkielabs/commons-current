@@ -1,11 +1,12 @@
 'use strict';
 
-// Explicit bridge to the existing GitData publisher's native argument contracts.
+// Explicit bridge to the existing GitHub publishers' native argument contracts.
 // The caller supplies discovered token tools; no credentials, network client or retry.
 const READ = 'mcp__codex_apps__github_token_connection_github_read';
 const WRITE = 'mcp__codex_apps__github_token_connection_github_repository_write';
 const ACTIONS = ['fetch', 'fetch_file', 'fetch_blob', 'create_blob', 'create_tree',
-  'create_commit', 'create_branch', 'create_pull_request', 'merge_pull_request'];
+  'create_commit', 'create_branch', 'create_file', 'update_file',
+  'create_pull_request', 'merge_pull_request'];
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
@@ -64,6 +65,44 @@ function bytesFromBase64(value) {
 function utf8(bytes) {
   // decodeURIComponent rejects malformed UTF-8 rather than replacing source bytes.
   return decodeURIComponent(bytes.map(value => '%' + value.toString(16).padStart(2, '0')).join(''));
+}
+
+function base64FromUtf8(value) {
+  if (typeof value !== 'string') throw new TypeError('content must be complete UTF-8 text');
+  const bytes = [];
+  for (const char of value) {
+    let cp = char.codePointAt(0);
+    // Match normal UTF-8 encoding for a JavaScript string's unpaired surrogate.
+    if (cp >= 0xd800 && cp <= 0xdfff) cp = 0xfffd;
+    if (cp < 0x80) bytes.push(cp);
+    else if (cp < 0x800) bytes.push(0xc0 | (cp >> 6), 0x80 | (cp & 63));
+    else if (cp < 0x10000) bytes.push(0xe0 | (cp >> 12), 0x80 | ((cp >> 6) & 63), 0x80 | (cp & 63));
+    else bytes.push(0xf0 | (cp >> 18), 0x80 | ((cp >> 12) & 63),
+      0x80 | ((cp >> 6) & 63), 0x80 | (cp & 63));
+  }
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  let encoded = '';
+  for (let index = 0; index < bytes.length; index += 3) {
+    const a = bytes[index], b = bytes[index + 1], c = bytes[index + 2];
+    encoded += alphabet[a >> 2] + alphabet[((a & 3) << 4) | ((b ?? 0) >> 4)]
+      + (b === undefined ? '=' : alphabet[((b & 15) << 2) | ((c ?? 0) >> 6)])
+      + (c === undefined ? '=' : alphabet[c & 63]);
+  }
+  return encoded;
+}
+
+function contentsPayload(data, update) {
+  if (!object(data) || !/^[0-9a-f]{40}$/.test(data.commit?.sha ?? '')) {
+    throw new TypeError('GitHub Contents write response lacks the resulting commit SHA');
+  }
+  const payload = {commit_sha: data.commit.sha};
+  if (update) {
+    if (!/^[0-9a-f]{40}$/.test(data.content?.sha ?? '')) {
+      throw new TypeError('GitHub Contents update response lacks the resulting content SHA');
+    }
+    payload.content_sha = data.content.sha;
+  }
+  return payload;
 }
 
 function filePayload(data, args) {
@@ -207,6 +246,17 @@ function createGitHubTokenAdapter(tools, options = {}) {
     return invoke('create_branch', 'POST', repository(args.repository_full_name) + '/git/refs',
       {ref: 'refs/heads/' + required(args.branch_name, 'branch_name'), sha: args.sha});
   };
+  const contentsWrite = (action, args, update) => {
+    if (update && !/^[0-9a-f]{40}$/.test(args.sha ?? '')) {
+      throw new TypeError('Contents update requires the observed existing blob sha');
+    }
+    const path = repository(args.repository_full_name) + '/contents/' + filePath(args.path);
+    const body = {message: required(args.message, 'message'), content: base64FromUtf8(args.content),
+      ...(args.branch == null ? {} : {branch: args.branch}), ...(update ? {sha: args.sha} : {})};
+    return invoke(action, 'PUT', path, body, data => contentsPayload(data, update));
+  };
+  surface[bindings.create_file] = args => contentsWrite('create_file', args, false);
+  surface[bindings.update_file] = args => contentsWrite('update_file', args, true);
   surface[bindings.create_pull_request] = args => {
     const body = {};
     for (const key of ['title', 'body', 'draft', 'head_repo', 'issue', 'maintainer_can_modify']) {
