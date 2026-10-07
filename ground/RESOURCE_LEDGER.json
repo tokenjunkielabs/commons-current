@@ -24,6 +24,16 @@
   ],
   "priority_queue": [
     {
+      "priority": 100,
+      "name": "mermail-official-browser-oauth-callback-window",
+      "stage": "AVAILABLE",
+      "condition": "CONSTRAINED",
+      "consumer": "Existing Mermail/Superteam submission owner needing one authenticated hosted-MCP canary",
+      "value": "A live official browser-mode OAuth callback road can convert the already-open Mermail tab into authenticated canary capacity before the opportunity deadline.",
+      "evidence_freshness": "EPHEMERAL_UNTIL_2026-10-07T10:38:18Z",
+      "next_action": "Bryce uses the already-open desktop Chrome tab to continue with Google and approve; no demo, X post, final submission, payment, or external contact is authorized."
+    },
+    {
       "priority": 99,
       "name": "zindi-preregistered-bias-discovery-plan-20261006-2104",
       "stage": "AVAILABLE",
@@ -616,24 +626,25 @@
     "inventory/resources/records/resource-master-noon-delta-20261006-1204.json",
     "inventory/resources/records/resource-master-afternoon-delta-20261006-1756.json",
     "inventory/resources/records/resource-master-zindi-plan-delta-20261006-2104.json",
-    "inventory/resources/records/resource-master-claim-payment-policy-delta-20261007-0004.json"
+    "inventory/resources/records/resource-master-claim-payment-policy-delta-20261007-0004.json",
+    "inventory/resources/records/resource-master-mermail-oauth-road-delta-20261007-0555.json"
   ],
   "schema": "commons-resource-ledger/v2",
   "secrets": false,
   "shared_resource_rule": "ALL_CARRIERS_MAY_USE_ALL_SHARED_RESOURCES; CLAUDE_IS_OWNER_HANDLED",
-  "slack_ts": "1791356915.946249",
+  "slack_ts": "1791367243.417849",
   "snapshot": {
-    "base_main_sha": "bf92d2a9d9970746266175c742c124b433022174",
-    "observed_at": "2026-10-07T07:08:36Z",
-    "source_window_upper": "2026-10-07T07:08:36Z",
+    "base_main_sha": "faf20beee51c9b2d7861716ac71668f9defc3e34",
+    "observed_at": "2026-10-07T10:00:24Z",
+    "source_window_upper": "2026-10-07T10:00:24Z",
     "later_publication_observations_are_not_swept": true,
     "privacy_rule": "Shared account identities, service roles, aggregate quotas, reset states, and operating state may be published for Commons routing. Never persist passwords, tokens, API credentials, recovery or verification links, payment credentials, personal legal identity, or private mail contents.",
     "scope": "Anything convertible into Commons capability or value, including Bryce, devices, subscriptions, models, agents, tools, repositories, builds, data, attention, and external roads.",
     "truth_rule": "Capacity, authority, lifecycle stage, and condition are independent. Declared or cached is not live; reset is not permission; activity is not value.",
-    "prior_terminal_slack_ts": "1791346868.595899",
-    "github_source_lower_exclusive": "84e9111476d74d19b5f267ea015aa976ef5a874d"
+    "prior_terminal_slack_ts": "1791358034.016959",
+    "github_source_lower_exclusive": "3930e7387a98697892905393bfdc961b1a66f71a"
   },
-  "source_id": "resource-master-claim-payment-policy-delta-20261007-0004",
+  "source_id": "resource-master-mermail-oauth-road-delta-20261007-0555",
   "stage_order": [
     "DECLARED",
     "AVAILABLE",
@@ -642,7 +653,7 @@
     "EXERCISED",
     "PRODUCING"
   ],
-  "subject": "CANONICAL RESOURCE GRAPH — Zindi preregistered bias-discovery plan delta",
+  "subject": "CANONICAL RESOURCE GRAPH — Mermail official browser OAuth callback road delta",
   "supersedes_source_ids": [
     "resource-master-late-morning-delta-20261006-0928",
     "resource-master-late-main-delta-20261005-1922",
@@ -756,9 +767,39 @@
     "resource-master-midmorning-delta-20261006-0855",
     "resource-master-noon-delta-20261006-1204",
     "resource-master-afternoon-delta-20261006-1756",
-    "resource-master-zindi-plan-delta-20261006-2104"
+    "resource-master-zindi-plan-delta-20261006-2104",
+    "resource-master-claim-payment-policy-delta-20261007-0004"
   ],
   "surfaces": [
+    {
+      "name": "mermail-official-browser-oauth-callback-window",
+      "kind": "OWNER_CONSENT_GATED_ACCOUNT_AUTHORIZATION_ROAD",
+      "capacity": "ONE OFFICIAL CODEX-MCP BROWSER OAUTH CALLBACK LISTENER, TIME-BOUNDED TO APPROXIMATELY 2026-10-07T10:38:18Z",
+      "stage": "AVAILABLE",
+      "condition": "CONSTRAINED",
+      "authority": "OWNER_ONLY GOOGLE ACCOUNT SELECTION AND CONSENT; RESOURCE MASTER MAY RECORD AND ROUTE THE EXACT STEP BUT MAY NOT CLICK, APPROVE, MUTATE OAUTH SCOPES, POST, SUBMIT, CONTACT, PAY, OR CLAIM AUTHENTICATION",
+      "holder": "Bryce via Account Chad; official codex mcp login process",
+      "consumer": "Existing Mermail/Superteam submission owner needing one authenticated hosted-MCP canary",
+      "value": "Provides a precise, live path from the already-open Mermail authorization tab to authenticated canary execution without depending on the separately consent-gated Chrome CDP road.",
+      "source": "Commons Grok Slack receipt 1791365898.061799 at 2026-10-07T09:38:18Z; Account Chad route 1791367224.936579",
+      "evidence_freshness": "EPHEMERAL_UNTIL_2026-10-07T10:38:18Z",
+      "claim_active": false,
+      "last_receipt": "resource-master-mermail-oauth-road-delta-20261007-0555",
+      "last_used_at": "2026-10-07T10:00:24Z",
+      "evidence_ts": "2026-10-07T10:00:24Z",
+      "own_activation_this_run": true,
+      "auth_surface": "Official codex mcp login browser flow with an already-open desktop Chrome tab and localhost callback listener; no account identity, credential, token, private URL, or scope value is persisted.",
+      "rate_plan_boundary": "An open OAuth tab and listening callback are not authentication, a live Mermail session, hosted-MCP success, provider quota, demo, X post, submission, acceptance, award, payment, revenue, or cash.",
+      "assigned_backlog": "Owner consent only under operation ACCOUNT-MERMAIL-CLI-OAUTH-LOGIN-20261007-06; existing Mermail implementation and submission owners retained; no duplicate worker or build order.",
+      "stale_after": "2026-10-07T10:38:18Z, callback completion, explicit failure, replacement listener, account-policy change, or owner withdrawal, whichever occurs first",
+      "build_order": "NONE_OWNER_CONSENT_GATE_NOT_IMPLEMENTATION",
+      "exact_safe_probe": "At 2026-10-07T09:38:18Z, the official browser-mode command had opened the Mermail authorization tab and held a localhost callback listener for one hour. No callback completion, authenticated canary, demo, post, submission, award, payment, revenue, or cash receipt was observed.",
+      "next_action": "Before the callback expires, Bryce may use the already-open tab to continue with Google, select the existing work account, and approve. After an exact callback receipt, the existing owner may run the smallest authenticated hosted-MCP canary. Chrome CDP remains separately consent-gated and the phone road remains abandoned.",
+      "links": [
+        "https://tokenjunkielabs.slack.com/archives/C0BRGMDQB6G/p1791365898061799",
+        "https://tokenjunkielabs.slack.com/archives/C0BU51F1PL3/p1791367224936579?thread_ts=1790977806.441259&cid=C0BU51F1PL3"
+      ]
+    },
     {
       "name": "zindi-biasmap-preregistered-bias-discovery-plan",
       "kind": "OFFLINE_COMPETITION_RESEARCH_PLAN",
