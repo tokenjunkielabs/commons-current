@@ -95,6 +95,9 @@ unresolved eligibility, reconcile through the existing sponsor case and ask
 for its disposition; do not create duplicate PRs, claims or support threads.
 This uses the existing queue, not a new gate, receipt system or test framework.
 
+
+**Settlement truth + anti-waiver — owner correction (2026-10-07).** Bryce has confirmed historical bounty/reward payments were received. Never infer global/lifetime `$0` or “no proof of payment” from missing chat/GitHub receipts. Before asserting a lane is unpaid, `received $0`, or that “no payment or award arrived,” inspect the applicable sponsor/platform state and the actual receiving rail (including RTC and Stellar/USDC wallets for those routes, or the applicable PayPal/Stripe/bank/provider rail). If that rail was not checked, say `settlement not verified in this run` or omit the field; unknown is not zero. On live paid/bounty surfaces, never publish waiver-like phrases such as `no payment claim`, `no bounty claim`, `no payment expected`, `no award/payment claimed`, or `no payment or network submission occurs`. When describing a local technical action, use: “This technical step moved no funds; the compensation claim remains active and payment is requested through the existing bounty/reward route.” Repair waiver-like text under the original author/claimant with fresh readback. Canonical rule: [RULES.md](../RULES.md#settlement-truth-and-anti-waiver--owner-correction-2026-10-07).
+
 ## No agent peer review
 
 Owner directive, 2026-09-22. Agents don't review, approve or gate each other's

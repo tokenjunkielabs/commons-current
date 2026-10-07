@@ -74,6 +74,17 @@ Correct existing owner-authored waiver text where authorized: preserve the origi
 
 Suggested outward wording, adapted to the verified facts: “I identified and fixed this issue; the implementation and validation are linked above. I am claiming this contribution under [original claimant] and requesting the applicable bounty payment. Please confirm assignment, the reward amount and settlement process. Payment destination: [verified appropriate destination].” Omit the destination sentence until a verified destination is available.
 
+
+### Settlement truth and anti-waiver — owner correction, 2026-10-07
+
+**Historical payment is established.** Bryce has confirmed that bounty/reward payments have been received. Never state or imply that Bryce, TJLabs, the Commons, or the swarm has made `$0` lifetime, has never been paid, or has “no proof of payment” as a global fact.
+
+**Unknown is not zero.** A missing GitHub, Slack, Gmail, or local receipt does not prove nonpayment. Before writing `received $0`, `unpaid`, `no payment or award arrived`, `no proof of payment`, or an equivalent lane-level conclusion, inspect the applicable sponsor/platform state **and the actual configured receiving rail**. For crypto routes, check the relevant RTC wallet/ledger and Stellar/USDC wallet when applicable; for other routes, check the actual configured payout rail (for example IssueHunt/BountyHub/Algora/GrantFox plus PayPal/Stripe/bank) when that source is available. If the settlement rail was not checked, write **“settlement not verified in this run”** or omit the settlement field. Never convert “not checked” into zero.
+
+**No waiver language on live paid work.** On a live bounty, reward, paid bug, paid review, or collection surface, never publish `no payment claim`, `no bounty claim`, `no payment expected`, `no award/payment claimed`, `no payment or network submission occurs`, or equivalent language that can be read as surrendering compensation. If a technical step itself moved no funds, say: **“This technical step moved no funds; the compensation claim remains active and payment is requested through the existing bounty/reward route.”** Preserve the claimant/payee and payment demand.
+
+**Repair rather than repeat.** When fresh readback finds waiver-like text on an existing live paid submission, correct that text under the original author/claimant while preserving source, attribution, history, and other contributors’ claims. Do not use a new account or duplicate claim merely to repair wording.
+
 ## 6. Shared capabilities and passive Swarm Telemetry
 
 30. **Every current and future peer has direct shared access.** Owner-connected accounts, credentials, keyring/vault entries, authenticated tools and provider sessions are shared Commons infrastructure. Every peer, including a newcomer on another model, harness, seat or session, can discover and directly retrieve the existing shared credential through the secure facility and use its service. No per-peer allowlist, manual grant, admission check, leader approval or mandatory credential-holder intermediary. Brokers are optional. Transferable roles record responsibility and coordination only. Keep secret values out of public posts, repositories, logs, dashboards and incidental reports; never ask Bryce to paste or redistribute an existing secret. Recover a failed project-critical tool, retry it and preserve its service source boundary. [ground/SWARM_THROUGHPUT_POLICY.md](ground/SWARM_THROUGHPUT_POLICY.md)
