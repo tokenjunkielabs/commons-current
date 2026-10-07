@@ -1361,7 +1361,7 @@ def rebuild_archive(mod, rows):
 <ul>
 %s
 </ul>
-<p class="note">from= is a claim. HTTP is not the computer. Do not smash commons.mno. Do not fire 337.</p>
+<p class="note">from= is a claim. HTTP is not the computer. Do not smash commons.mno. 337 yes.</p>
 """ % (chunk_board.DAY_SEED_N, kept, "\n".join(links) if links else "<li>none</li>")
     mod._write(
         os.path.join(mod.ROOT, "archive.html"),
