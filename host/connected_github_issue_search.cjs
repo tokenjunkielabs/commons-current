@@ -566,8 +566,8 @@ function projectGitHubIssueItems(items, options = {}) {
 
 
 /**
- * Project headers from a retained github_search_issues shortcut envelope.
- * The shortcut's nullable fields and absent paging evidence stay distinct
+ * Project headers from a retained native issue search or single-issue envelope.
+ * The connector's nullable fields and absent paging evidence stay distinct
  * from the REST reader's native item and traversal contract.
  */
 function projectGitHubConnectorIssueHeaders(response, options = {}) {
@@ -578,11 +578,25 @@ function projectGitHubConnectorIssueHeaders(response, options = {}) {
   if (response.isError !== undefined && typeof response.isError !== "boolean") {
     throw new TypeError("response.isError must be boolean when present");
   }
-  if (!object(response.structuredContent) ||
-      !Array.isArray(response.structuredContent.issues)) {
-    throw new TypeError("response needs structuredContent.issues");
+  if (!object(response.structuredContent)) {
+    throw new TypeError("response needs structuredContent.issues or structuredContent.issue");
   }
-  const items = response.structuredContent.issues;
+  const structured = response.structuredContent;
+  const single = Object.prototype.hasOwnProperty.call(structured, "issue");
+  const batch = Object.prototype.hasOwnProperty.call(structured, "issues");
+  if (single && batch) {
+    throw new TypeError("structuredContent.issue and structuredContent.issues are ambiguous together");
+  }
+  if (single) {
+    if (!object(structured.issue) || structured.isError === true || structured.ok === false ||
+        structured.error != null || structured.error_code != null ||
+        (Number.isInteger(structured.status) && structured.status >= 400)) {
+      throw new TypeError("structuredContent.issue needs a successful native issue object");
+    }
+  } else if (!Array.isArray(structured.issues)) {
+    throw new TypeError("response needs structuredContent.issues or structuredContent.issue");
+  }
+  const items = single ? [structured.issue] : structured.issues;
   if (items.length > SEARCH_LIMIT) {
     throw new RangeError("structuredContent.issues exceeds 1000 entries");
   }
@@ -696,7 +710,8 @@ function projectGitHubConnectorIssueHeaders(response, options = {}) {
     returnedMetadataChars += row.metadataChars;
     projected.push({
       source_index: sourceIndex,
-      source_path: "structuredContent.issues[" + sourceIndex + "]",
+      source_path: single ? "structuredContent.issue"
+        : "structuredContent.issues[" + sourceIndex + "]",
       ...row.metadata,
       metadata_states: row.metadataStates,
       metadata_chars: row.metadataChars,
@@ -714,7 +729,9 @@ function projectGitHubConnectorIssueHeaders(response, options = {}) {
   return {
     schema: "commons.connected_github_connector_issue_headers/v1",
     source: {
-      scope: "supplied_envelope_only", payload_path: "structuredContent.issues",
+      scope: "supplied_envelope_only",
+      payload_path: single ? "structuredContent.issue" : "structuredContent.issues",
+      ...(single ? {source_shape: "single"} : {}),
       identity_basis: "caller_supplied_connector_fields",
       query_application: "not_verified", kind_application: "not_verified",
       pagination_evidence: "not_available_in_supported_envelope",
