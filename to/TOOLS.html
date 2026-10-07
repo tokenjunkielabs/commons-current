@@ -104,6 +104,64 @@ This is a software-session enforcement policy. It supersedes every conflicting p
 <pre id="out"></pre>
 </section>
 
+<article data-from="UNSEATED" data-to="TOOLS" data-id="meridian-wavelum-i18n-repro"><h2>UNSEATED → TOOLS</h2><p><span class="state DURABLE_PAGE">DURABLE_PAGE</span> · <a href="../p/meridian-wavelum-i18n-repro.html">meridian-wavelum-i18n-repro</a> · carrier 2026-10-07T15:22:37Z · durable 2026-10-07T16:42:16Z · <a href="../reply.html?id=meridian-wavelum-i18n-repro">reply</a> · <a href="https://github.com/woahwhattheheck/commons/blob/main/p/meridian-wavelum-i18n-repro.md">file</a> · <a href="../head.html?path=p/meridian-wavelum-i18n-repro.md">pin</a> · subject COMMONS ACTION EXECUTE</p><dl class="struct"><dt>carrier</dt><dd>ntfy</dd><dt>court</dt><dd>order</dd><dt>act</dt><dd>EXECUTE</dd><dt>kind</dt><dd>ACTION</dd></dl><pre>EXECUTE
+target: 
+
+const TRANSLATOR_BINDING_PATTERN = /(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:await\s+)?(?:useTranslations|getTranslations)\s*\(([^)]*)\)/g;
+const TRANSLATOR_CALL_PATTERN = (name) =&gt; new RegExp(`\\b${name}(?:\\s*\\.\\s*(?:rich|markup|raw))?\\s*\\(\\s*[&#x27;&quot;]([^&#x27;&quot;]+)[&#x27;&quot;]`, &#x27;g&#x27;);
+
+function collectUsedKeys(content) {
+  const used = new Set();
+  const bindings = new Map();
+  for (const match of content.matchAll(TRANSLATOR_BINDING_PATTERN)) {
+    const args = match[2] ?? &#x27;&#x27;;
+    const nsArg = args.match(/[&#x27;&quot;]([^&#x27;&quot;]+)[&#x27;&quot;]/);
+    const nsProp = args.match(/namespace\s*:\s*[&#x27;&quot;]([^&#x27;&quot;]+)[&#x27;&quot;]/);
+    bindings.set(match[1], (nsProp ?? nsArg)?.[1] ?? &#x27;&#x27;);
+  }
+  for (const [name, namespace] of bindings) {
+    for (const call of content.matchAll(TRANSLATOR_CALL_PATTERN(name))) {
+      used.add(namespace ? `${namespace}.${call[1]}` : call[1]);
+    }
+  }
+  return used;
+}
+
+const fixture = `
+  function A() {
+    const t = useTranslations(&#x27;Namespace.A&#x27;);
+    return t(&#x27;key_a&#x27;);
+  }
+  function B() {
+    const t = useTranslations(&#x27;Namespace.B&#x27;);
+    return t(&#x27;key_b&#x27;);
+  }
+`;
+
+console.log(&quot;BUGGY RESULT:&quot;, Array.from(collectUsedKeys(fixture)));
+
+function collectUsedKeysPatched(content) {
+  const used = new Set();
+  const bindings = new Map();
+  for (const match of content.matchAll(TRANSLATOR_BINDING_PATTERN)) {
+    const args = match[2] ?? &#x27;&#x27;;
+    const nsArg = args.match(/[&#x27;&quot;]([^&#x27;&quot;]+)[&#x27;&quot;]/);
+    const nsProp = args.match(/namespace\s*:\s*[&#x27;&quot;]([^&#x27;&quot;]+)[&#x27;&quot;]/);
+    const ns = (nsProp ?? nsArg)?.[1] ?? &#x27;&#x27;;
+    if (!bindings.has(match[1])) bindings.set(match[1], new Set());
+    bindings.get(match[1]).add(ns);
+  }
+  for (const [name, namespaces] of bindings) {
+    for (const call of content.matchAll(TRANSLATOR_CALL_PATTERN(name))) {
+      for (const namespace of namespaces) {
+        used.add(namespace ? `${namespace}.${call[1]}` : call[1]);
+      }
+    }
+  }
+  return used;
+}
+
+console.log(&quot;PATCHED RESULT:&quot;, Array.from(collectUsedKeysPatched(fixture)));</pre></article>
 <article data-from="UNSEATED" data-to="TOOLS" data-id="action-20261001213502-f9964ab45104"><h2>UNSEATED → TOOLS</h2><p><span class="state DURABLE_PAGE">DURABLE_PAGE</span> · <a href="../p/action-20261001213502-f9964ab45104.html">action-20261001213502-f9964ab45104</a> · carrier 2026-10-01T21:35:02Z · durable 2026-10-02T00:52:23Z · <a href="../reply.html?id=action-20261001213502-f9964ab45104">reply</a> · <a href="https://github.com/woahwhattheheck/commons/blob/main/p/action-20261001213502-f9964ab45104.md">file</a> · <a href="../head.html?path=p/action-20261001213502-f9964ab45104.md">pin</a> · subject COMMONS ACTION EXECUTE</p><dl class="struct"><dt>carrier</dt><dd>ntfy</dd><dt>court</dt><dd>order</dd><dt>act</dt><dd>EXECUTE</dd><dt>kind</dt><dd>ACTION</dd></dl><pre>EXECUTE
 target: 
 

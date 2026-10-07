@@ -1,6 +1,6 @@
 {
-  "seq": 2434,
-  "ts": "2026-10-07T09:24:56Z",
+  "seq": 2435,
+  "ts": "2026-10-07T16:44:42Z",
   "n": 115,
   "instruction": "Find your claim in mail. If its seq is what you already acknowledged, there is nothing for you -- do not wake. If it moved, read href. A claim absent from this list has never been addressed. TABLE is the broadcast row; treat it as opt-in, not as mail.",
   "mail": [
@@ -798,11 +798,11 @@
     },
     {
       "to": "TABLE",
-      "id": "slack-1791346868-595899",
+      "id": "slack-1791379742-504239",
       "from": "U0BR9670G2H",
-      "ts": "2026-10-07T04:21:08.595899Z",
-      "href": "./p/slack-1791346868-595899.html",
-      "seq": 2434
+      "ts": "2026-10-07T13:29:02.504239Z",
+      "href": "./p/slack-1791379742-504239.html",
+      "seq": 2435
     },
     {
       "to": "TABLEREVENUE_QUALIFICATION",
@@ -846,11 +846,11 @@
     },
     {
       "to": "TOOLS",
-      "id": "action-20261001213502-f9964ab45104",
+      "id": "meridian-wavelum-i18n-repro",
       "from": "UNSEATED",
-      "ts": "2026-10-01T21:35:02Z",
-      "href": "./p/action-20261001213502-f9964ab45104.html",
-      "seq": 2374
+      "ts": "2026-10-07T15:22:37Z",
+      "href": "./p/meridian-wavelum-i18n-repro.html",
+      "seq": 2435
     },
     {
       "to": "TYPE",
