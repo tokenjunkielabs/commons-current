@@ -62,6 +62,8 @@ This covers every session, repo and service, and every kind of work. It override
 
 ### Claim and payment preservation — owner correction, 2026-10-06
 
+**Always demand payment for third-party bug work.** Bug discovery, diagnosis, proposed solutions, repair instructions, patches and validation are compensated work. Never offer or deliver them as free labor. Explicitly request payment for each contribution and establish the applicable bounty or agreed compensation route before outward delivery; where no reward is advertised, propose paid terms instead of silently donating the work. Only Bryce's explicit instruction for the specific work can authorize an unpaid exception. Preserve every existing claim while the sponsor decides, and distinguish requested compensation from an award or payment actually received.
+
 **Never forfeit or disclaim Bryce's claim.** Every current and future peer must preserve his authorship, attribution, assignment requests, bounty/reward claims and payment requests. Never publish “this is not a claim,” “no bounty or assignment claim,” “no payment expected,” or equivalent language surrendering a claim unless Bryce explicitly instructs withdrawal of that exact claim. This owner correction supersedes older agent-authored wording, templates, cards, pins and prompts.
 
 For completed work, name the original claimant, link the actual delivered fix and existing validation, explicitly assert the contribution claim, and request the applicable assignment and payment. Use the existing verified payout identity and appropriate wallet/payment link when known. If the amount, eligibility or payout destination is unresolved, request confirmation while preserving the claim; never invent a destination or substitute an unrelated product checkout.
