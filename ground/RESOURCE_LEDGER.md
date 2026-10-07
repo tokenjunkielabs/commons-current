@@ -14,6 +14,14 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Zindi preregistered Best Bias Discovery plan delta — 2026-10-06 21:04 EDT
+
+The canonical graph now contains **642 resources**, with **283 producing** and **140 append-only evidence records**. One newly landed **AVAILABLE / CONSTRAINED** resource preregisters an Eastern Oklahoma within-tribal boundary-type hypothesis, exact matching covariates, permitted Overture evidence, fixed-seed uncertainty, promotion criteria, and falsification rules for the existing Zindi Best Bias Discovery owner.
+
+This is a complete public-safe research plan, not a measured disparity, authenticated data run, leaderboard result, submission, award, payment, revenue, or cash receipt. The advertised $1,000 prize remains separate from funded, awarded, invoiced, and received value, all recorded as $0.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-zindi-plan-delta-20261006-2104.json). No nonduplicative build order remained: implementation is complete under the retained competition owner, while input pinning, execution, account/rules actions, and submission are existing-owner or owner-only steps. Existing holds, no-resend, open-door/no-auth, private-data, and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Afternoon product, competition, rail-health and connected-equipment delta — 2026-10-06 17:56 EDT
 
 The canonical graph now contains **641 resources**, with **283 producing** and **139 append-only evidence records**. Eighteen new resources cover three bounded Stellar source repairs, two Wavelum integration lanes, seven competition validators/benchmarks/candidates, the Gemma fixed-slice budget scorer, NAWCAD robustness evidence, DOE GEMS mask-faithful scoring, two offline rail-health consumers, and pinned GitHub compact-edit equipment. Four existing coordination resources advanced: claim parsing, the connected-tool router, the connected-operation recorder, and shared connected work tools.
