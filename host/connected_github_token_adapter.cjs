@@ -1,7 +1,8 @@
 'use strict';
 
 // Explicit bridge to the existing GitHub publishers' native argument contracts.
-// The caller supplies discovered token tools; no credentials, network client or retry.
+// The caller supplies discovered token tools and an optional explicit native blob
+// binding; no credentials, network client, retry or automatic transport fallback.
 const READ = 'mcp__codex_apps__github_token_connection_github_read';
 const WRITE = 'mcp__codex_apps__github_token_connection_github_repository_write';
 const ACTIONS = ['fetch', 'fetch_file', 'fetch_blob', 'create_blob', 'create_tree',
@@ -167,6 +168,13 @@ function createGitHubTokenAdapter(tools, options = {}) {
   if (typeof tools?.[readBinding] !== 'function' || typeof tools?.[writeBinding] !== 'function') {
     throw new TypeError('Supply the discovered token read and repository write bindings');
   }
+  const nativeCreateBlobBinding = options.native_create_blob_binding;
+  if (nativeCreateBlobBinding !== undefined) {
+    required(nativeCreateBlobBinding, 'native_create_blob_binding');
+    if (typeof tools?.[nativeCreateBlobBinding] !== 'function') {
+      throw new TypeError('Supply the selected native create-blob binding');
+    }
+  }
   if (options.onResponse !== undefined && typeof options.onResponse !== 'function') {
     throw new TypeError('onResponse must be a function');
   }
@@ -227,9 +235,31 @@ function createGitHubTokenAdapter(tools, options = {}) {
   surface[bindings.fetch_blob] = args => invoke('fetch_blob', 'GET',
     repository(args.repository_full_name) + '/git/blobs/' + pathPart(args.blob_sha, 'blob_sha'),
     undefined, data => blobPayload(data, args));
-  surface[bindings.create_blob] = args => invoke('create_blob', 'POST',
-    repository(args.repository_full_name) + '/git/blobs',
-    {content: args.content, encoding: args.encoding ?? 'utf-8'});
+  const invokeNativeCreateBlob = async args => {
+    const binding = nativeCreateBlobBinding;
+    const record = {action: 'create_blob', binding, transport: 'native', outcome: 'pending'};
+    calls.push(record);
+    let response;
+    try { response = await tools[binding](args); }
+    catch (error) {
+      record.outcome = 'threw';
+      record.error = String(error?.message ?? error);
+      throw error;
+    }
+    record.outcome = response?.isError === true ? 'provider_error' : 'returned';
+    if (options.onResponse) {
+      try { await options.onResponse({action: 'create_blob', binding, transport: 'native', response}); }
+      catch (error) { record.callback_error = String(error?.message ?? error); }
+    }
+    // The existing publisher already decodes its native response contract and
+    // verifies the actual SHA against the prepared source pin. Keep that raw
+    // envelope intact rather than forcing it through the token decoder.
+    return response;
+  };
+  surface[bindings.create_blob] = args => nativeCreateBlobBinding === undefined
+    ? invoke('create_blob', 'POST', repository(args.repository_full_name) + '/git/blobs',
+      {content: args.content, encoding: args.encoding ?? 'utf-8'})
+    : invokeNativeCreateBlob(args);
   surface[bindings.create_tree] = args => invoke('create_tree', 'POST',
     repository(args.repository_full_name) + '/git/trees',
     {tree: args.tree_elements, ...(args.base_tree_sha == null ? {} : {base_tree: args.base_tree_sha})});
@@ -280,3 +310,4 @@ function createGitHubTokenAdapter(tools, options = {}) {
 }
 
 module.exports = {createGitHubTokenAdapter};
+
