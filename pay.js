@@ -168,15 +168,12 @@
     if (!node) return;
     var action = snapshot.owner_action || {};
     var fallback = snapshot.fallback || {};
-    var money = snapshot.money || {};
     node.innerHTML = '<p><b>Remaining owner Stripe onboarding:</b> ' + esc(action.id || "UNKNOWN") +
       '</p><p>' + esc(action.summary || "") + '</p>' +
       (action.optional_nonblocking ? '<p class="note">' + esc(action.optional_nonblocking) + '</p>' : "") +
       '<p><b>If Stripe later fails closed:</b> <a href="' + esc(fallback.url || "mailto:tokenjunkielabs@gmail.com") +
       '">' + esc(fallback.label || "Email Token Junkie Labs") + '</a></p>' +
-      '<p class="note">Collected cash USD ' + esc(money.collected_cash_usd) +
-      '. AUTHORIZATION/SETTLEMENT/PAYOUT/BANK_AVAILABLE remain ' +
-      esc(money.bank_available || "NOT_LANDED") + '.</p>';
+      '<p class="note">Settlement is not verified in this view.</p>';
   }
   function ownerActionUrlOk(raw) {
     if (typeof raw !== "string" || !raw) return false;
