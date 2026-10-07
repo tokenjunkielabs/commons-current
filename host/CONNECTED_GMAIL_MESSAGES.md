@@ -85,12 +85,13 @@ The module accepts these actual native full-MIME shapes:
 | --- | --- |
 | `gmail_read_email` with full format | `response.structuredContent` contains `id`, `thread_id`, and `payload`. |
 | `gmail_batch_read_email` | `response.structuredContent.responses[]` contains those full message objects directly. |
+| `gmail_read_email_thread` | `response.structuredContent` contains the native thread `id` and `messages[]` of those full message objects. Each message must identify that same `thread_id`. |
 
 A payload contains `mime_type`, optional MIME `parts`, headers as `{name, value}` entries, and decoded text in `body.content`. Raw, metadata-only, search, error, and unrelated response shapes are unsupported. The projector does not substitute a search snippet or decode `base64_url_content`.
 
 ## Reading the view
 
-The result contains `format`, `source_shape`, the original `message_count`, selected `messages`, aggregate `omitted` counts, and the effective `limits`.
+The result contains `format`, `source_shape`, the original `message_count`, selected `messages`, aggregate `omitted` counts, and the effective `limits`. Single and batch shapes remain unchanged. A native thread uses `source_shape: "thread"` and adds `thread: {id, source_path}`, copying the exact observed thread ID from `$.structuredContent.id`.
 
 Each selected message retains its `id` and `thread_id`, plus literal Subject, From, and Date header values, clipped to the header limit. Header values are message data, not an authentication assertion. Each available body has:
 
@@ -102,7 +103,42 @@ Each selected message retains its `id` and `thread_id`, plus literal Subject, Fr
 For example, a batch path such as
 `$.structuredContent.responses[0].payload.parts[0].body.content`
 refers to that field in the retained native response. A single-message path starts at
-`$.structuredContent.payload`. Read a needed omitted field from the retained response; another Gmail call is unnecessary when the content is already present.
+`$.structuredContent.payload`; a thread message uses
+`$.structuredContent.messages[index].payload`. Read a needed omitted field from the retained response; another Gmail call is unnecessary when the content is already present.
+
+## Consume a retained native thread
+
+Pass the complete retained `gmail_read_email_thread` response directly to the
+same API. Its `messages[]` are kept distinct and in provider order; they are
+not flattened into another message or inferred from the thread snippet.
+
+```js
+const threadView = box.exports.projectGmailMessages(retainedThreadResponse, {
+  source_indices: selectedThreadMessageIndices,
+  maxMessages: selectedThreadMessageIndices.length,
+  maxBodyChars: 0,
+  maxTotalBodyChars: 0,
+  include_native_metadata: true
+});
+store("mail-thread-view", threadView);
+```
+
+Choose source indices from that already retained array. Sparse message paths,
+body paths and optional native-metadata paths keep their original
+`$.structuredContent.messages[index]` positions. Existing MIME selection,
+clipping, unavailable-body reports and omission counts apply independently to
+each selected message. All retained message envelopes are validated, including
+omitted ones; raw or metadata-only thread messages are not accepted as full MIME.
+
+`message_count` counts the retained `messages[]` only. The native thread reader
+returns at most its requested `max_messages`, in oldest-to-newest order within
+that returned set; the projector neither supplies missing history nor declares
+a total conversation count. Projection limits add further explicit omissions.
+An empty native `messages[]` therefore means no messages in the supplied
+collection, not that the conversation has no other messages. Thread identity
+is native envelope data and does not establish sender authentication or current
+mailbox state.
+
 
 MIME selection follows these rules:
 
@@ -187,7 +223,7 @@ text(metadataView.messages.map(message => ({
 })));
 ```
 
-Each selected message gains `native_metadata.label_ids` and `native_metadata.internal_date`. Both fields contain a `status` and an exact `source_path`, such as `$.structuredContent.responses[0].label_ids`. The original index survives sparse selection. A single-message source path starts at `$.structuredContent`.
+Each selected message gains `native_metadata.label_ids` and `native_metadata.internal_date`. Both fields contain a `status` and an exact `source_path`, such as `$.structuredContent.responses[0].label_ids`. The original index survives sparse selection. A single-message source path starts at `$.structuredContent`; a native thread uses `$.structuredContent.messages[index]` for the original message position.
 
 | Status | Meaning | `value` |
 | --- | --- | --- |
@@ -219,3 +255,4 @@ The extension was consumed once on source index `0` of an actual retained two-me
 The previously retained header/body projection for that selected message matched every existing field after removing the new metadata and the already-supported sparse-selection location fields. The other message remained omitted at `[[1,2]]`, and no body text was displayed. This consumption made zero additional Gmail calls and did not rerun the previous reader. No actual mail content, headers, identifiers, label values, or date values are published in this receipt.
 
 Missing, invalid, limit-exceeded, disabled-option, and single-message metadata branches were reviewed in source; the actual input exercised the complete native batch fields. This observation is not a general MIME, timestamp, or label corpus benchmark.
+
