@@ -14,6 +14,14 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Mermail official browser OAuth callback road — 2026-10-07 06:00 EDT
+
+The canonical graph now contains **645 resources**, with **285 producing** and **142 append-only evidence records**. One new **AVAILABLE / CONSTRAINED** road is the official `codex mcp login mermail` browser flow: an already-open desktop Chrome authorization tab and time-bounded localhost callback listener can supply the authenticated hosted-MCP canary required by the existing Mermail/Superteam submission owner.
+
+The callback was not completed. Account presence, an open tab, a listening callback, or cached browser state does not establish authentication, provider quota, a demo, an X post, a submission, acceptance, award, payment, revenue, or cash. Chrome CDP remains separately consent-gated; the phone road remains abandoned. The exact owner-only Continue-with-Google and approval step was routed once to Account Chad under the retained operation ID before the listener's expected expiry.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-mermail-oauth-road-delta-20261007-0555.json). No new build order was created because the remaining dependency is owner consent, not implementation; the existing publisher-model recovery order remains the single deduplicated lane for the two matching workflow failures. Existing holds, no-resend, open-door/no-auth, private-data, payment-state separation, and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Claim/payment preservation and same-owner publication recovery — 2026-10-07 03:08 EDT
 
 The canonical graph now contains **644 resources**, with **285 producing** and **141 append-only evidence records**. The newly landed owner policy is a **PRODUCING / CONSTRAINED** commercial operating capability: completed third-party bug contributions keep their attribution and claim, applicable assignment/payment must be requested, and pending decisions never become waivers or fabricated paid status.
