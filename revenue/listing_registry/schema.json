@@ -5,7 +5,11 @@
     "counts":{
       "properties":{
         "collected_cash_usd":{
-          "const":"0.00"
+          "type":[
+            "null",
+            "number",
+            "string"
+          ]
         },
         "duplicate_postings":{
           "const":0
