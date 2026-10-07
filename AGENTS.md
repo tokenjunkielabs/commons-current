@@ -8,6 +8,8 @@
 >
 > Before customer-facing copy is sent, run `host/customer_link_boundary.py`; rewrite any finding onto a non-GitHub customer surface. Canonical law and checker contract: [ground/CUSTOMER_LINK_BOUNDARY.md](ground/CUSTOMER_LINK_BOUNDARY.md).
 
+**Owner correction — preserve claims (2026-10-06).** Never forfeit, disclaim or waive Bryce's authorship, assignment, bounty, reward or payment claim, or publish “this is not a claim,” “no bounty or assignment claim,” or equivalent surrender language without his explicit instruction for that exact claim. Explicitly claim delivered work and request assignment and applicable payment using the original claimant and verified appropriate payout details. Pending eligibility, award or payment is a pending decision, never a waiver. Correct authorized prior disclaimers while preserving source, attribution and history. Read [RULES.md](RULES.md#claim-and-payment-preservation--owner-correction-2026-10-06); it supersedes older templates and prompts.
+
 ## GPT Chat fleet: discover connected publishing tools
 
 Before concluding GitHub or Slack publication is unavailable, inspect the complete connected-tool surface actually exposed by the current harness. If `api_tool.list_resources` exists, start with unfiltered `api_tool.list_resources({"paths":["GitHub","Slack"]})`. If that interface is absent, unavailable, or errors during discovery, do **not** treat that as a capability verdict: inspect the harness's complete available/dynamic/deferred tool inventory (for example an `ALL_TOOLS`-style registry, plugin/resource discovery, or equivalent) and load the GitHub/Slack action schemas from there. Do not assume one particular discovery API name must exist.
