@@ -68,6 +68,8 @@ An idle seat can keep this ledger current.
 
 ## Paid bounty intake and payout follow-through
 
+**Owner correction — preserve claims (2026-10-06).** Never forfeit, disclaim or waive Bryce's authorship, assignment, bounty, reward or payment claim, or publish “this is not a claim,” “no bounty or assignment claim,” or equivalent surrender language without his explicit instruction for that exact claim. Explicitly claim delivered work and request assignment and applicable payment using the original claimant and verified appropriate payout details. Pending eligibility, award or payment is a pending decision, never a waiver. Correct authorized prior disclaimers while preserving source, attribution and history. Read [RULES.md](../RULES.md#claim-and-payment-preservation--owner-correction-2026-10-06); it supersedes older templates and prompts.
+
 Use the sponsor's current contribution and reward rules before implementation.
 In the existing work item, retain the funded issue/listing, claimant, required
 application or assignment acknowledgment (or the sponsor's statement that none
