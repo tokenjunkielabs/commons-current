@@ -117,7 +117,6 @@ function proofOf(event) {
 function buildScene(input) {
   input = input || {};
   var head = text(input.head).toLowerCase(), mainShas = asSet(input.mainShas || []), recent = input.recent || [];
-  if (head) mainShas[head] = true;
   var events = recent.map(function (row) { return eventFromRecent(row, mainShas, head); });
   events = events.concat(ledgerEvents(input.builds || {}, mainShas, head));
   events.sort(function (a, b) { return b.time - a.time || a.id.localeCompare(b.id); });
@@ -218,7 +217,7 @@ function mount(opts) {
         scene = buildScene({
           presence: Array.isArray(out[0]) ? out[0] : [], recent: Array.isArray(out[1]) ? out[1] : [],
           builds: out[2] || {}, head: head,
-          mainShas: mainRows.map(function (row) { return row.sha; }).concat(pulse.head ? [pulse.head] : [])
+          mainShas: mainRows.map(function (row) { return row.sha; })
         });
         scene.headLive = gh.live;
         groups = assignPositions(scene.agents);
