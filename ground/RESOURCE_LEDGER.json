@@ -16380,7 +16380,7 @@
       "consumer": "Canonical Resource Master publication and already-owned publisher recovery operations requiring original-actor repository transport",
       "value": "Provides a bounded original-actor repository write road after the GitHub App route refused mutation, without changing credentials, bypassing controls or duplicating logical operations.",
       "source": "Direct same-owner GitHub read and unique branch-create receipts against bf92d2a9d9970746266175c742c124b433022174; repository observed public/unlocked with push authority; branch codex/resource-master-claim-payment-policy-20261007-0004-7ca6",
-      "exact_safe_probe": "The same-owner transport read the repository and created the claimed unique branch at the exact current-main SHA. This receipt will add file, commit, PR, merge and exact current-main readback evidence before terminal completion.",
+      "exact_safe_probe": "The same-owner transport read the repository, created the claimed unique non-force branch, wrote the exact four-file tree, opened and squash-merged PR #32204, and matched all four expected blobs on current main.",
       "next_action": "Use only for already-authorized source-pinned operations with exact preimage, non-force branch, PR/merge CAS and current-main readback; reconcile uncertain provider outcomes before retrying.",
       "links": [
         "https://github.com/woahwhattheheck/commons/tree/codex/resource-master-claim-payment-policy-20261007-0004-7ca6",
