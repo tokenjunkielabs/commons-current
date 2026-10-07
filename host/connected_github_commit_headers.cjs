@@ -70,10 +70,10 @@ function omittedRanges(count, selected) {
   return ranges;
 }
 
-/** Inspect one retained native fetch_commit envelope; no calls or mutations. */
+/** Inspect one retained native or token commit envelope; no calls or mutations. */
 function projectGitHubCommitHeaders(response, options) {
   const {limits, selected: requested, expected} = readOptions(options);
-  const commitPath = ["structuredContent", "commit"];
+  let commitPath = ["structuredContent", "commit"];
   const base = {
     schema: SCHEMA, status: null, limits: {...limits},
     source: {representation: "native_commit", source_path: commitPath,
@@ -88,19 +88,42 @@ function projectGitHubCommitHeaders(response, options) {
   if (!object(response)) return refuse("UNSUPPORTED_REPRESENTATION", "EXPECTED_CALL_TOOL_RESULT");
   if (response.isError === true) return refuse("PROVIDER_ERROR", "PROVIDER_ERROR_ENVELOPE");
   const payload = response.structuredContent;
-  if (!object(payload) || !object(payload.commit)) {
+  if (!object(payload)) {
     return refuse("UNSUPPORTED_REPRESENTATION", "EXPECTED_NATIVE_COMMIT");
   }
-  const commit = payload.commit;
+  let commit, token = false;
+  if (object(payload.commit)) {
+    commit = payload.commit;
+  } else if (own(payload, "data") && own(payload, "status") && own(payload, "ok")) {
+    token = true;
+    commitPath = ["structuredContent", "data"];
+    base.source = {...base.source, representation: "token_commit", source_path: commitPath};
+    if (!Number.isSafeInteger(payload.status) || payload.status < 100 || payload.status > 599 ||
+        typeof payload.ok !== "boolean") {
+      return refuse("UNSUPPORTED_REPRESENTATION", "INVALID_TOKEN_STATUS");
+    }
+    if (!payload.ok || payload.status < 200 || payload.status >= 300) {
+      return refuse("PROVIDER_ERROR", "TOKEN_PROVIDER_ERROR", {provider_status: payload.status});
+    }
+    if (!object(payload.data) || !object(payload.data.commit)) {
+      return refuse("UNSUPPORTED_REPRESENTATION", "EXPECTED_TOKEN_COMMIT");
+    }
+    commit = payload.data;
+  } else {
+    return refuse("UNSUPPORTED_REPRESENTATION", "EXPECTED_NATIVE_COMMIT");
+  }
+  const message = token ? commit.commit.message : commit.message;
+  const messagePath = token ? [...commitPath, "commit", "message"] : [...commitPath, "message"];
   if (typeof commit.sha !== "string" || !SHA.test(commit.sha) ||
-      typeof commit.message !== "string" || !Array.isArray(commit.files)) {
+      typeof message !== "string" || !Array.isArray(commit.files)) {
     return refuse("UNSUPPORTED_REPRESENTATION", "INVALID_COMMIT_FIELDS");
   }
   if (expected !== undefined && commit.sha !== expected) {
     return refuse("IDENTITY_MISMATCH", "COMMIT_SHA_MISMATCH", {
       expected_commit_sha: expected, observed_commit_sha: commit.sha});
   }
-  const headerFields = ["repository_full_name", "url", "html_url", "display_url", "created_at"];
+  const headerFields = token ? ["url", "html_url"] :
+    ["repository_full_name", "url", "html_url", "display_url", "created_at"];
   for (const key of headerFields) {
     if (!own(commit, key)) continue;
     const value = commit[key], path = [...commitPath, key];
@@ -169,11 +192,11 @@ function projectGitHubCommitHeaders(response, options) {
     ? Array.from({length: Math.min(limits.max_files, rows.length - limits.start_index)},
       (_, index) => limits.start_index + index)
     : requested;
-  const messageLength = prefixLength(commit.message, limits.max_message_chars);
+  const messageLength = prefixLength(message, limits.max_message_chars);
   const header = {sha: commit.sha, metadata_source_paths: {sha: [...commitPath, "sha"]},
-    message: commit.message.slice(0, messageLength), message_source_path: [...commitPath, "message"],
-    message_chars: commit.message.length, returned_message_chars: messageLength,
-    returned_message_range: [0, messageLength], message_truncated: messageLength < commit.message.length};
+    message: message.slice(0, messageLength), message_source_path: messagePath,
+    message_chars: message.length, returned_message_chars: messageLength,
+    returned_message_range: [0, messageLength], message_truncated: messageLength < message.length};
   for (const key of headerFields) {
     if (!own(commit, key)) continue;
     header[key] = commit[key];
