@@ -6,15 +6,47 @@ The intended track is Aspire's enterprise knowledge challenge within the Tencent
 
 The release says participants must apply Tencent-provided AI tools. The current artifact is an offline, deterministic, non-generative Python prototype; it does not establish that tool requirement, accepted registration, eligibility, cloud deployment or overall challenge readiness. No provider integration or account action is performed by this build. This packet remains a draft for the project owner.
 
+### Official event record
+
+- Event: [Tencent Cloud AI CAN DO IT Hackathon Singapore 2026](https://tch.tencentcloud.com/contest/44)
+- Challenge: **FinTech - The Internal Brain: Building a Context-Aware Enterprise Knowledge System with RBAC, Security Logging & Audit Trail**
+- Team registration: https://qdrl.qq.com/65xN1yft
+- Project submission: https://tinyurl.com/TCHackathonSGProjectSubmission
+- Official event-page submission deadline: `2026-10-16 23:59:59`.
+- The event page does not state a timezone for that timestamp.
+
+Registration and project submission are separate event processes. Record their completion from their respective provider receipts.
+
 ## What the prototype contributes
 
 The operator can run scoped queries, ingest a document, retain an ordered session and reproduce that session from its original normalized bundle. Query citations include source URIs, `content_sha256` for content bytes and `document_sha256` for the whole normalized record, including provenance and access metadata. Successful ingestion audit payloads bind the full document record. Authorization runs before retrieval. A requested document ID cannot widen an actor's access, and document text cannot change policy.
 
 The retained audit chain captures supported decisions in order. The replay command goes further: it executes the retained operations again and compares their outcomes, audit evidence and final bundle digest. A separately retained artifact digest or audit checkpoint provides a comparison with an earlier receipt; local digests alone do not authenticate its author or establish completeness.
 
+## Fit to the judging dimensions
+
+| Official dimension | Submission evidence |
+| --- | --- |
+| Relevance | Implements the requested enterprise knowledge workflow with RBAC, security logging and audit history. |
+| Human-centric design | The browser makes scoped context, authorization decisions, citations and recorded outcomes directly inspectable. |
+| Use of AI | The lexical engine supplies a governed, authorized-evidence layer for an AI assistant. Actual Tencent-product use is recorded separately after it occurs. |
+| Technical execution | Includes executable Python workflows, a real browser demo, structured fictional input, replay and retained evidence. |
+| Feasibility | Runs locally and defines integration points for enterprise identity, knowledge and observability systems. |
+| Responsible AI practices | Keeps role-aware context, denials, untrusted-text markers, operator visibility and a digest-linked audit trail explicit. |
+| Potential business impact | Shortens internal knowledge discovery and reuse while preserving access control and accountability. |
+
 ## Demonstration walkthrough
 
 Run from the directory containing this file with Python 3.11 or later. Use only the supplied fictional data. [README.md](README.md) explains the command and exit behavior in full.
+
+Start the browser demonstration with:
+
+```bash
+python -B -m internal_brain.web_demo demo_bundle.json
+```
+
+Open the printed URL. Select `maya`, ask for the finance plan and show `NO_AUTHORIZED_MATCH`; select `li` and show the authorized `finance-plan` result with citations and document digests; then select `chen` and load the verified audit chain. The page labels every actor as an operator-selected declaration rather than an authenticated identity.
+
 
 1. Run `python -B -m internal_brain validate demo_bundle.json`. Show that the trusted operator sees the entire bundle, including policy and document contents. Explain that `maya`, `li` and `chen` are declared local identities rather than authenticated sessions.
 2. Run the ordered fictional session below. Inspect the employee travel result and its source citations. The vendor note contains hostile instruction language that remains untrusted document content.
@@ -60,6 +92,10 @@ This document is a walkthrough, not an execution receipt. Attach actual command 
 The local flow is strict JSON loading, declared tenant and actor resolution, authorization, deterministic operation execution, cited results, retained audit evidence and replay. A future answer-generation component would consume only the already-authorized evidence. It must not decide or override access policy.
 
 The current filesystem operator is trusted with the complete tenant bundle and can select any declared actor. The prototype provides no authentication service, encrypted persistent storage, remote append-only audit anchor, shared service concurrency or Tencent integration. Deployment and any challenge-required tool use remain separate work requiring their own implementation and evidence.
+
+## Tencent product-use evidence
+
+Tencent CodeBuddy, WorkBuddy and Miora activity is tracked separately from repository authorship and source lineage. When one is actually used, record the product name, account or workspace, date, task performed and retained output or provider reference.
 
 ## Credits and external actions
 
