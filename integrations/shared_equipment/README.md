@@ -102,6 +102,14 @@ optional route for its stable operation IDs, exact file transfer and readback;
 it is not a prerequisite for native internal coordination. Outward publication
 continues to follow the existing publication policy.
 
+Direct callers of `GitHubSlackEquipment.slack()` use that same internal
+workspace boundary as `ServiceEquipment`: the base verifier accepts the
+destination channel and reads its sharing metadata through `WorkHandoff`.
+The base adapter adds no outward sender/footer requirement. The external
+upload-URL allocation step has no destination yet; its eventual share still
+uses the existing channel boundary and operation readback. Provider failures
+retain their typed outcome and uncertainty metadata.
+
 ---
 
 ### GitHub issue and PR metadata
