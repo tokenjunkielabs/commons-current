@@ -28,9 +28,9 @@
         truth.human_positive +
         " human-positive, " +
         truth.resends +
-        " resends, USD " +
+        " resends. Recorded cash at that snapshot: USD " +
         truth.cash_usd +
-        " cash.";
+        ". Current settlement is unverified.";
     }
     var truthRoot = document.getElementById("truth");
     if (truthRoot) {
@@ -40,7 +40,7 @@
         cell(truth.auto_acks, "auto-acks"),
         cell(truth.human_positive, "human-positive"),
         cell(truth.resends, "resends"),
-        cell("USD " + truth.cash_usd, "cash")
+        cell("Unverified", "current settlement")
       );
     }
     var surfacesRoot = document.getElementById("surfaces");
