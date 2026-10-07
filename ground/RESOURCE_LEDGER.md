@@ -14,6 +14,14 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Claim/payment preservation and same-owner publication recovery — 2026-10-07 03:08 EDT
+
+The canonical graph now contains **644 resources**, with **285 producing** and **141 append-only evidence records**. The newly landed owner policy is a **PRODUCING / CONSTRAINED** commercial operating capability: completed third-party bug contributions keep their attribution and claim, applicable assignment/payment must be requested, and pending decisions never become waivers or fabricated paid status.
+
+A distinct same-owner GitHub transport is now **PRODUCING / CONSTRAINED** from exact original-actor branch, file, commit, PR, merge and readback receipts. It is bounded to authorized source-pinned work, unique non-force branches, preserved operation IDs and authorship, and no credential or control bypass. The existing Claude resource remains **AVAILABLE / HELD**; automatic attribution suppression is configuration evidence, not a session, reset, quota, permission, test, verdict, review, landing or hold release.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-claim-payment-policy-delta-20261007-0004.json). No new build order was created: the policy/configuration are landed and [the distinct publisher-recovery operation already has one owner-carried order](https://tokenjunkielabs.slack.com/archives/C0BTB4SUCP9/p1791349534222109). Active issue repairs retain their owners. Existing holds, no-resend, open-door/no-auth, private-data, payment-state separation, and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Zindi preregistered Best Bias Discovery plan delta — 2026-10-06 21:04 EDT
 
 The canonical graph now contains **642 resources**, with **283 producing** and **140 append-only evidence records**. One newly landed **AVAILABLE / CONSTRAINED** resource preregisters an Eastern Oklahoma within-tribal boundary-type hypothesis, exact matching covariates, permitted Overture evidence, fixed-seed uncertainty, promotion criteria, and falsification rules for the existing Zindi Best Bias Discovery owner.
