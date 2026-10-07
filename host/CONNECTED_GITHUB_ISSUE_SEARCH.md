@@ -6,7 +6,7 @@ The same module also provides `projectGitHubConnectorIssueHeaders` for an alread
 
 This packages the existing route workaround for queue intake. During the October 3 Broker work, `github_search_issues` returned ordinary issue #1406 for a query containing `is:pr`. Direct metadata confirmed that item was an open issue. The identical query through the approved native REST route returned zero open Broker PRs. The route had already been shared in fleet coordination; this module supplies reusable pagination and coverage reporting.
 
-The module uses the caller's connected tool object. It owns no credentials, network client, filesystem, or mutation action.
+The module uses the caller's connected tool object. It owns no credentials, network client, filesystem, or mutation action. Native fetch remains the default; callers may explicitly select the existing GitHub Token Connection read action.
 
 ## Use from code mode
 
@@ -48,6 +48,47 @@ text({
 Pin the helper source ref when an operation needs a retained version. Supply repository, author, kind, state, date and other selectors in `query` as needed. The helper neither adds repository qualifiers nor rewrites the query. The current connector's approved resource access still applies.
 
 Keep an explicit `is:issue` or `is:pr` selector for single-kind queues. GitHub documents that some GitHub App user-token searches require a kind qualifier. Use separate queries when both kinds are needed under those connections.
+
+### Select the existing private-token read connection
+
+~~~javascript
+const result = await box.exports.searchGitHubIssues(tools, {
+  query: "repo:woahwhattheheck/commons is:issue is:open connector -label:board",
+  per_page: 20,
+  max_pages: 1
+}, {
+  transport: "token",
+  onResponse: ({ page, path, binding, response }) => {
+    store("token-issue-query-" + page, { path, binding, response });
+  }
+});
+text({ status: result.status, stats: result.stats, coverage: result.coverage });
+~~~
+
+The selected binding is `mcp__codex_apps__github_token_connection_github_read`.
+Each page makes one call with a relative `/search/issues` path. Token results
+add `request.transport` and `request.binding`; each coverage page retains its
+actual `path`, and the response callback additionally receives `path` and
+`binding`. Existing URL, query, pagination, deduplication and coverage fields
+remain available. Default or `transport: "native"` keeps the native request
+and result shape. Route selection is explicit: the helper never switches
+connections after an error or performs credential lookup.
+
+For this selected route, query encoding leaves colon and slash literal, uses
+`+` for spaces, and keeps reserved parameter delimiters and literal `+` escaped.
+Those spellings preserve the parameter value. The token connector rejected a
+fully encoded scoped query with `INVALID_ARGUMENT` / “Use a relative GitHub
+REST path”; the query-safe spelling reached GitHub successfully and returned
+the intended repository's open non-board issues. This is an observed formatter
+workaround, not a change to that connector's validation or provider access.
+Native URL encoding is unchanged. Unknown query shapes can still receive a
+provider error; no scope, permission or query-application claim is inferred.
+
+Only a token wrapper with `ok: true`, a 2xx integer `status` and canonical
+search `data` is decoded. An explicit error, `ok: false` or HTTP error status
+stops as `NATIVE_ERROR`; the original callback response remains available.
+Arbitrary objects under `data` are not search payloads without the successful
+HTTP envelope.
 
 ### Choose whether imported board records belong in the query
 
@@ -94,6 +135,7 @@ query strings were retained; no adapter change or repeat query was needed.
 | `timeout_ms` | Cooperative budget checked before each request; default 30,000 ms. Zero returns before a request. |
 | `updated_at_lte` | Optional caller-declared inclusive update-time ceiling; observes retained metadata without changing the query or filtering rows. See the bound observation below. |
 | `options.onResponse` | Optional awaited callback receiving `{page, url, response}` for each original native result, including native errors. |
+| `options.transport` | `native` (default) or `token`; selects one existing connected read binding without automatic fallback. |
 
 ~~~javascript
 const result = await box.exports.searchGitHubIssues(tools, {
@@ -620,3 +662,4 @@ other scalar metadata, null/missing bodies and refusal paths remain inspected
 as source only. No synthetic response, fixture, test, native process or accepted
 REST operation was replayed. The older REST function bodies are byte-for-byte
 preserved; the module adds this function and its export.
+
