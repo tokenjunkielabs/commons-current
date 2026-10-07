@@ -8,7 +8,9 @@ after discovering the actual token tools and preparing an authorized change.
 
 The adapter has no credentials, network client, checkout, authentication gate,
 retry, connection switch or fallback transport. Each wrapper invocation makes
-one call through the selected token binding. The existing publisher checks
+one call through the selected binding. Token bindings remain the default;
+an optional explicitly supplied native create-blob binding selects only that
+operation before dispatch. The existing publisher checks
 source and provider identities and decides when its merge step is ready.
 
 ## API and explicit use
@@ -43,18 +45,57 @@ existing publisher requires a checkout.
 | --- | --- |
 | `tools` | A separate surface containing the eleven publisher-compatible wrapper functions. The original supplied surface is not modified. |
 | `bindings` | Action-to-wrapper-name mapping for the publisher's existing `options.bindings`; values are string keys on `adapter.tools`. |
-| `calls` | Live invocation records with `action`, actual `binding`, `method`, relative `path` and `outcome`; actual HTTP status, thrown error and callback error are added when available. |
+| `calls` | Live invocation records with `action`, actual `binding` and `outcome`. Token calls include `method` and relative `path`; native blob calls include `transport: 'native'`. Actual HTTP status, thrown error and callback error are added when available. |
 
 | Option | Default or contract |
 | --- | --- |
 | `read_binding` | `mcp__codex_apps__github_token_connection_github_read` |
 | `write_binding` | `mcp__codex_apps__github_token_connection_github_repository_write` |
-| `onResponse` | Optional awaited function receiving `{action, binding, method, path, response}` for each returned token envelope. |
+| `native_create_blob_binding` | Optional discovered native create-blob tool name. When supplied, only `create_blob` uses that exact binding with the publisher's unchanged native arguments; otherwise it uses the token writer. |
+| `onResponse` | Optional awaited function receiving `{action, binding, method, path, response}` for token envelopes or `{action, binding, transport: 'native', response}` for native blob envelopes. |
 
 Both selected bindings must exist as functions at construction, including
 when a later operation only reads. A supplied callback must be a function.
 Binding overrides select already-observed compatible tools; the adapter does
 not discover another account or acquire credentials.
+
+## Explicit native blobs for the token request-size limit
+
+The token MCP endpoint rejected a real 166KB GitData blob request with HTTP
+413 before GitHub dispatch. The native create-blob tool accepted those exact
+source bytes. Callers preparing a large atomic GitData publication can select
+the already-discovered native binding explicitly:
+
+```javascript
+const adapter = createGitHubTokenAdapter(tools, {
+  native_create_blob_binding: 'mcp__codex_apps__github_create_blob',
+  onResponse: async observation => retainProviderResponse(observation),
+});
+const result = await publishGitHubChange(adapter.tools, preparedChange, {
+  bindings: adapter.bindings,
+  onProgress: progress => retainOperationProgress(progress),
+});
+```
+
+The native binding must exist as a function at construction. Each create-blob
+invocation forwards the publisher's original `repository_full_name`,
+`content` and `encoding` arguments in one native call. The adapter returns
+the original native envelope unchanged, including provider errors and
+malformed acknowledgements. The existing publisher decodes that native
+contract and checks the actual complete blob SHA against the prepared source
+pin. The awaited callback receives the original response before it reaches
+the publisher. It records callback failures without erasing the provider
+result. Native call outcomes are `returned`, `provider_error` or `threw`;
+the publisher determines whether the returned blob identity is valid.
+
+All reads, tree and commit creation, branch creation, PR creation and merging
+continue through the selected token bindings. Contents create/update remains
+token-backed; this option does not expand its request-size capacity.
+Selection is explicit for the whole adapter, rather than based on a guessed
+size threshold. There is no fallback after a rejected, malformed or thrown
+token call, and no automatic retry. Reconcile already-created blobs and
+uncertain mutations before any later publication; selecting this option
+does not authorize restarting a partial operation.
 
 ## REST mapping and supported scope
 
@@ -70,7 +111,7 @@ PR.
 | `fetch` | GET of the relative path from an explicitly supplied `https://api.github.com/` URL. |
 | `fetch_file` | GET `/repos/{owner}/{repo}/contents/{path}` with the supplied `ref`, when present. |
 | `fetch_blob` | GET `/repos/{owner}/{repo}/git/blobs/{blob_sha}`. |
-| `create_blob` | POST `/git/blobs`, retaining source content and encoding. |
+| `create_blob` | POST `/git/blobs`, retaining source content and encoding, or one call to the explicitly selected native create-blob binding. |
 | `create_tree` | POST `/git/trees`, mapping `tree_elements` to `tree` and the optional `base_tree_sha` to `base_tree`. |
 | `create_commit` | POST `/git/commits`, mapping `tree_sha` to `tree` and ordered parent SHAs to `parents`. |
 | `create_branch` | POST `/git/refs` with `refs/heads/{branch_name}` and the exact supplied commit SHA. |
@@ -134,8 +175,9 @@ a file read and no alternate route after a failed file response.
 
 ## Raw response custody and failures
 
-Every returned adapted wrapper has `token_response` containing the exact
-original token envelope. Successful projection requires an actual
+Every token-backed adapted wrapper has `token_response` containing the exact
+original token envelope. The explicitly selected native blob path returns its
+confirmed original native envelope directly, as described above. Successful projection requires an actual
 `structuredContent` wrapper with integer 2xx `status`, `ok === true` and
 `data`; each projected publisher payload must be an object. Failed provider
 envelopes and invalid response shapes return native-shaped error envelopes
@@ -185,3 +227,4 @@ the next write, then performs the requested merge and complete immutable
 readbacks. Separate complete file reads at current main establish
 their later observed versions; none of these outcomes is presumed by the
 adapter.
+
