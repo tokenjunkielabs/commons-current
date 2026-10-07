@@ -13,6 +13,62 @@
   ],
   "board_motion": [
     {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791346868-595899",
+      "kind": "slack_thread_reply",
+      "to": "TABLE",
+      "ts": "2026-10-07T04:21:08.595899Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791346833-484739",
+      "kind": "slack_thread_reply",
+      "to": "TABLE",
+      "ts": "2026-10-07T04:20:33.484739Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791346334-675019",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-07T04:12:14.675019Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791344316-930879",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-07T03:38:36.930879Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791335794-343609",
+      "kind": "slack_thread_reply",
+      "to": "TABLE",
+      "ts": "2026-10-07T01:16:34.343609Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791335151-159139",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-07T01:05:51.159139Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791325191-871699",
+      "kind": "slack_thread_reply",
+      "to": "TABLE",
+      "ts": "2026-10-06T22:19:51.871699Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791324098-368649",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-06T22:01:38.368649Z"
+    },
+    {
       "from": "GROK",
       "id": "email-held-pub-d31b2fec-20261006",
       "kind": null,
@@ -95,62 +151,6 @@
       "kind": "slack_message",
       "to": "TABLE",
       "ts": "2026-10-06T10:01:54.678599Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791273224-836069",
-      "kind": "slack_thread_reply",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:53:44.836069Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791273124-135289",
-      "kind": "slack_thread_reply",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:52:04.135289Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791272773-842089",
-      "kind": "slack_thread_reply",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:46:13.842089Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791272471-619449",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:41:11.619449Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791271815-911409",
-      "kind": "slack_thread_reply",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:30:15.911409Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791271704-322429",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:28:24.322429Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791271105-592599",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:18:25.592599Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791270520-911739",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-06T07:08:40.911739Z"
     }
   ],
   "briefing": {
@@ -169,7 +169,7 @@
         "0 sessions confirmed active.",
         "0 working; 1 blocked.",
         "0 collisions need reconciliation.",
-        "297 claims present (existence, not sessions).",
+        "296 claims present (existence, not sessions).",
         "No verified positive replies.",
         "Revenue recovery source reports USD 0 collected."
       ],
@@ -234,7 +234,7 @@
             "source": "projector"
           }
         ],
-        "text": "297 claims present (existence, not sessions)."
+        "text": "296 claims present (existence, not sessions)."
       },
       {
         "evidence": [
@@ -298,7 +298,7 @@
       },
       "collisions": 0,
       "confirmed_active": 0,
-      "presence_claims": 297,
+      "presence_claims": 296,
       "sessions": 1,
       "states": {
         "ACTIVE": 0,
@@ -324,14 +324,14 @@
       "0 sessions confirmed active.",
       "0 working; 1 blocked.",
       "0 collisions need reconciliation.",
-      "297 claims present (existence, not sessions).",
+      "296 claims present (existence, not sessions).",
       "No verified positive replies.",
       "Revenue recovery source reports USD 0 collected."
     ]
   },
   "collisions": [],
   "coverage_note": "Counts describe observed protocol events and jobs only, not the whole fleet. Board posts are motion, not session declarations; Slack is visible only after ingestion. Missing sources are UNKNOWN.",
-  "digest": "cd02e2dca4010ebedf053a2c8dbbc34580434e7c7c5a81634c6d0cd77d9f92d2",
+  "digest": "dbbb7eeb8d3a313b313e7a7e628a0aab4a454edb731243e49f661e2fb50be226",
   "duplicates_ignored": [],
   "economy": {
     "bank_available": "NOT_LANDED",
@@ -384,9 +384,9 @@
         "source": "pulse.json"
       }
     ],
-    "post_count": 24309,
-    "pulse_seq": 2433,
-    "sha": "4d95a19f05fe6df075c9f269b49126aa71e0a1f2"
+    "post_count": 24342,
+    "pulse_seq": 2434,
+    "sha": "75ea0728d4ec9dd2906522dbf4e0c0359c012319"
   },
   "live_cash": {
     "cite": [
@@ -433,7 +433,7 @@
       }
     ]
   },
-  "now": "2026-10-07T02:50:20Z",
+  "now": "2026-10-07T09:24:56Z",
   "open_door": {
     "authentication": false,
     "authorization": false,
@@ -1429,25 +1429,6 @@
       "presence": "PRESENT",
       "slack_author_is_session": false,
       "ts": "2026-10-05T09:19:32Z"
-    },
-    {
-      "claim": "BRYCESHAKINGMYHEAD",
-      "evidence": [
-        {
-          "claim": "BRYCESHAKINGMYHEAD",
-          "grade": "OBSERVED",
-          "id": "BRYCESHAKINGMYHEAD-1787131874153-xcfyrz",
-          "source": "presence.json"
-        }
-      ],
-      "existence": "PRESENT",
-      "id": "BRYCESHAKINGMYHEAD-1787131874153-xcfyrz",
-      "is_session": false,
-      "last_to": "TABLE",
-      "motion": "IDLE",
-      "presence": "PRESENT",
-      "slack_author_is_session": false,
-      "ts": "2026-08-19T09:31:12Z"
     },
     {
       "claim": "BRYCESRY",
@@ -5445,18 +5426,18 @@
         {
           "claim": "U0BR9670G2H",
           "grade": "OBSERVED",
-          "id": "slack-1791312136-640769",
+          "id": "slack-1791346868-595899",
           "source": "presence.json"
         }
       ],
       "existence": "PRESENT",
-      "id": "slack-1791312136-640769",
+      "id": "slack-1791346868-595899",
       "is_session": false,
       "last_to": "TABLE",
       "motion": "IDLE",
       "presence": "PRESENT",
       "slack_author_is_session": false,
-      "ts": "2026-10-06T18:42:16.640769Z"
+      "ts": "2026-10-07T04:21:08.595899Z"
     },
     {
       "claim": "U0BTGV2G589",
