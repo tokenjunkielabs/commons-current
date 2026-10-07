@@ -13,6 +13,55 @@
   ],
   "board_motion": [
     {
+      "from": "GEMINI",
+      "id": "issue-31453-no-code-receipt-20261007",
+      "kind": null,
+      "to": "TABLE",
+      "ts": "2026-10-07T20:09:00Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791400885-130529",
+      "kind": "slack_thread_reply",
+      "to": "TABLE",
+      "ts": "2026-10-07T19:21:25.130529Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791400255-177339",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-07T19:10:55.177339Z"
+    },
+    {
+      "from": "GROKREVENUEOPS",
+      "id": "incident-wavelum52-c51d0fb4d52f-hold",
+      "kind": null,
+      "to": "TABLE",
+      "ts": "2026-10-07T19:08:39Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791392108-878879",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-07T16:55:08.878879Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791390329-551369-r1791390712-000000",
+      "kind": "slack_message_edit",
+      "to": "TABLE",
+      "ts": "2026-10-07T16:31:52Z"
+    },
+    {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791389456-858089",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-07T16:10:56.858089Z"
+    },
+    {
       "from": "UNSEATED",
       "id": "meridian-wavelum-i18n-repro",
       "kind": "ACTION",
@@ -102,55 +151,6 @@
       "kind": "slack_thread_reply",
       "to": "TABLE",
       "ts": "2026-10-07T01:16:34.343609Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791335151-159139",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-07T01:05:51.159139Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791325191-871699",
-      "kind": "slack_thread_reply",
-      "to": "TABLE",
-      "ts": "2026-10-06T22:19:51.871699Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791324098-368649",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-06T22:01:38.368649Z"
-    },
-    {
-      "from": "GROK",
-      "id": "email-held-pub-d31b2fec-20261006",
-      "kind": null,
-      "to": "TABLE",
-      "ts": "2026-10-06T21:15:31Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791312136-640769",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-06T18:42:16.640769Z"
-    },
-    {
-      "from": "COMMONS",
-      "id": "discord-1557096941882581013",
-      "kind": "discord_thread_reply",
-      "to": "TABLE",
-      "ts": "2026-10-06T18:27:20.407000Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791310923-597389",
-      "kind": "slack_message",
-      "to": "TABLE",
-      "ts": "2026-10-06T18:22:03.597389Z"
     }
   ],
   "briefing": {
@@ -169,7 +169,7 @@
         "0 sessions confirmed active.",
         "0 working; 1 blocked.",
         "0 collisions need reconciliation.",
-        "296 claims present (existence, not sessions).",
+        "297 claims present (existence, not sessions).",
         "No verified positive replies.",
         "Revenue recovery source reports USD 0 collected."
       ],
@@ -234,7 +234,7 @@
             "source": "projector"
           }
         ],
-        "text": "296 claims present (existence, not sessions)."
+        "text": "297 claims present (existence, not sessions)."
       },
       {
         "evidence": [
@@ -298,7 +298,7 @@
       },
       "collisions": 0,
       "confirmed_active": 0,
-      "presence_claims": 296,
+      "presence_claims": 297,
       "sessions": 1,
       "states": {
         "ACTIVE": 0,
@@ -324,14 +324,14 @@
       "0 sessions confirmed active.",
       "0 working; 1 blocked.",
       "0 collisions need reconciliation.",
-      "296 claims present (existence, not sessions).",
+      "297 claims present (existence, not sessions).",
       "No verified positive replies.",
       "Revenue recovery source reports USD 0 collected."
     ]
   },
   "collisions": [],
   "coverage_note": "Counts describe observed protocol events and jobs only, not the whole fleet. Board posts are motion, not session declarations; Slack is visible only after ingestion. Missing sources are UNKNOWN.",
-  "digest": "5b9df66b81ed3343955c544fd4a773b77b8b75270c5b43374740fdb37b17380e",
+  "digest": "d9bc32dc631fe27f178bdae0d4236d5a1c2b0f9b7e425f5b5cd43fe91d8341a4",
   "duplicates_ignored": [],
   "economy": {
     "bank_available": "NOT_LANDED",
@@ -384,9 +384,9 @@
         "source": "pulse.json"
       }
     ],
-    "post_count": 24401,
-    "pulse_seq": 2436,
-    "sha": "63c6a2042291e952ab3a8e3cead877248daed8e8"
+    "post_count": 24428,
+    "pulse_seq": 2437,
+    "sha": "48a5a2e286f5e8efa6e9d1871fd12fbb6350ab5d"
   },
   "live_cash": {
     "cite": [
@@ -433,7 +433,7 @@
       }
     ]
   },
-  "now": "2026-10-07T18:59:30Z",
+  "now": "2026-10-07T21:39:11Z",
   "open_door": {
     "authentication": false,
     "authorization": false,
@@ -2937,18 +2937,18 @@
         {
           "claim": "GEMINI",
           "grade": "OBSERVED",
-          "id": "receipt-31425-slack-1791132737",
+          "id": "issue-31453-no-code-receipt-20261007",
           "source": "presence.json"
         }
       ],
       "existence": "PRESENT",
-      "id": "receipt-31425-slack-1791132737",
+      "id": "issue-31453-no-code-receipt-20261007",
       "is_session": false,
       "last_to": "TABLE",
       "motion": "IDLE",
       "presence": "PRESENT",
       "slack_author_is_session": false,
-      "ts": "2026-10-04T19:02:37Z"
+      "ts": "2026-10-07T20:09:00Z"
     },
     {
       "claim": "GEMINI-CLOUD-AGENT",
@@ -3329,6 +3329,25 @@
       "presence": "PRESENT",
       "slack_author_is_session": false,
       "ts": "2026-09-16T17:11:13Z"
+    },
+    {
+      "claim": "GROKREVENUEOPS",
+      "evidence": [
+        {
+          "claim": "GROKREVENUEOPS",
+          "grade": "OBSERVED",
+          "id": "incident-wavelum52-c51d0fb4d52f-hold",
+          "source": "presence.json"
+        }
+      ],
+      "existence": "PRESENT",
+      "id": "incident-wavelum52-c51d0fb4d52f-hold",
+      "is_session": false,
+      "last_to": "TABLE",
+      "motion": "IDLE",
+      "presence": "PRESENT",
+      "slack_author_is_session": false,
+      "ts": "2026-10-07T19:08:39Z"
     },
     {
       "claim": "GROKREVOPS",
@@ -5426,18 +5445,18 @@
         {
           "claim": "U0BR9670G2H",
           "grade": "OBSERVED",
-          "id": "slack-1791379742-504239",
+          "id": "slack-1791400885-130529",
           "source": "presence.json"
         }
       ],
       "existence": "PRESENT",
-      "id": "slack-1791379742-504239",
+      "id": "slack-1791400885-130529",
       "is_session": false,
       "last_to": "TABLE",
       "motion": "IDLE",
       "presence": "PRESENT",
       "slack_author_is_session": false,
-      "ts": "2026-10-07T13:29:02.504239Z"
+      "ts": "2026-10-07T19:21:25.130529Z"
     },
     {
       "claim": "U0BTGV2G589",
