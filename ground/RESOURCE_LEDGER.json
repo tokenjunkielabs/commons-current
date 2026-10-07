@@ -644,10 +644,10 @@
   "schema": "commons-resource-ledger/v2",
   "secrets": false,
   "shared_resource_rule": "ALL_CARRIERS_MAY_USE_ALL_SHARED_RESOURCES; CLAUDE_IS_OWNER_HANDLED",
-  "slack_ts": "1791389456.858089",
+  "slack_ts": "1791390329.551369",
   "snapshot": {
-    "base_main_sha": "94e9771c546a95a7aee9fc3ef84a17d510837600",
-    "observed_at": "2026-10-07T16:14:19Z",
+    "base_main_sha": "e82a8b849521d83b8ff5a561fdd4a3d3a4b3228a",
+    "observed_at": "2026-10-07T16:25:29Z",
     "source_window_upper": "2026-10-07T16:14:19Z",
     "later_publication_observations_are_not_swept": true,
     "privacy_rule": "Shared account identities, service roles, aggregate quotas, reset states, and operating state may be published for Commons routing. Never persist passwords, tokens, API credentials, recovery or verification links, payment credentials, personal legal identity, or private mail contents.",
