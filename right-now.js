@@ -18,15 +18,26 @@
     }).join(" · ");
   }
 
+  function snapshotNote(control) {
+    var snapshotAsOf = typeof control.as_of === "string" && control.as_of
+      ? control.as_of : "date unavailable";
+    var cashAsOf = control.settled_cash && typeof control.settled_cash.as_of === "string" &&
+      control.settled_cash.as_of ? control.settled_cash.as_of : "date unavailable";
+    return "Recorded control snapshot as of " + snapshotAsOf +
+      ". Provider cash evidence as of " + cashAsOf +
+      ". Current settlement: unverified.";
+  }
+
   function render(control) {
     target.replaceChildren();
     var truth = control.truth;
     var cash = control.settled_cash;
     var settled = control.settled_awards;
+    target.append(text("p", snapshotNote(control), "note"));
     var summary = document.createElement("div");
     summary.className = "metrics";
     [
-      ["USD cash", "USD " + truth.collected_cash_usd],
+      ["Recorded USD cash", "USD " + truth.collected_cash_usd],
       ["Provider cash receipts", truth.settled_cash_receipts],
       ["Paid awards", truth.paid_awards],
       ["Settled award value", formatTotals(truth.settled_amounts_by_currency)],
@@ -43,7 +54,7 @@
     });
     target.append(summary);
 
-    target.append(text("h3", "Verified provider cash"));
+    target.append(text("h3", "Recorded provider cash evidence"));
     var cashList = document.createElement("ol");
     cashList.className = "queue";
     cash.receipts.forEach(function (receipt) {
@@ -69,7 +80,7 @@
       "note"
     ));
 
-    target.append(text("h3", "Verified paid awards"));
+    target.append(text("h3", "Recorded paid awards"));
     var awardList = document.createElement("ol");
     awardList.className = "queue";
     settled.awards.forEach(function (award) {
@@ -95,7 +106,7 @@
       "note"
     ));
 
-    target.append(text("h3", "Evidence-ranked execution queue"));
+    target.append(text("h3", "Recorded execution queue"));
     var list = document.createElement("ol");
     list.className = "queue";
     control.execution_queue.forEach(function (item) {
@@ -105,7 +116,7 @@
       list.append(row);
     });
     if (!control.execution_queue.length) {
-      list.append(text("li", "No evidenced opportunities are currently queued."));
+      list.append(text("li", "No evidenced opportunities are in this recorded snapshot."));
     }
     target.append(list);
 
@@ -115,7 +126,7 @@
     control.blockers.forEach(function (item) {
       var row = document.createElement("li");
       row.append(text("strong", item.id));
-      row.append(text("span", item.condition + " Current: " + item.current));
+      row.append(text("span", item.condition + " Recorded: " + item.current));
       blockerList.append(row);
     });
     target.append(blockerList);
