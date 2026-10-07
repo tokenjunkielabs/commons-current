@@ -67,8 +67,13 @@ Earlier revisions remain in their own immutable filenames.
 Both writes must confirm the exact name/path/byte count before the callback
 fulfills. The index is written after the data record. A saved index cannot
 acknowledge its own write: `snapshot().latest_index` reports the locator after
-that write returns. Store that descriptor with the existing private operation
-checkpoint. The index's `acknowledged_updates` counts backend updates mapped
+that write returns. Retain that descriptor, operation identity and exact file
+names in the existing private durable checkpoint before leaving the active
+tool call. Runtime-only `store`/`load` values can disappear when that runtime
+resets; they are not the custody checkpoint. Keep each accepted result and its
+locator physically retained during the live invocation so recovery remains
+possible without repeating a provider operation. The index's
+`acknowledged_updates` counts backend updates mapped
 by this fresh instance; it is not a count of directory files, provider calls
 or successful provider effects.
 
@@ -95,6 +100,7 @@ const reader = readerModule.createExecJsonReader(
 const recovered = await journalModule.recoverOperationJournalEntry(
   reader, actualSavedLatestIndexLocator, actualResultKey
 );
+// Optional runtime convenience; recoverable record/index custody already exists.
 store(actualRecoveredKey, recovered.value);
 text({
   key: recovered.key,
