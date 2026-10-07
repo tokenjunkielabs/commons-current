@@ -64,7 +64,6 @@
     var publicRails = rails.filter(publicEligible);
     var usable = rails.filter(ownerUsable);
     var active = publicRails[0] || null;
-    var cash = (registry.cash || {}).collected_usd;
     var status = document.getElementById("js-switcher-status");
     if (status) {
       if (active) {
@@ -79,7 +78,7 @@
         "<span><b>" + esc(active ? active.provider : "none") + "</b>active rail</span>" +
         "<span><b>" + esc(publicRails.length) + "</b>public</span>" +
         "<span><b>" + esc(usable.length) + "</b>owner-usable</span>" +
-        "<span><b>USD " + esc(cash == null ? 0 : cash) + "</b>cash</span>";
+        "<span><b>Unverified</b>current settlement</span>";
     }
   }
   function linkList(rail) {
