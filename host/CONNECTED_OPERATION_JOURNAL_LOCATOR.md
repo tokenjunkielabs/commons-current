@@ -26,6 +26,7 @@ const reader = readerModule.createExecJsonReader(
 const observed = await locatorModule.observeOperationJournalLocator(
   tools.exec_command, reader, {prefix: actualSavedJournalPrefix}
 );
+// Runtime convenience; retain observed locator custody before this call ends.
 store(actualPrivateLocatorKey, observed.index_locator);
 text({
   sequence: observed.index_locator.sequence,
@@ -41,6 +42,13 @@ The caller expressly chooses this local directory observation. It does not infer
 a directory, choose a provider account, discover credentials or automatically
 resume an operation. Print metadata only. Full returned index/execution content
 and caller-chosen keys remain private.
+
+Retain the exact directory/prefix and complete observed `index_locator`,
+including its operation identity, in the existing private durable checkpoint
+before leaving the live tool call. Physically retain the full observation and
+reader responses there as well. The example's `store` call is runtime convenience;
+its value can disappear after a runtime reset and does not save that checkpoint.
+Saved observation custody does not establish the original writer's acknowledgement.
 
 ## Exact observation and scope
 
