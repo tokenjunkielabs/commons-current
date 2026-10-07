@@ -14,6 +14,16 @@ This extends the original DEMON live-compute board from Slack
 `1787637936.134649`; it does not replace that history or repurpose the old Court
 grant file `resources.json`.
 
+## Settlement truth, Gemini economics guard, and callback expiry — 2026-10-07 09:11 EDT
+
+The canonical graph now contains **646 resources**, with **285 producing** and **143 append-only evidence records**. One new **AVAILABLE / CONSTRAINED** source capability guards the existing Gemini Slack bridge: multi-item free-form bounty intake with GitHub references can no longer publish unverified `payable`, `escrowed`, or `funded` language as positive economics. A real local function run preserved those items as unverified leads and placed them behind a validation hold; ordinary single-item discussion remained unchanged. This is landed source, not deployment, a live provider session, verified funding, settlement, payment, payout, revenue, or cash.
+
+The existing claim-and-payment preservation policy advanced in place from PR #32208. Historical bounty payments are established, but no item-specific settlement was verified in this run. Missing chat or repository receipts are not evidence of zero: the actual payout rail must be checked before an item is called unpaid or zero, and live paid work may not be wrapped in waiver-like language.
+
+The prior Mermail browser callback passed its declared expiry without a completion receipt. Its reserved capacity is released and the road is now **AVAILABLE / STALE**; expiry does not prove authentication failure or authorize a repeated owner request.
+
+[Exact bounded receipt](../inventory/resources/records/resource-master-settlement-truth-gemini-economics-delta-20261007-0909.json). No new build order was created because both landed changes retain existing owners and the remaining Mermail step is owner consent, not implementation. Existing holds, no-resend, open-door/no-auth, private-data, payment-state separation, and **NO CONTACT OR RELAY TO MICHAEL CLARK** remain unchanged.
+
 ## Mermail official browser OAuth callback road — 2026-10-07 06:00 EDT
 
 The canonical graph now contains **645 resources**, with **285 producing** and **142 append-only evidence records**. One new **AVAILABLE / CONSTRAINED** road is the official `codex mcp login mermail` browser flow: an already-open desktop Chrome authorization tab and time-bounded localhost callback listener can supply the authenticated hosted-MCP canary required by the existing Mermail/Superteam submission owner.
