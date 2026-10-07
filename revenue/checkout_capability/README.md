@@ -8,6 +8,14 @@ data.
 projects public rails from it and fails closed when catalog, SKU files,
 or HTML disagree.
 
+The snapshot's `observed_at` scopes its recorded cash and stage fields. The
+offline projector returns `collected_cash_usd=null`,
+`settlement_status=NOT_VERIFIED_IN_THIS_RUN`, and
+`settlement_scope=offline_snapshot_only`. The original snapshot amount and time
+remain in `recorded_cash_usd` and `recorded_cash_observed_at`. This view does
+not replace independently verified historical payments or establish current
+settlement.
+
 A public rail is chargeable **and** payout-capable only when livemode,
 `charges_enabled`, `payouts_enabled`, link `active=true`, and the
 canonical recorded URL all match. Duplicate Payment Links on the same
