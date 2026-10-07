@@ -19,14 +19,14 @@
   },
   "watermark": {
     "prior_terminal_slack_ts": "1791358034.016959",
-    "slack_sweep_through": "1791367224.936579",
+    "slack_sweep_through": "1791367762.953009",
     "claim_ts": "1791367243.417849",
-    "durable_terminal_slack_ts": "PENDING_TERMINAL",
+    "durable_terminal_slack_ts": "1791367762.953009",
     "prior_observed_main_sha": "3930e7387a98697892905393bfdc961b1a66f71a",
-    "github_source_through": "faf20beee51c9b2d7861716ac71668f9defc3e34",
+    "github_source_through": "24e042e354f154d159e1468ac06c44771718463b",
     "later_arrivals_not_swept": [
-      "commits after faf20beee51c9b2d7861716ac71668f9defc3e34",
-      "Slack messages after 1791367243.417849"
+      "commits after 24e042e354f154d159e1468ac06c44771718463b",
+      "Slack messages after 1791367762.953009"
     ],
     "automations_observed": {
       "resource_master_id": "6a8f0f00d8f48191ba63d4cb17da4f05",
@@ -40,12 +40,20 @@
   },
   "evidence": {
     "claim": "https://tokenjunkielabs.slack.com/archives/C0BRGMDQB6G/p1791367243417849",
-    "terminal": "PENDING_TERMINAL",
+    "terminal": "https://tokenjunkielabs.slack.com/archives/C0BRGMDQB6G/p1791367762953009?thread_ts=1791367243.417849&cid=C0BRGMDQB6G",
     "source_message": "https://tokenjunkielabs.slack.com/archives/C0BRGMDQB6G/p1791365898061799",
     "owner_route": "https://tokenjunkielabs.slack.com/archives/C0BU51F1PL3/p1791367224936579?thread_ts=1790977806.441259&cid=C0BU51F1PL3",
     "source_main": "https://github.com/woahwhattheheck/commons/commit/faf20beee51c9b2d7861716ac71668f9defc3e34",
-    "activation_pull_request": "PENDING",
-    "activation_merge": "PENDING",
+    "activation_pull_request": "https://github.com/woahwhattheheck/commons/pull/32206",
+    "activation_merge": "https://github.com/woahwhattheheck/commons/commit/24e042e354f154d159e1468ac06c44771718463b",
+    "activation_checks": "8/8 completed success or intentional skip before merge",
+    "current_main_readback": {
+      "main_sha": "24e042e354f154d159e1468ac06c44771718463b",
+      "ledger_blob": "92d69c947b6dbe0f4fec4fd1789b2ac5dd2c9d42",
+      "ledger_markdown_blob": "c98eb463ed919b1d8b71e6116f18ce006b3d402d",
+      "receipt_blob": "456e10aeeb3289817d81a3443532f8513f020bb5",
+      "resources_html_blob": "635ec5f78cec9f5aa4a47c925ab2b541cde8cd46"
+    },
     "slack_channels_swept": [
       "C0BRGMDQB6G", "C0BTB4SUCP9", "C0BU2V38CBC", "C0BTVA3C0G3", "C0BTA20SU95", "C0BTURDA3PW", "C0BTTA66TK3"
     ],
