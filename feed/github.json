@@ -1,8 +1,8 @@
 {
   "counts": {
-    "open_issues": 5643,
+    "open_issues": 5603,
     "open_pull_requests": 0,
-    "runs_in_progress": 2,
+    "runs_in_progress": 1,
     "runs_queued": 70
   },
   "counts_source": "graphql",
@@ -13,8 +13,34 @@
   "open_heads": {},
   "pulls_listed": 0,
   "pulls_listing": "COMPLETE",
-  "queue_depth_per_runner": 35.0,
+  "queue_depth_per_runner": 70.0,
   "recently_closed": [
+    {
+      "author": "woahwhattheheck",
+      "base": "main",
+      "branch": "codex/resource-master-zindi-plan-delta-20261006-2104-7ca6",
+      "closed_at": "2026-10-07T01:15:45Z",
+      "head_sha": "69c66f22ee2d2cc1c439c1e558247bbeab3670bd",
+      "merge_commit_sha": "499aab864755ffcf02e12efc1fd0a70530ec535f",
+      "merged_at": "2026-10-07T01:15:45Z",
+      "number": 32194,
+      "state": "MERGED",
+      "title": "resources: record Zindi bias-discovery plan delta",
+      "updated_at": "2026-10-07T01:15:45Z"
+    },
+    {
+      "author": "woahwhattheheck",
+      "base": "main",
+      "branch": "competition/zindi-bias-discovery-r1-20261006",
+      "closed_at": "2026-10-07T00:33:16Z",
+      "head_sha": "a25938a8ac5deb17ac8a3b99978614604dc05bda",
+      "merge_commit_sha": "a7e4ee25b3a2c67b6825c8033521dcecf0201d7c",
+      "merged_at": "2026-10-07T00:33:16Z",
+      "number": 32193,
+      "state": "MERGED",
+      "title": "competition: add preregistered Zindi bias-discovery plan",
+      "updated_at": "2026-10-07T00:33:16Z"
+    },
     {
       "author": "woahwhattheheck",
       "base": "main",
@@ -183,36 +209,10 @@
       "state": "MERGED",
       "title": "feat: propose Wavelum import-order enforcement integration",
       "updated_at": "2026-10-06T18:37:22Z"
-    },
-    {
-      "author": "woahwhattheheck",
-      "base": "main",
-      "branch": "sol56/doe-gems-known-mask-20261006",
-      "closed_at": "2026-10-06T18:36:06Z",
-      "head_sha": "e88d789f62d1ea45fb2773ee4a9cfbccf73267f4",
-      "merge_commit_sha": "5e02029998754947cc238c6e80c07a0e4e09883e",
-      "merged_at": "2026-10-06T18:36:06Z",
-      "number": 32172,
-      "state": "MERGED",
-      "title": "Match GEMS local scoring to organizer mask semantics",
-      "updated_at": "2026-10-06T18:36:06Z"
-    },
-    {
-      "author": "woahwhattheheck",
-      "base": "main",
-      "branch": "work/wavelum-frontend71-i18n-gate-20261006-7ca6",
-      "closed_at": "2026-10-06T18:33:55Z",
-      "head_sha": "ec5041ea78fe6a63c710e8d7043f7c5328211e37",
-      "merge_commit_sha": "61c4d772cd566a86e4a19903facd6bbe6a3c5725",
-      "merged_at": "2026-10-06T18:33:55Z",
-      "number": 32171,
-      "state": "MERGED",
-      "title": "feat: prepare Wavelum translation completeness gate",
-      "updated_at": "2026-10-06T18:42:13Z"
     }
   ],
   "repository": "woahwhattheheck/commons",
   "schema": "commons-github-state/v1",
-  "unchanged_since": "2026-10-06T23:57:57Z",
+  "unchanged_since": "2026-10-07T02:51:43Z",
   "undatable_pulls": []
 }
