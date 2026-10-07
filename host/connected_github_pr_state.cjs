@@ -1,8 +1,9 @@
 "use strict";
 
-// One native GET; retain GitHub's nullable mergeability without polling.
+// One connected GET; retain GitHub's nullable mergeability without polling.
 // The caller owns the tool binding and the original response's private custody.
 const FETCH = "mcp__codex_apps__github_fetch";
+const TOKEN_READ = "mcp__codex_apps__github_token_connection_github_read";
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
 
@@ -30,13 +31,19 @@ function decodePullRequest(response) {
     const value = queue[offset];
     if (!object(value) || seen.has(value)) continue;
     seen.add(value);
-    if (value.isError === true || own(value, "error")) {
+    if (value.isError === true || own(value, "error") || value.ok === false ||
+        (Number.isInteger(value.status) && value.status >= 400)) {
       const error = new Error("native GitHub response reports an error");
       error.code = "NATIVE_ERROR";
       throw error;
     }
     if (canonicalPullRequest(value)) {
       return value;
+    }
+    // The private-token reader retains REST data in its successful HTTP envelope.
+    if (value.ok === true && Number.isInteger(value.status) &&
+        value.status >= 200 && value.status < 300 && object(value.data)) {
+      queue.push(value.data);
     }
     if (object(value.structuredContent)) queue.push(value.structuredContent);
     if (typeof value.content === "string") {
@@ -70,7 +77,7 @@ function refView(ref) {
   return { ref: ref.ref, sha: ref.sha, repository };
 }
 
-/** Project one retained native response. No provider call or source mutation. */
+/** Project one retained connected response. No provider call or source mutation. */
 function projectGitHubPullRequest(response) {
   const payload = decodePullRequest(response);
   if (typeof payload.title !== "string" || typeof payload.state !== "string") {
@@ -93,8 +100,8 @@ function projectGitHubPullRequest(response) {
   };
 }
 
-/** Read one PR through the existing native REST binding. Never retries or merges. */
-async function readGitHubPullRequest(tools, input) {
+/** Read one PR through the caller-selected REST binding. Never retries or merges. */
+async function readGitHubPullRequest(tools, input, options = {}) {
   if (!object(input) || Object.keys(input).some(key =>
     key !== "repository_full_name" && key !== "pr_number")) {
     throw new TypeError("input supports repository_full_name and pr_number");
@@ -107,11 +114,20 @@ async function readGitHubPullRequest(tools, input) {
   if (!Number.isSafeInteger(number) || number < 1) {
     throw new TypeError("pr_number must be a positive safe integer");
   }
-  if (!tools || typeof tools[FETCH] !== "function") {
-    throw new TypeError("the native " + FETCH + " action is not available");
+  if (!object(options) || Object.keys(options).some(key => key !== "transport")) {
+    throw new TypeError("options supports only transport");
   }
-  const url = "https://api.github.com/repos/" + repository.split("/")
+  const transport = options.transport ?? "native";
+  if (transport !== "native" && transport !== "token") {
+    throw new TypeError("transport must be native or token");
+  }
+  const binding = transport === "token" ? TOKEN_READ : FETCH;
+  if (!tools || typeof tools[binding] !== "function") {
+    throw new TypeError("the connected " + binding + " action is not available");
+  }
+  const path = "/repos/" + repository.split("/")
     .map(encodeURIComponent).join("/") + "/pulls/" + number;
+  const url = "https://api.github.com" + path;
   const started = Date.now();
   const result = {
     schema: "commons.connected_github_pr_state/v1",
@@ -122,8 +138,13 @@ async function readGitHubPullRequest(tools, input) {
     pr: null,
     response: null,
   };
+  if (transport === "token") {
+    result.request.transport = transport;
+    result.request.binding = binding;
+    result.request.path = path;
+  }
   try {
-    result.response = await tools[FETCH]({ url });
+    result.response = await tools[binding](transport === "token" ? { path } : { url });
   } catch (error) {
     result.status = "TOOL_ERROR";
     result.error = { message: error instanceof Error ? error.message : String(error) };
@@ -149,3 +170,4 @@ async function readGitHubPullRequest(tools, input) {
 }
 
 module.exports = Object.freeze({ projectGitHubPullRequest, readGitHubPullRequest });
+
