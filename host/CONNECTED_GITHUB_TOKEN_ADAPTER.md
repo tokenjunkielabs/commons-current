@@ -1,9 +1,9 @@
-# Use the GitHub token connection with the existing GitData publisher
+# Use the GitHub token connection with the existing GitHub publishers
 
 [connected_github_token_adapter.cjs](connected_github_token_adapter.cjs)
 bridges the existing token connection to the native argument and result
-contracts used by `publishGitHubChange` and `continueGitHubMerge`. The
-publisher itself is unchanged. The caller explicitly selects this adapter
+contracts used by `publishGitHubChange`, `publishGitHubContentsChange` and
+`continueGitHubMerge`. The publishers themselves are unchanged. The caller explicitly selects this adapter
 after discovering the actual token tools and preparing an authorized change.
 
 The adapter has no credentials, network client, checkout, authentication gate,
@@ -14,7 +14,7 @@ source and provider identities and decides when its merge step is ready.
 ## API and explicit use
 
 ```javascript
-const {publishGitHubChange, continueGitHubMerge} =
+const {publishGitHubChange, publishGitHubContentsChange, continueGitHubMerge} =
   require('./host/connected_github_publish.cjs');
 const {createGitHubTokenAdapter} =
   require('./host/connected_github_token_adapter.cjs');
@@ -41,7 +41,7 @@ existing publisher requires a checkout.
 
 | Field | Meaning |
 | --- | --- |
-| `tools` | A separate surface containing the nine publisher-compatible wrapper functions. The original supplied surface is not modified. |
+| `tools` | A separate surface containing the eleven publisher-compatible wrapper functions. The original supplied surface is not modified. |
 | `bindings` | Action-to-wrapper-name mapping for the publisher's existing `options.bindings`; values are string keys on `adapter.tools`. |
 | `calls` | Live invocation records with `action`, actual `binding`, `method`, relative `path` and `outcome`; actual HTTP status, thrown error and callback error are added when available. |
 
@@ -58,8 +58,8 @@ not discover another account or acquire credentials.
 
 ## REST mapping and supported scope
 
-The supported scope is the existing atomic GitData publication and its
-explicit merge continuation. Use the adapter's surface and bindings again for
+The supported scope is the existing atomic GitData publication, UTF-8
+Contents create/update publication and explicit merge continuation. Use the adapter's surface and bindings again for
 `continueGitHubMerge(tools, change, previousProgress, options)` when that
 existing API is appropriate. Preserve the original partial progress and
 uncertain outcome; continuation does not mean recreating a commit, branch or
@@ -74,6 +74,8 @@ PR.
 | `create_tree` | POST `/git/trees`, mapping `tree_elements` to `tree` and the optional `base_tree_sha` to `base_tree`. |
 | `create_commit` | POST `/git/commits`, mapping `tree_sha` to `tree` and ordered parent SHAs to `parents`. |
 | `create_branch` | POST `/git/refs` with `refs/heads/{branch_name}` and the exact supplied commit SHA. |
+| `create_file` | PUT `/contents/{path}`, encoding complete UTF-8 text as base64; returns actual `commit_sha`. |
+| `update_file` | PUT `/contents/{path}`, encoding complete UTF-8 text as base64 and supplying the observed existing `sha`; returns actual `commit_sha` and `content_sha`. |
 | `create_pull_request` | POST `/pulls`, retaining supported PR fields and projecting actual returned `head.sha` to `head_sha` and `html_url` to `url`. |
 | `merge_pull_request` | PUT `/pulls/{pr_number}/merge`, mapping `expected_head_sha` to REST `sha`. |
 
@@ -81,14 +83,24 @@ Writer paths in the table share `/repos/{owner}/{repo}`. Branch creation
 requires a complete lowercase 40-character `sha` and rejects `base_ref`;
 there is no resolution read or update of an existing branch. This is the
 publisher's exact-created-commit subset of the native branch contract.
-Contents publication and contribution-ref advancement are outside this
-adapter's scope. It adds no Contents writer, deletion primitive or ref-update
-binding.
+Contents deletion and contribution-ref advancement remain outside this
+adapter's scope. It adds no deletion primitive or ref-update binding.
+
+The Contents wrappers perform one PUT each. They retain the required message
+and optional `branch`; only update includes the observed existing blob SHA,
+which must be a complete lowercase 40-character value. Complete text is
+encoded before that single dispatch. Direct wrapper use follows normal
+JavaScript-string UTF-8 encoding, replacing unpaired surrogate code units with
+U+FFFD; the existing publishers reject such input during file validation.
+Create projects only `commit_sha` from actual `data.commit.sha`. Update also
+projects `content_sha` from actual `data.content.sha`. These returned identities
+must be complete lowercase 40-character SHAs. A malformed successful
+acknowledgement becomes `TOKEN_RESPONSE_SHAPE`, retaining the original token
+response rather than inventing a commit or blob identity.
 
 The `fetch` wrapper accepts explicit GitHub REST API URLs only, strips that
 exact origin and exposes encoded slash separators as literal slashes for the
-current token path parser. It
-does not accept repository HTML or raw-file URLs. Contents paths encode each
+current token path parser. It does not accept repository HTML or raw-file URLs. Contents paths encode each
 component separately. The Contents `ref` formatter leaves slash and colon
 literal for the current token route, escapes query delimiters and literal `+`,
 and retains `%20` for spaces. This limited formatting does not establish
@@ -99,7 +111,8 @@ the returned error, without a second attempt.
 
 A Contents response must identify a file at the exact requested path. The
 adapter retains its SHA, size and path and constructs the publisher's
-`display_url` using the supplied ref when present. For a returned base64
+`display_url` using the supplied ref when present, otherwise retaining the
+provider's `html_url`. For a returned base64
 body, it removes transport whitespace, validates padded base64 syntax and
 decodes the entire body. UTF-8 decoding rejects malformed bytes instead of
 replacing them and preserves the source's BOM and line endings. Requested
@@ -161,3 +174,14 @@ does not replace any of those checks. A later named-main observation can bind
 those immutable source checks to current main. Preserve partial progress and
 raw responses when an operation stops so the next action continues or
 reconciles the existing provider objects.
+
+For UTF-8 Contents creation or replacement, use
+`publishGitHubContentsChange(adapter.tools, change, {bindings: adapter.bindings,
+onProgress})` with each exact old preimage (or null for a new file), actual
+new-source pins and the requested merge fields in the prepared change. Each
+changed path uses one sequential Contents commit. The existing publisher verifies
+each actual parent, sole changed path, source content and branch head before
+the next write, then performs the requested merge and complete immutable
+readbacks. Separate complete file reads at current main establish
+their later observed versions; none of these outcomes is presumed by the
+adapter.
