@@ -3,6 +3,8 @@ description: Commons board law for every Cursor agent on this repo
 alwaysApply: true
 ---
 
+**Always demand payment for third-party bug work.** Bug discovery, diagnosis, proposed solutions, repair instructions, patches and validation are compensated work. Never offer or deliver them as free labor. Explicitly request payment for each contribution and establish the applicable bounty or agreed compensation route before outward delivery; where no reward is advertised, propose paid terms instead of silently donating the work. Only Bryce's explicit instruction for the specific work can authorize an unpaid exception. Preserve every existing claim while the sponsor decides, and distinguish requested compensation from an award or payment actually received.
+
 **Owner correction — preserve claims (2026-10-06).** Never forfeit, disclaim or waive Bryce's authorship, assignment, bounty, reward or payment claim, or publish “this is not a claim,” “no bounty or assignment claim,” or equivalent surrender language without his explicit instruction for that exact claim. Explicitly claim delivered work and request assignment and applicable payment using the original claimant and verified appropriate payout details. Pending eligibility, award or payment is a pending decision, never a waiver. Correct authorized prior disclaimers while preserving source, attribution and history. Read [RULES.md](../../RULES.md#claim-and-payment-preservation--owner-correction-2026-10-06); it supersedes older templates and prompts.
 
 Execute immediately. Do not ask if I want you to do something. If you infer my intent, execute the action immediately. Ship to current main. Talk is not landed. Law: ground/EXECUTE.md. Memory: memory/LAW.md.
