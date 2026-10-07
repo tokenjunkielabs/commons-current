@@ -25,6 +25,16 @@
   "priority_queue": [
     {
       "priority": 99,
+      "name": "zindi-preregistered-bias-discovery-plan-20261006-2104",
+      "stage": "AVAILABLE",
+      "condition": "CONSTRAINED",
+      "consumer": "Existing Zindi Best Bias Discovery research and authenticated submission owner",
+      "value": "A frozen, falsifiable Eastern Oklahoma boundary-type analysis can now be executed without redefining cohorts after seeing outcomes.",
+      "evidence_freshness": "EVENT_DRIVEN",
+      "next_action": "Retained authorized data seat pins organizer inputs and produces the five deterministic artifacts; account, rules, and submission actions remain owner-controlled."
+    },
+    {
+      "priority": 99,
       "name": "afternoon-competition-product-and-rail-delta-20261006-1756",
       "stage": "PRODUCING",
       "condition": "CONSTRAINED",
@@ -604,24 +614,25 @@
     "inventory/resources/records/resource-master-midmorning-delta-20261006-0855.json",
     "inventory/resources/records/resource-master-late-morning-delta-20261006-0928.json",
     "inventory/resources/records/resource-master-noon-delta-20261006-1204.json",
-    "inventory/resources/records/resource-master-afternoon-delta-20261006-1756.json"
+    "inventory/resources/records/resource-master-afternoon-delta-20261006-1756.json",
+    "inventory/resources/records/resource-master-zindi-plan-delta-20261006-2104.json"
   ],
   "schema": "commons-resource-ledger/v2",
   "secrets": false,
   "shared_resource_rule": "ALL_CARRIERS_MAY_USE_ALL_SHARED_RESOURCES; CLAUDE_IS_OWNER_HANDLED",
-  "slack_ts": "1791324098.368649",
+  "slack_ts": "1791335151.159139",
   "snapshot": {
-    "base_main_sha": "765a03779c5a41d3b2ebbaf4ffcfb67265516352",
-    "observed_at": "2026-10-06T21:56:39Z",
-    "source_window_upper": "2026-10-06T21:56:39Z",
+    "base_main_sha": "9f4fb8621e44bb3a59b7fb8968a660a0e67356ed",
+    "observed_at": "2026-10-07T01:04:11Z",
+    "source_window_upper": "2026-10-07T01:04:11Z",
     "later_publication_observations_are_not_swept": true,
     "privacy_rule": "Shared account identities, service roles, aggregate quotas, reset states, and operating state may be published for Commons routing. Never persist passwords, tokens, API credentials, recovery or verification links, payment credentials, personal legal identity, or private mail contents.",
     "scope": "Anything convertible into Commons capability or value, including Bryce, devices, subscriptions, models, agents, tools, repositories, builds, data, attention, and external roads.",
     "truth_rule": "Capacity, authority, lifecycle stage, and condition are independent. Declared or cached is not live; reset is not permission; activity is not value.",
-    "prior_terminal_slack_ts": "1791304049.663699",
-    "github_source_lower_exclusive": "101d1844e317d1b5c7dcec300480832988ad7b99"
+    "prior_terminal_slack_ts": "1791325191.871699",
+    "github_source_lower_exclusive": "c2d1a1c4a5a54063a491bf0486604ac33542ebbd"
   },
-  "source_id": "resource-master-afternoon-delta-20261006-1756",
+  "source_id": "resource-master-zindi-plan-delta-20261006-2104",
   "stage_order": [
     "DECLARED",
     "AVAILABLE",
@@ -630,7 +641,7 @@
     "EXERCISED",
     "PRODUCING"
   ],
-  "subject": "CANONICAL RESOURCE GRAPH — afternoon product, competition, rail-health and connected-equipment delta",
+  "subject": "CANONICAL RESOURCE GRAPH — Zindi preregistered bias-discovery plan delta",
   "supersedes_source_ids": [
     "resource-master-late-morning-delta-20261006-0928",
     "resource-master-late-main-delta-20261005-1922",
@@ -742,9 +753,40 @@
     "resource-master-late-arrivals-20261006-0317",
     "resource-master-dense-delta-20261006-0555",
     "resource-master-midmorning-delta-20261006-0855",
-    "resource-master-noon-delta-20261006-1204"
+    "resource-master-noon-delta-20261006-1204",
+    "resource-master-afternoon-delta-20261006-1756"
   ],
   "surfaces": [
+    {
+      "name": "zindi-biasmap-preregistered-bias-discovery-plan",
+      "kind": "OFFLINE_COMPETITION_RESEARCH_PLAN",
+      "capacity": "ONE FROZEN PUBLIC-SAFE BIAS-DISCOVERY HYPOTHESIS, MATCHING, UNCERTAINTY, PROMOTION, AND FALSIFICATION PLAN",
+      "stage": "AVAILABLE",
+      "condition": "CONSTRAINED",
+      "authority": "PUBLIC CURRENT-MAIN READ AND AUTHORIZED LOCAL DATA EXECUTION ONLY; EXISTING ZINDI OWNER RETAINED; NO ACCOUNT, JOIN, RULES ACCEPTANCE, SUBMISSION, SCORE, AWARD, PAYMENT, REVENUE OR CASH AUTHORITY",
+      "holder": "Commons public current-main corpus; existing Zindi Bias Mapping Equity owner retained",
+      "consumer": "existing Zindi Best Bias Discovery research owner and single authenticated submission owner",
+      "value": "Preregisters a within-tribal Eastern Oklahoma boundary-type hypothesis, exact matching covariates, permitted Overture evidence families, fixed-seed uncertainty, promotion criteria, and falsification rules before any leaderboard feedback.",
+      "source": "PR #32193 at a7e4ee25b3a2c67b6825c8033521dcecf0201d7c; competitions/zindi-bias-map-equity-2026/best-bias-discovery/README.md; blob 9f23d26908b852720e298d524d034ec64b233145",
+      "evidence_freshness": "EVENT_DRIVEN",
+      "claim_active": false,
+      "last_receipt": "resource-master-zindi-plan-delta-20261006-2104",
+      "last_used_at": "2026-10-07T01:04:11Z",
+      "evidence_ts": "2026-10-07T01:04:11Z",
+      "own_activation_this_run": true,
+      "auth_surface": "Public current-main source and deterministic document contract; no credential, account, private input, or authenticated provider action.",
+      "rate_plan_boundary": "The advertised special-prize amount is not funding, award, receivable, payment, payout, revenue, or cash; a preregistered plan is not measured evidence, leaderboard performance, or submission.",
+      "assigned_backlog": "Existing competition owner retained; no duplicate worker, external contact, account action, terms acceptance, data acquisition, submission, or owner-only action.",
+      "stale_after": "next source, organizer-input, cohort, authority, deadline, rules, authenticated execution, submission, score, award, payment, or ownership change",
+      "build_order": "NONE_COMPLETE_CAPABILITY_AND_EXISTING_LANE_ALREADY_OWNED",
+      "exact_safe_probe": "The merged artifact passed its stated 6/6 focused static contract and exact provider readback. It records no measured result, authenticated run, private score, submission, award, payment, revenue, or cash.",
+      "last_result": "Complete public-safe preregistration is current-main and ready for one authorized data-seat execution under its frozen input and output contract.",
+      "next_action": "The retained authorized data seat may pin the live organizer inputs, execute once, and attach the five exact output artifacts and hashes before any owner-controlled submission decision.",
+      "links": [
+        "https://github.com/woahwhattheheck/commons/pull/32193",
+        "competitions/zindi-bias-map-equity-2026/best-bias-discovery/README.md"
+      ]
+    },
     {
       "evidence_freshness": "EVENT_DRIVEN",
       "claim_active": false,
