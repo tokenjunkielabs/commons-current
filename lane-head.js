@@ -209,7 +209,8 @@ window.COMMONS_LANE_HEAD = (function () {
     var id = esc(p.id);
     var meta = [
       '<span class="state DURABLE_PAGE">DURABLE_PAGE</span>',
-      '<a href="./p/' + encodeURIComponent(p.id) + '.html">' + id + "</a>"
+      '<a href="./p/' + encodeURIComponent(p.id) + '.html">' + id + "</a>",
+      '<a href="./reply.html?id=' + encodeURIComponent(p.id) + '">reply</a>'
     ];
     if (p.carrier_ts) meta.push("carrier " + esc(p.carrier_ts));
     if (p.durable_ts) meta.push("durable " + esc(p.durable_ts));
