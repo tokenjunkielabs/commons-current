@@ -48,6 +48,19 @@ Open the local URL printed in the terminal. The browser is a real operator surfa
 
 The page deliberately has no login and no token check. The operator selects one of the declarations already present in the fictional bundle; that selection is not authentication. `/meta` exposes role and clearance declarations without document bodies, `/query` executes the existing authorization-before-retrieval path, and `/audit` returns and verifies the current in-memory audit chain.
 
+### Export a digest-bound AI context packet
+
+The context command runs the same query engine, copies only the already-authorized result evidence into `internal-brain-ai-context/v1`, binds it to the query receipt, and adds explicit downstream constraints. It does not call a model or widen the selected actor's scope.
+
+```bash
+python -B -m internal_brain.assistant_context build \
+  demo_bundle.json demo_query_finance.json \
+  --out finance-context.json
+python -B -m internal_brain.assistant_context verify finance-context.json
+```
+
+The output is created exclusively. Its `source_result_receipt_sha256` binds the query receipt; `packet_sha256` binds the complete context packet. `NO_AUTHORIZED_MATCH` produces an empty evidence list with `abstain_when_no_authorized_match: true`. Authorized results retain document IDs, snippets, citations, content/document digests and untrusted-instruction markers. The browser `/query` response includes the same verified packet beside the ordinary receipt.
+
 ## Run the fictional operator session
 
 `demo_operations.json` supplies eight ordered operations:

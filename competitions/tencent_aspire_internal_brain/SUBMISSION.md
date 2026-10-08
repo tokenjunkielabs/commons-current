@@ -29,7 +29,7 @@ The retained audit chain captures supported decisions in order. The replay comma
 | --- | --- |
 | Relevance | Implements the requested enterprise knowledge workflow with RBAC, security logging and audit history. |
 | Human-centric design | The browser makes scoped context, authorization decisions, citations and recorded outcomes directly inspectable. |
-| Use of AI | The lexical engine supplies a governed, authorized-evidence layer for an AI assistant. Actual Tencent-product use is recorded separately after it occurs. |
+| Use of AI | The engine emits a digest-bound `internal-brain-ai-context/v1` packet containing only already-authorized, citation-backed evidence plus explicit abstention and scope constraints. Actual Tencent-product use is recorded separately after it occurs. |
 | Technical execution | Includes executable Python workflows, a real browser demo, structured fictional input, replay and retained evidence. |
 | Feasibility | Runs locally and defines integration points for enterprise identity, knowledge and observability systems. |
 | Responsible AI practices | Keeps role-aware context, denials, untrusted-text markers, operator visibility and a digest-linked audit trail explicit. |
@@ -76,6 +76,19 @@ printf 'Replay exit status: %s\n' "$replay_rc"
 ```
 
 Use unused output names on a later demonstration; existing files and input aliases are refused. Retain the run's `artifact_sha256` separately if an independent replay comparison is needed, and provide it through `--expected-artifact-sha256 HEX`. This digest covers canonical JSON excluding its own field; it is not a checksum of the formatted file bytes. Optional `verify-audit` checkpoints are `--expected-head-digest HEX` and `--expected-event-count N`, using the original summary's `audit_head_digest` and `audit_event_count`. Record values from the actual run rather than copying an illustrative digest or count.
+
+### AI context-packet handoff
+
+For an AI-assistant demonstration, run the finance query through the context builder and retain the verified packet:
+
+```bash
+python -B -m internal_brain.assistant_context build \
+  demo_bundle.json demo_query_finance.json \
+  --out submission-context.json
+python -B -m internal_brain.assistant_context verify submission-context.json
+```
+
+Show that `source_result_receipt_sha256` binds the query result, `packet_sha256` verifies the complete packet, evidence remains citation-backed, and downstream constraints require evidence-only use without widening the selected actor's scope. Repeat with an employee query for `finance-plan` to show an empty abstention packet rather than restricted evidence.
 
 ## Materials to retain for owner review
 
