@@ -64,6 +64,16 @@ def classify(snapshot: Dict[str, Any]) -> Dict[str, Any]:
     history_claims: List[Dict[str, str]] = snapshot["history"]["claims"]
     material = [row for row in history_claims if _same_target(row, target)]
     material.sort(key=lambda row: (parse_slack_ts(row["message_ts"], "message_ts"), row["author_id"], row["seat_id"]))
+    # Exact search only indexes the requested digest. The complete channel
+    # census must also expose other digests for this SAME work key and role:
+    # differing scope descriptions must not silently authorize two writers.
+    scope_conflicts = [
+        row for row in history_claims
+        if row["work_key"] == target["work_key"]
+        and row["role"] == target["role"]
+        and row["scope_digest_sha256"] != target["scope_digest_sha256"]
+    ]
+    scope_conflicts.sort(key=lambda row: (parse_slack_ts(row["message_ts"], "message_ts"), row["author_id"], row["seat_id"]))
     history_by_message = {message_key(row): row for row in material}
     search_matches: List[Dict[str, str]] = snapshot["search"]["matches"]
     search_by_message = {message_key(row): row for row in search_matches}
@@ -106,6 +116,10 @@ def classify(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         status = "HOLD_INDEX_DIVERGENCE"
         next_action = "WAIT_INDEX_CONVERGENCE"
         reason = "full history contains materially-same claims missing from exact search results"
+    elif scope_conflicts:
+        status = "HOLD_SCOPE_DIGEST_CONFLICT"
+        next_action = "RECONCILE_SCOPE_OWNERSHIP"
+        reason = "full history contains another TAKE for the same work key and role with a different scope digest"
     elif candidate_is_earliest:
         status = "CANDIDATE_VISIBLE_EARLIEST"
         next_action = "PROCEED_TO_SEPARATE_MUTATION_FENCE"
@@ -124,6 +138,8 @@ def classify(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "index_divergence": bool(search_missing),
         "history_search_mismatch": bool(search_extra),
         "material_history_claim_count": len(material),
+        "scope_digest_conflict_count": len(scope_conflicts),
+        "scope_digest_conflict_message_ts": [row["message_ts"] for row in scope_conflicts],
         "search_match_count": len(search_matches),
         "search_missing_message_ts": [key[1] for key in search_missing],
         "search_extra_message_ts": [key[1] for key in search_extra],
@@ -145,6 +161,8 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"- Candidate earliest: `{str(c['candidate_is_earliest']).lower()}`",
         f"- Index divergence: `{str(c['index_divergence']).lower()}`",
         f"- History/search mismatch: `{str(c['history_search_mismatch']).lower()}`",
+        f"- Same-work scope conflicts: `{c['scope_digest_conflict_count']}`",
+        f"- Scope-conflict message timestamps: `{', '.join(c['scope_digest_conflict_message_ts']) or 'none'}`",
         f"- Next action: `{c['recommended_next_action']}`",
         "",
         c["reason"],
