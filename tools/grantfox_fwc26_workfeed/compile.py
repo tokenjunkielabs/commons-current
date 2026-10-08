@@ -83,6 +83,7 @@ class Candidate:
     open_pull_requests: tuple[str, ...]
     coordination_owners: tuple[str, ...]
     observed_at: str | None
+    repository_archived: bool | None
     status: str
     reward_class: str
     explicit_reward_mentions: tuple[str, ...]
@@ -105,6 +106,7 @@ class Candidate:
             "open_pull_requests": list(self.open_pull_requests),
             "coordination_owners": list(self.coordination_owners),
             "observed_at": self.observed_at,
+            "repository_archived": self.repository_archived,
             "status": self.status,
             "reward_class": self.reward_class,
             "explicit_reward_mentions": list(self.explicit_reward_mentions),
@@ -276,6 +278,13 @@ def classify(record: dict[str, Any], *, fresh_after: str | None = None) -> Candi
     observed_claimants = _observed_claimants(record)
     open_pull_requests = _open_pull_requests(record)
     coordination_owners = _coordination_owners(record)
+    archive_fields = [name for name in ("repository_archived", "repo_archived") if name in record]
+    for name in archive_fields:
+        if record[name] is not None and type(record[name]) is not bool:
+            raise WorkfeedError(f"{key}: {name} must be a boolean or null")
+    if len(archive_fields) == 2 and record["repository_archived"] is not record["repo_archived"]:
+        raise WorkfeedError(f"{key}: conflicting repository archive evidence")
+    repository_archived = record[archive_fields[0]] if archive_fields else None
     observed_at_value = record.get("observed_at", record.get("snapshot_observed_at"))
     observed_at_dt = _parse_iso8601(observed_at_value, f"{key}: observed_at")
     fresh_after_dt = _parse_iso8601(fresh_after, "fresh_after") if fresh_after else None
@@ -308,6 +317,9 @@ def classify(record: dict[str, Any], *, fresh_after: str | None = None) -> Candi
     elif missing:
         status = "INELIGIBLE"
         reason = "missing required campaign labels: " + ", ".join(sorted(missing))
+    elif repository_archived is True:
+        status = "REPOSITORY_ARCHIVED"
+        reason = "repository is archived and cannot accept new pull requests"
     elif stale_evidence:
         status = "STALE_EVIDENCE"
         if observed_at_dt is None:
@@ -348,6 +360,7 @@ def classify(record: dict[str, Any], *, fresh_after: str | None = None) -> Candi
         open_pull_requests=open_pull_requests,
         coordination_owners=coordination_owners,
         observed_at=str(observed_at_value) if observed_at_value not in (None, "") else None,
+        repository_archived=repository_archived,
         status=status,
         reward_class=reward_class,
         explicit_reward_mentions=explicit_mentions,
@@ -375,7 +388,8 @@ def compile_records(records: Iterable[dict[str, Any]], *, fresh_after: str | Non
         "CLAIMED_OR_PR_OPEN": 3,
         "ASSIGNED": 4,
         "STALE_EVIDENCE": 5,
-        "INELIGIBLE": 6,
+        "REPOSITORY_ARCHIVED": 6,
+        "INELIGIBLE": 7,
     }
     candidates.sort(
         key=lambda c: (
@@ -408,6 +422,7 @@ def render_markdown(candidates: Iterable[Candidate]) -> str:
         f"- CLAIMED_OR_PR_OPEN: {counts.get('CLAIMED_OR_PR_OPEN', 0)}",
         f"- ASSIGNED: {counts.get('ASSIGNED', 0)}",
         f"- STALE_EVIDENCE: {counts.get('STALE_EVIDENCE', 0)}",
+        f"- REPOSITORY_ARCHIVED: {counts.get('REPOSITORY_ARCHIVED', 0)}",
         f"- INELIGIBLE: {counts.get('INELIGIBLE', 0)}",
         "",
         "## Queue",
