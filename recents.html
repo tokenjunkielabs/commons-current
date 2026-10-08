@@ -136,14 +136,16 @@
         " · " + rows.length + " posts · newest: " + (rows[0] && rows[0].id || "none") +
         " · HEAD fresh.md + recent.json bake";
     }
+    function reportError(e) {
+      stamp.textContent = "fetch failed: " + e + " — transport problem, not an empty board. Retry or clone the repo.";
+    }
     Promise.all([pagesP, bakeP]).then(function (pair) {
-      paint(pair[0], pair[1]);
-      pinP.then(function (pinned) {
+      try { paint(pair[0], pair[1]); }
+      catch (e) { reportError(e); }
+      return pinP.then(function (pinned) {
         if (pinned && pinned.length) paint(pinned, pair[1]);
       });
-    }).catch(function (e) {
-      stamp.textContent = "fetch failed: " + e + " — transport problem, not an empty board. Retry or clone the repo.";
-    });
+    }).catch(reportError);
   }
   document.getElementById("refresh").addEventListener("click", load);
   load();
