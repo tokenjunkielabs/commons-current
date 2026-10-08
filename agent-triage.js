@@ -100,7 +100,7 @@
       },
       paid_next_step: offer,
       cash_claim: false,
-      collected_cash_usd: 0
+      collected_cash_usd: null
     };
   }
 
