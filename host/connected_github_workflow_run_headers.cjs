@@ -74,10 +74,10 @@ function withheld(row, key, path) {
     withheld: true};
 }
 
-/** Project one retained native fetch_commit_workflow_runs envelope; no calls. */
+/** Project retained native or successful token workflow-run metadata; no calls. */
 function projectGitHubWorkflowRunHeaders(response, options) {
   const {limits, selected: requested} = optionsOf(options);
-  const sourcePath = ["structuredContent", "workflow_runs"];
+  let sourcePath = ["structuredContent", "workflow_runs"];
   const base = {schema: SCHEMA, status: null, limits: {...limits},
     source: {representation: "native_commit_workflow_runs", source_path: sourcePath,
       range_unit: "utf16_code_units", range_end: "exclusive"},
@@ -97,10 +97,25 @@ function projectGitHubWorkflowRunHeaders(response, options) {
       (Number.isInteger(payload.status) && payload.status >= 400)) {
     return refuse("PROVIDER_ERROR", "PROVIDER_ERROR_PAYLOAD");
   }
+  let runsPayload = payload;
   if (!Array.isArray(payload.workflow_runs)) {
-    return refuse("UNSUPPORTED_REPRESENTATION", "EXPECTED_NATIVE_WORKFLOW_RUNS");
+    if (payload.ok !== true || !Number.isInteger(payload.status) ||
+        payload.status < 200 || payload.status >= 300 || !object(payload.data)) {
+      return refuse("UNSUPPORTED_REPRESENTATION", "EXPECTED_NATIVE_WORKFLOW_RUNS");
+    }
+    runsPayload = payload.data;
+    sourcePath = ["structuredContent", "data", "workflow_runs"];
+    base.source = {...base.source, representation: "token_repository_workflow_runs",
+      source_path: sourcePath};
+    if (runsPayload.isError === true || runsPayload.ok === false || own(runsPayload, "error") ||
+        (Number.isInteger(runsPayload.status) && runsPayload.status >= 400)) {
+      return refuse("PROVIDER_ERROR", "PROVIDER_ERROR_PAYLOAD");
+    }
+    if (!Array.isArray(runsPayload.workflow_runs)) {
+      return refuse("UNSUPPORTED_REPRESENTATION", "EXPECTED_TOKEN_WORKFLOW_RUNS");
+    }
   }
-  const rows = payload.workflow_runs;
+  const rows = runsPayload.workflow_runs;
   if (rows.length > limits.max_input_runs) {
     return refuse("INPUT_LIMIT", "RUNS_LIMIT", {observed: rows.length, maximum: limits.max_input_runs});
   }
@@ -181,7 +196,7 @@ function projectGitHubWorkflowRunHeaders(response, options) {
       returned_metadata_chars: metadataChars, metadata_omitted_fields: omittedMetadata,
       all_selected_metadata_included: omittedMetadata.length === 0,
       retained_head_sha_fields: rows.filter(row => own(row, "head_sha")).length,
-      total_count_present: own(payload, "total_count")}};
+      total_count_present: own(runsPayload, "total_count")}};
 }
 
 module.exports = {projectGitHubWorkflowRunHeaders, SCHEMA, DEFAULTS};

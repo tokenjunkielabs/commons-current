@@ -1,17 +1,21 @@
-# Project retained native workflow-run headers
+# Project retained native and token workflow-run headers
 
 `host/connected_github_workflow_run_headers.cjs` exports the pure function
-`projectGitHubWorkflowRunHeaders(response, options?)`. Pass the original native
-`github_fetch_commit_workflow_runs` MCP response, retained privately with its
-exact request. The supported input is `response.structuredContent.workflow_runs[]`.
-Generic REST payloads, token wrappers and JSON text-block fallbacks are outside
-this input contract. The helper makes no provider calls and does not change,
-sort or deduplicate the response.
+`projectGitHubWorkflowRunHeaders(response, options?)`. Pass an original supported
+MCP response, retained privately with its exact request. Native input uses
+`response.structuredContent.workflow_runs[]`. A successful token response uses
+`response.structuredContent.data.workflow_runs[]`, with `structuredContent.ok`
+exactly `true`, integer HTTP `status` from 200 through 299 and object `data`.
+Plain REST objects and JSON text-block fallbacks remain outside this contract.
+The helper makes no provider calls and does not change, sort or deduplicate the
+response. If native `workflow_runs[]` is present, that existing shape has priority.
 
 The native action advertises PR-triggered runs from the first page. Projection
 does not verify that filtering, the requested head, page coverage or CI success.
-Use the existing workflow finder when its separate search contract is needed;
-this projector does not change that helper.
+Record the token GET path and selectors beside its original response; the token
+shape does not prove which request produced it. Use the existing workflow finder
+when its separate search contract is needed; this projector does not change that
+helper, choose a transport or issue a follow-up request.
 
 ## Use a retained response
 
@@ -28,7 +32,16 @@ const view = projectGitHubWorkflowRunHeaders(retainedNativeWorkflowRunsResponse,
 });
 ```
 
-Keep the complete native response private beside the bounded view. No job,
+The same function and options accept an original successful token response:
+
+```js
+const tokenView = projectGitHubWorkflowRunHeaders(retainedTokenWorkflowRunsResponse, {
+  max_runs: 2,
+  max_metadata_chars: 400
+});
+```
+
+Keep the complete original response private beside the bounded view. No job,
 step, log or other body content is fetched or expanded by this call.
 
 ## Options and selection
@@ -55,16 +68,22 @@ All supplied rows are validated before selection, including omitted rows.
 The input-count and per-header bounds do not impose a total serialized-input,
 output-byte or token ceiling.
 
-## Native values, paths and metadata budget
+## Source values, paths and metadata budget
 
-The view uses schema `commons.connected_github_workflow_run_headers/v1`,
-`source.representation: "native_commit_workflow_runs"` and
-`source.source_path: ["structuredContent", "workflow_runs"]`. Each selected run
-retains its exact `source_index`, array-form `source_path` and native `id`.
-`metadata_source_paths` locates every included field, for example
-`["structuredContent", "workflow_runs", 1, "conclusion"]`.
+The view keeps schema `commons.connected_github_workflow_run_headers/v1`.
 
-| Native field | Accepted value when supplied |
+| Supported shape | `source.representation` | `source.source_path` |
+| --- | --- | --- |
+| Native commit workflow runs | `native_commit_workflow_runs` | `["structuredContent", "workflow_runs"]` |
+| Successful token repository workflow runs | `token_repository_workflow_runs` | `["structuredContent", "data", "workflow_runs"]` |
+
+Each selected run retains its exact `source_index`, array-form `source_path` and
+supplied `id`. Every metadata and withheld-field path starts from the selected
+shape. For example, a token conclusion path is
+`["structuredContent", "data", "workflow_runs", 1, "conclusion"]`. The complete
+native projection remains unchanged.
+
+| Run field | Accepted value when supplied |
 | --- | --- |
 | `id` | Required positive safe integer or a positive decimal digit string without leading zeroes; original numeric/string type is preserved. |
 | `status`, `conclusion`, `name`, `jobs_url`, `logs_url`, `html_url`, `head_sha`, `head_branch`, `event`, `path`, `created_at`, `updated_at`, `run_started_at` | String or null, copied literally when the metadata budget allows. |
@@ -109,7 +128,8 @@ indices/ranges, returned metadata characters and omitted fields.
 optional fields may still be omitted. `all_selected_metadata_included`
 separately reports budget omissions. `retained_head_sha_fields` counts supplied
 own `head_sha` fields, including null; `total_count_present` only records whether
-the payload has that own field, without copying or validating its value.
+the selected run payload has that own field, without copying or validating its
+value. For token input this is `structuredContent.data`, not the outer wrapper.
 
 Scope remains `retained_response_only`, `snapshot: false`. Provider completeness,
 pagination, requested-head verification, filter application, an all-workflow
@@ -123,8 +143,8 @@ Returned refusals contain no projected runs and expose `status` and `issue.code`
 
 | Status | Codes and conditions |
 | --- | --- |
-| `UNSUPPORTED_REPRESENTATION` | `EXPECTED_CALL_TOOL_RESULT` for non-object input; `EXPECTED_NATIVE_WORKFLOW_RUNS` for an unsupported structured shape; `INVALID_RUN_ID`, `INVALID_HEADER_FIELD`, `INVALID_WORKFLOW_ID` or `INVALID_RUN_NUMBER` for invalid native fields. An overlong supplied `workflow_id` also uses `INVALID_WORKFLOW_ID`. |
-| `PROVIDER_ERROR` | `PROVIDER_ERROR_ENVELOPE` for root `isError: true`; `PROVIDER_ERROR_PAYLOAD` for structured `isError: true`, `ok: false`, any own `error` property, or integer `status >= 400`. |
+| `UNSUPPORTED_REPRESENTATION` | `EXPECTED_CALL_TOOL_RESULT` for non-object input; `EXPECTED_NATIVE_WORKFLOW_RUNS` for an unsupported structured shape or `EXPECTED_TOKEN_WORKFLOW_RUNS` for recognized successful token `data` without a run array; `INVALID_RUN_ID`, `INVALID_HEADER_FIELD`, `INVALID_WORKFLOW_ID` or `INVALID_RUN_NUMBER` for invalid run fields. An overlong supplied `workflow_id` also uses `INVALID_WORKFLOW_ID`. |
+| `PROVIDER_ERROR` | `PROVIDER_ERROR_ENVELOPE` for root `isError: true`; `PROVIDER_ERROR_PAYLOAD` for structured `isError: true`, `ok: false`, any own `error` property, or integer `status >= 400`; the same error flags are checked inside recognized token `data`. |
 | `INPUT_LIMIT` | `RUNS_LIMIT`, `HEADER_CHAR_LIMIT` or `SELECTED_ID_METADATA_BUDGET`, with the observed and allowed bounds. |
 
 Invalid options throw locally. `TypeError` covers non-object options, unknown
@@ -136,4 +156,5 @@ capped or dropped.
 
 Keep the original request and raw response beside a refusal. The projector
 does not retry, change transport or represent a failed/unsupported response as
-an empty successful provider result.
+an empty successful provider result. Recognized token `data` with a missing or
+non-array `workflow_runs` is refused; it does not become a zero-run result.
