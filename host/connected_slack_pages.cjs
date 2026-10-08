@@ -380,6 +380,14 @@ function projectSlackMessages(response, request, options = {}) {
   if (typeof observeApplicationSuppression !== 'boolean') {
     throw new TypeError('observe_application_suppression must be boolean');
   }
+  const observeThreadSummaries = Object.prototype.hasOwnProperty.call(options, 'observe_thread_summaries')
+    ? options.observe_thread_summaries : false;
+  if (typeof observeThreadSummaries !== 'boolean') {
+    throw new TypeError('observe_thread_summaries must be boolean');
+  }
+  if (observeThreadSummaries && operation !== 'read_channel') {
+    throw new TypeError('observe_thread_summaries requires read_channel');
+  }
   const defaults = {start_index: 0, max_messages: 8, max_body_chars: 800,
     max_total_body_chars: 6400, max_input_chars: 1048576,
     ...(headerOnly ? {max_header_chars: 800, max_total_header_chars: 6400} : {})};
@@ -388,6 +396,7 @@ function projectSlackMessages(response, request, options = {}) {
     max_header_chars: 65536, max_total_header_chars: 262144};
   for (const key of Object.keys(options)) {
     if (key !== 'source_indices' && key !== 'header_only' && key !== 'observe_application_suppression' &&
+        key !== 'observe_thread_summaries' &&
         !Object.prototype.hasOwnProperty.call(defaults, key)) {
       const modeHint = !headerOnly && (key === 'max_header_chars' || key === 'max_total_header_chars')
         ? '; header budgets require header_only: true; omit both header-budget options for body projection'
@@ -398,6 +407,7 @@ function projectSlackMessages(response, request, options = {}) {
   const limits = {...defaults, ...options};
   delete limits.header_only;
   delete limits.observe_application_suppression;
+  delete limits.observe_thread_summaries;
   for (const [key, value] of Object.entries(limits)) {
     if (key === 'source_indices') continue;
     if (!Number.isSafeInteger(value) || value < (['max_messages', 'max_input_chars'].includes(key) ? 1 : 0) ||
@@ -425,7 +435,8 @@ function projectSlackMessages(response, request, options = {}) {
       parent_message_ts: operation === 'read_thread' ? args.message_ts : null,
       request_window: requestWindow, window_application: 'not_verified',
       content_basis: 'connector_rendered_content', message_identity: 'rendered_header',
-      channel_binding: 'retained_request', representations: 0, input_chars: 0},
+      channel_binding: 'retained_request', representations: 0, input_chars: 0,
+      ...(observeThreadSummaries ? {thread_summary_observation: 'selected_channel_suffix_only'} : {})},
     limits, coverage: {scope: 'retained_response_only', snapshot: false}, messages: [], issue: null};
   const refuse = (code, detail) => {
     result.issue = {code, detail}; return result;
@@ -637,6 +648,19 @@ function projectSlackMessages(response, request, options = {}) {
     let headerTruncated = 0;
     for (const row of selected) {
       const [start, end] = row.rendered_content_range;
+      let projectedRow = row;
+      if (observeThreadSummaries) {
+        // This terminal connector-shaped literal is not authenticated thread state.
+        const suffix = /(?:^|\n)(Thread: ([1-9][0-9]*) replies \(latest: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [A-Z]{2,5})\))(?:\nReactions: [^\n]*)?\n*$/.exec(rendered.slice(start, end));
+        let summary = null;
+        if (suffix && Number.isSafeInteger(Number(suffix[2]))) {
+          const summaryStart = start + suffix.index + (suffix[0].startsWith('\n') ? 1 : 0);
+          summary = {reply_count: Number(suffix[2]), latest_rendered: suffix[3],
+            source_range: [summaryStart, summaryStart + suffix[1].length],
+            basis: 'rendered_literal_only', authentication: 'not_performed'};
+        }
+        projectedRow = {...row, thread_summary: summary};
+      }
       if (headerOnly) {
         const [headerStart, headerEnd] = row.header_range;
         let length = Math.min(headerEnd - headerStart, limits.max_header_chars,
@@ -647,7 +671,7 @@ function projectSlackMessages(response, request, options = {}) {
             rendered.charCodeAt(headerStart + length) >= 0xdc00 &&
             rendered.charCodeAt(headerStart + length) <= 0xdfff) length--;
         const clipped = length < headerEnd - headerStart;
-        result.messages.push({...row,
+        result.messages.push({...projectedRow,
           rendered_header: rendered.slice(headerStart, headerStart + length),
           header_chars: headerEnd - headerStart, returned_header_chars: length,
           header_truncated: clipped, rendered_content: '', content_chars: end - start,
@@ -663,7 +687,7 @@ function projectSlackMessages(response, request, options = {}) {
           rendered.charCodeAt(start + length - 1) >= 0xd800 && rendered.charCodeAt(start + length - 1) <= 0xdbff &&
           rendered.charCodeAt(start + length) >= 0xdc00 && rendered.charCodeAt(start + length) <= 0xdfff) length--;
       const clipped = length < end - start;
-      result.messages.push({...row, rendered_content: rendered.slice(start, start + length),
+      result.messages.push({...projectedRow, rendered_content: rendered.slice(start, start + length),
         content_chars: end - start, returned_chars: length, truncated: clipped});
       full += end - start; used += length; truncated += clipped ? 1 : 0;
     }
