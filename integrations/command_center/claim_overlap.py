@@ -23,8 +23,12 @@ from urllib.parse import urlsplit
 
 SCHEMA = "commons-claim-overlap/v1"
 _OP = r"[A-Za-z0-9][A-Za-z0-9_.]*(?:[-:][A-Za-z0-9_.]+)+"
+# Slack receipts use "TAKE · OP" and "TAKE BUILD/SHIP · OP".
+# A bounded role needs a bullet; arbitrary prose never becomes a claim.
+_CLAIM_BULLET_PREFIX = r"(?:[A-Za-z]+(?:[/ -][A-Za-z]+){0,2}\s*)?[·•]\s*"
 _DECLARATION = re.compile(
-    rf"^\s*(?:CLAIM|TAKE|Taking|I claim|I(?: am|'m|’m) taking)\s+({_OP})(?=\s|[.,:;—]|$)",
+    rf"^\s*(?:CLAIM|TAKE|Taking|I claim|I(?: am|'m|’m) taking)\s+"
+    rf"(?:{_CLAIM_BULLET_PREFIX})?({_OP})(?=\s|[.,:;—·•]|$)",
     re.IGNORECASE,
 )
 _EXT = r"(?:py|mjs|cjs|js|jsx|ts|tsx|kt|java|md|json|html|css|yaml|yml|toml|sh|ps1|rs|go|cs|cpp|c|h|txt|sql|ipynb|vue|svelte|proto)"
@@ -226,7 +230,7 @@ def _scope_paths(clause: str, source: dict[str, Any]) -> list[dict[str, Any]]:
 def _scope_clauses(body: str, remainder: str | None = None) -> list[str]:
     clauses: list[str] = []
     if remainder:
-        header = _sentences(remainder.lstrip(" .:—–-"))
+        header = _sentences(remainder.lstrip(" .:—–-·•"))
         if header and not _REFERENCE_START.match(header[0]):
             clauses.append(header[0])
     for sentence in _sentences(body):
@@ -248,7 +252,11 @@ def _events(record: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str
     sentences = _sentences(body)
     events: list[dict[str, Any]] = []
     unresolved: list[dict[str, Any]] = []
-    terminal_prefix = re.compile(rf"^(?:DONE|LANDED|RELEASED?|Completed)(?:\s*/\s*(?:DONE|LANDED|RELEASED?))?\s+({_OP})(?=\s|[.,:;—]|$)", re.I)
+    terminal_prefix = re.compile(
+        rf"^(?:(?:DONE|LANDED|RELEASED?|Completed|SHIPPED)"
+        rf"(?:\s*/\s*(?:DONE|LANDED|RELEASED?|COMPLETE(?:D)?))?"
+        rf"|COLLISION\s*/\s*RELEASED?)\s+"
+        rf"(?:{_CLAIM_BULLET_PREFIX})?({_OP})(?=\s|[.,:;—·•]|$)", re.I)
     terminal_suffix = re.compile(rf"^({_OP})\s+(?:[—–-]\s+)?(?:(?:is|has been)\s+)?(?:complete(?:d)?|done|landed|released)\b", re.I)
     terminal_own = re.compile(rf"^I\s+(?:have\s+)?(?:completed|released|landed)\s+({_OP})(?=\s|[.,:;—]|$)", re.I)
     for sentence in sentences:
