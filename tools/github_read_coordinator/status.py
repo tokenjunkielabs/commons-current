@@ -13,6 +13,28 @@ from pathlib import Path
 BUCKETS = {"core", "issue_search", "code_search", "search", "secondary", "burst"}
 
 
+def uncached_route_decisions(cooldowns, auth_blocked):
+    """Summarize recorded wait floors by read family, not provider readiness."""
+    families = {
+        "core": ("core", "secondary", "burst"),
+        "issue_search": ("issue_search", "search", "secondary", "burst"),
+        "code_search": ("code_search", "search", "secondary", "burst"),
+    }
+    results = {}
+    for family, inherited in families.items():
+        active = {bucket: cooldowns[bucket] for bucket in inherited if bucket in cooldowns}
+        deadline = max((entry["until"] for entry in active.values()), default=None)
+        remaining = max((entry["remaining_seconds"] for entry in active.values()), default=None)
+        state = "AUTH_BLOCKED" if auth_blocked else "COOLDOWN" if active else "NO_RECORDED_COOLDOWN"
+        results[family] = {
+            "state": state,
+            "blocking_buckets": sorted(active),
+            "until": deadline,
+            "remaining_seconds": remaining,
+        }
+    return results
+
+
 def snapshot(path, alias, principal, *, now=None):
     """Observe one explicitly selected namespace without opening a write handle."""
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", alias):
@@ -40,7 +62,9 @@ def snapshot(path, alias, principal, *, now=None):
             cooldowns[bucket] = {"until": deadline, "remaining_seconds": math.ceil(deadline - observed)}
     return {"rail": alias, "observed_at": observed, "coverage": "selected_local_broker_namespace_only",
             "provider_write_authority": False, "auth_blocked": blocked,
-            "cooldowns": dict(sorted(cooldowns.items())), "active_leases": flights,
+            "cooldowns": dict(sorted(cooldowns.items())),
+            "uncached_read_routes": uncached_route_decisions(cooldowns, blocked),
+            "active_leases": flights,
             "recent_cache_entries": cached, "cache_age_window_seconds": 300,
             "request_budget": None, "last_error": None,
             "unavailable_reason": "broker_does_not_persist_quota_or_last_error",

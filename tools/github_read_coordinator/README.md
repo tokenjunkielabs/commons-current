@@ -36,6 +36,18 @@ When a response reports both secondary throttling and an exhausted primary quota
 
 Following [GitHub’s secondary-limit guidance](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api#exceeding-the-rate-limit), repeated headerless secondary failures use a persisted fallback of 60, 120, 240 seconds, doubling up to one hour. Only a failed request admitted after the preceding secondary pause advances that fallback; responses already in flight and repeated completions do not count as another retry. A successful response clears the fallback history only when its request was admitted after the latest secondary deadline. Provider-specified Retry-After values and primary reset floors retain their existing behavior. This state is shared by cooperating processes and survives restarts; no automatic retry or sleeping loop is added.
 
+## Read-only route cooldown status
+
+`status.py` inspects one selected local broker database namespace through a read-only SQLite transaction. It never contacts GitHub and does not inspect, store, or reveal access tokens. The existing `--db`, `--rail`, and `--fingerprint` arguments and all previous JSON status fields are unchanged.
+
+The `uncached_read_routes` field adds one decision for each locally supported request family: `core`, `issue_search`, and `code_search`. Each entry includes a `state`, `blocking_buckets`, `until` (absolute epoch seconds or null), and `remaining_seconds` (integer or null). The deadline is the maximum recorded wait among applicable buckets:
+
+- `core`: core primary quota, secondary limit, and burst spacing.
+- `issue_search`: issue-search primary quota, legacy shared `search` floor, secondary limit, and burst spacing.
+- `code_search`: code-search primary quota, legacy shared `search` floor, secondary limit, and burst spacing.
+
+`AUTH_BLOCKED` takes precedence when the local namespace has recorded an authentication block, even if a cooldown is also active. Otherwise `COOLDOWN` means at least one applicable persisted deadline remains; `NO_RECORDED_COOLDOWN` means none is recorded at the observation time. A clear local result **does not mean** the provider is healthy, its live quota is sufficient, or a new request will succeed. Both `request_budget` and `provider_health` remain unknown; cached requests and in-flight leases have separate existing fields. This is observational guidance for cooperating readers, never a remote readiness check or permission to bypass throttling.
+
 ## Conditional refreshes
 
 Refresh both `broker.py` and `gateway.py` together on the next normal reader restart. Existing `/read` request bodies and response states remain valid; no new service, configuration or manual database migration is needed.
