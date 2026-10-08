@@ -3696,7 +3696,7 @@
   var xyzOut = document.getElementById("xyz-zero-result");
   var appendGuardOut = document.getElementById("titan-append-guard-result");
   var measureAbuseOut = document.getElementById("measure-abuse-result");
-  var remasureOut = document.getElementById("remeasure-result");
+  var remeasureOut = document.getElementById("remeasure-result");
   var claudeParkOut = document.getElementById("claude-park-result");
   var grokRecoveryOut = document.getElementById("grok-recovery-result");
   var contextIntegrityOut = document.getElementById("context-integrity-result");
@@ -4292,8 +4292,8 @@
 
   function paintRemeasure(result) {
     if (!remeasureOut) return;
-    remasureOut.setAttribute("data-tone", api.toneFor(result.state));
-    remasureOut.innerHTML = "<b>" + esc(result.state) + "</b><p>" + esc(result.note) + "</p>";
+    remeasureOut.setAttribute("data-tone", api.toneFor(result.state));
+    remeasureOut.innerHTML = "<b>" + esc(result.state) + "</b><p>" + esc(result.note) + "</p>";
   }
 
   function paintClaudePark(result) {
@@ -5263,7 +5263,7 @@
 
   function loadRemeasure(sha) {
     if (!remeasureOut) return Promise.resolve(null);
-    remasureOut.innerHTML = "<b>UNMEASURED</b><p>Reading host/remeasure.py at the official SHA…</p>";
+    remeasureOut.innerHTML = "<b>UNMEASURED</b><p>Reading host/remeasure.py at the official SHA…</p>";
     var url = RAW + sha + "/host/remeasure.py";
     return fetch(url, { cache: "no-store" }).then(function (r) {
       if (r.status === 404) {
