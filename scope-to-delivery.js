@@ -72,7 +72,7 @@
       row("Payout", pay.payout || "UNMEASURED"),
       row("Bank available", pay.bank_available || "UNMEASURED"),
       row("Cash claimed", String((project.payment_state || {}).cash_claimed)),
-      "<p class='note'>Payment does not prove delivery. Catalog cash is still 0.00.</p>",
+      "<p class='note'>Payment does not prove delivery. Current settlement is unverified in this view.</p>",
     ].join("");
 
     const gaps = ((project.handoff || {}).gaps || []).map(function (gap) {
