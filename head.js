@@ -492,7 +492,9 @@ window.COMMONS_HEAD = (function () {
     return api("commits?sha=main&per_page=20").then(function (commits) {
       var sha = commits && commits[0] && commits[0].sha;
       if (!sha) throw new Error("no HEAD sha");
-      setCached(SHA_KEY, { sha: sha });
+      setCached(SHA_KEY, {
+        sha: sha, observed_at: "", source: "github-api", status: "REMOTE_CURRENT", is_current: true
+      });
       var seen = {};
       var ids = [];
       idsFromCommits(commits).forEach(function (id) {
