@@ -485,8 +485,10 @@ Each selected entry adds `thread_summary`, either null or:
 - `basis: 'rendered_literal_only'` and `authentication: 'not_performed'`.
 
 The supported suffix is the observed `Thread: N replies (latest: YYYY-MM-DD
-HH:mm:ss ZONE)` form, optionally followed by one rendered `Reactions:` line
-and trailing newlines. A null value means that this terminal form was not
+HH:mm:ss ZONE)` form, optionally followed by one rendered `Reactions:` line,
+then one nonempty rendered `Files:` line, and trailing newlines. The optional
+attachment line is recognized only as suffix framing; its names and other
+metadata are not copied into the summary. A null value means that this terminal form was not
 observed; it does not mean zero replies. Other summary formats are not inferred.
 The summary remains inside the original content range, and existing body/header
 budgets, withholding and pagination keep their meanings. The source metadata
@@ -504,6 +506,15 @@ page: 14 summary records, 3,978 header characters and zero body characters.
 Every summary range matched its retained source, the input was unchanged, and
 the ordinary projection remained JSON-identical. Native continuation remained
 present. No channel refetch, synthetic fixture, test suite or build was used.
+
+A later real intake exposed the same summary followed by native attachment
+metadata. The focused follow-up used two retained pages (133 roots): 7
+previously unobserved summaries were returned, while all 45 existing summaries
+and the default output stayed exact. All 52 summary ranges matched their
+literal source lines; 17,980 header characters and zero body characters were
+returned. The retained inputs were unchanged. Attachment text was not projected.
+The captured suffixes included both Thread/Files and Thread/Reactions/Files.
+No native read, synthetic fixture, test suite or build was used for the check.
 
 ### Size channel history pages and header views together
 

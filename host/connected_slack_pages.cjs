@@ -651,7 +651,7 @@ function projectSlackMessages(response, request, options = {}) {
       let projectedRow = row;
       if (observeThreadSummaries) {
         // This terminal connector-shaped literal is not authenticated thread state.
-        const suffix = /(?:^|\n)(Thread: ([1-9][0-9]*) replies \(latest: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [A-Z]{2,5})\))(?:\nReactions: [^\n]*)?\n*$/.exec(rendered.slice(start, end));
+        const suffix = /(?:^|\n)(Thread: ([1-9][0-9]*) replies \(latest: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [A-Z]{2,5})\))(?:\nReactions: [^\n]*)?(?:\nFiles: [^\n]+)?\n*$/.exec(rendered.slice(start, end));
         let summary = null;
         if (suffix && Number.isSafeInteger(Number(suffix[2]))) {
           const summaryStart = start + suffix.index + (suffix[0].startsWith('\n') ? 1 : 0);
