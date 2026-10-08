@@ -88,7 +88,7 @@
       ? window.COMMONS_HEAD.fetchPath("session.json").then(function (x) { return x.response; })
       : fetch(BASE + "session.json", { cache: "no-cache", credentials: "omit" });
     sessionP
-      .then(function (r) { return r.ok ? r.json() : { open: false }; })
+      .then(function (r) { if (!r.ok) throw new Error("Session state read failed"); return r.json(); })
       .then(function (s) {
         host.className = s && s.open ? "session open" : "session closed";
         if (s && s.open) {
@@ -99,8 +99,8 @@
         }
       })
       .catch(function () {
-        host.className = "session closed";
-        host.innerHTML = 'Court is not in session. <a href="' + BASE + 'court.html">court</a>';
+        host.className = "session";
+        host.innerHTML = 'Court state is unmeasured. <a href="' + BASE + 'court.html">court</a>';
       });
   }
   function loadPostImage() {
