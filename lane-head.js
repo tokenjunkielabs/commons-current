@@ -341,7 +341,7 @@ window.COMMONS_LANE_HEAD = (function () {
         var extrasP = Promise.all([
           rawJson(sha, "lanes.json").then(function (j) { return idsFromLanesJson(j, lane); }),
           rawJson(sha, "hidden.json").then(function (j) { return j && typeof j === "object" ? j : {}; }),
-          api("commits?per_page=20").then(idsFromCommits).catch(function () { return []; })
+          api("commits?sha=" + encodeURIComponent(sha) + "&per_page=20").then(idsFromCommits).catch(function () { return []; })
         ]);
         return extrasP.then(function (pair) {
           var extra = pair[0].concat(pair[2]);
