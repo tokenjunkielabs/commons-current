@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
+from internal_brain.assistant_context import build_context_packet
 from internal_brain.core import (
     AuditError,
     AuthorizationError,
@@ -159,6 +160,7 @@ INDEX_HTML = r"""<!doctype html>
         <h3>Authorization decision</h3><pre id="authorization-output"></pre>
         <h3>Security boundary</h3><pre id="security-output"></pre>
         <h3>Audit event digest</h3><pre id="query-audit-digest"></pre>
+        <h3>AI context packet</h3><pre id="context-packet-output"></pre>
         <h3>Results</h3><div id="results-output"></div>
         <h3>Citations</h3><div id="citations-output"></div>
         <h3>Digests</h3><div id="digests-output"></div>
@@ -313,7 +315,7 @@ function renderResults(results) {
   });
 }
 
-function renderReceipt(receipt) {
+function renderReceipt(receipt, contextPacket) {
   byId("query-output").classList.remove("hidden");
   const code = typeof receipt.decision_code === "string" ? receipt.decision_code : "unspecified";
   const normalized = code.toUpperCase();
@@ -329,12 +331,14 @@ function renderReceipt(receipt) {
   byId("security-output").textContent = pretty(receipt.security_boundary ?? null);
   byId("query-audit-digest").textContent = pretty(receipt.audit_event_digest ?? null);
   byId("receipt-output").textContent = pretty(receipt);
+  byId("context-packet-output").textContent = pretty(contextPacket);
   renderResults(receipt.results);
   renderFields(byId("citations-output"), findFields(receipt.results, new Set(["citation", "citations", "source_citations"])));
   renderFields(byId("digests-output"), findFields(receipt, new Set([
     "digest", "content_digest", "document_digest", "chunk_digest",
     "audit_event_digest", "previous_digest", "previous_event_digest",
     "content_sha256", "document_sha256", "result_receipt_sha256", "query_sha256",
+    "packet_sha256", "source_result_receipt_sha256",
   ])));
   renderFields(byId("markers-output"), findFields(receipt.results, new Set([
     "instruction_marker", "instruction_markers", "instruction_detection", "instruction_detections",
@@ -400,7 +404,7 @@ byId("query-button").addEventListener("click", async () => {
       method: "POST",
       body: JSON.stringify({ actor_user_id: queryActor.value, question, max_results: maxResults, document_ids: documentIds }),
     });
-    renderReceipt(response.receipt);
+    renderReceipt(response.receipt, response.context_packet);
     status(target, "Query receipt returned.", "success");
   } catch (error) {
     byId("query-output").classList.add("hidden");
@@ -829,7 +833,12 @@ class InternalBrainRequestHandler(BaseHTTPRequestHandler):
         }
         with self.application_state.engine_lock:
             receipt = engine.query(query)
-        self._send_json(HTTPStatus.OK, {"ok": True, "receipt": receipt})
+            context_packet = build_context_packet(receipt)
+        self._send_json(HTTPStatus.OK, {
+            "ok": True,
+            "receipt": receipt,
+            "context_packet": context_packet,
+        })
 
     def _handle_audit(self) -> None:
         payload = self._read_json_object()
