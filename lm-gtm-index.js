@@ -77,7 +77,7 @@
     var status = document.getElementById("index-status");
     if (status) {
       status.textContent =
-        "Composed " +
+        "Recorded projection composed " +
         state.composed_at +
         ". Canonical CRM " +
         state.canonical_crm +
@@ -89,9 +89,7 @@
         truth.external_prospects +
         " external prospects, mailbox " +
         truth.mailbox +
-        ", USD " +
-        truth.cash_usd +
-        " cash. Public projection is not a CRM.";
+        ". Current settlement: unverified. Public projection is not a CRM.";
     }
     var truthRoot = document.getElementById("truth");
     if (truthRoot) {
@@ -104,7 +102,7 @@
         cell(truth.inbound_contacts, "inbound"),
         cell(truth.seller_context_rows, "seller context"),
         cell(truth.transport_actions, "sent by this composer"),
-        cell("USD " + truth.cash_usd, "cash")
+        cell("Unverified", "current settlement")
       );
     }
   }

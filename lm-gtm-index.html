@@ -36,8 +36,8 @@ body{max-width:78rem}.hero{padding:2rem 0 1rem}.hero h1{font-size:clamp(2.2rem,7
   <p class="lead">Agents get a model-readable projection of website-people-email-book, smart outreach, reply-to-revenue, outreach receipts, the marketing research universe, swarm-mail inboxes, and overlay pointers for live sales surfaces. Canonical CRM stays Airtable. This door does not mint contacts. Floor command is now <code>brief</code>. <code>hot</code> remains the full-row actionable subset. <code>hold</code> is HOLD/BUILD-AND-VERIFY (not draft-now). <code>sent</code> is HARD_DO_NOT_RESEND. <code>next</code> remains all-live.</p>
 </header>
 <section class="panel" aria-labelledby="truth-heading">
-  <h2 id="truth-heading">Public projection truth</h2>
-  <p id="index-status" class="note">Loading measured state.json…</p>
+  <h2 id="truth-heading">Recorded public projection</h2>
+  <p id="index-status" class="note">Recorded fallback date unavailable. Current settlement: unverified. Loading state.json…</p>
   <div id="truth" class="truth">
     <span><b>11</b>hot</span>
     <span><b>20</b>hold-build</span>
@@ -47,7 +47,7 @@ body{max-width:78rem}.hero{padding:2rem 0 1rem}.hero h1{font-size:clamp(2.2rem,7
     <span><b>11</b>inbound</span>
     <span><b>4</b>seller context</span>
     <span><b>0</b>sent by this composer</span>
-    <span><b>USD 0</b>cash</span>
+    <span><b>Unverified</b>current settlement</span>
   </div>
 </section>
 <section class="panel warning" aria-labelledby="not-crm-heading">
@@ -135,8 +135,8 @@ python3 host/lm_gtm_relationship_handoff.py city-of-billings-bid-1421 --brief
 python3 host/lm_gtm_relationship_handoff.py city-of-billings-bid-1421 --mailbox-verify</pre>
 </section>
 <noscript>
-  <p class="panel">JavaScript is off. Floor command is now <code>python3 host/lm_gtm_index.py brief</code>. Read <a href="./revenue/lm_gtm_index/INDEX.jsonl">INDEX.jsonl</a>, <a href="./revenue/lm_gtm_index/state.json">state.json</a>, and the separate <a href="./revenue/lm_gtm_index/relationship_handoff_evidence.jsonl">CRM6 handoff evidence</a>. Run <code>brief</code> for compact HOT, <code>freshness</code> for saved INDEX age, <code>sent</code> for HARD_DO_NOT_RESEND, and <code>hold</code> for HOLD/BUILD-AND-VERIFY. Handoff <code>--mailbox-verify</code> never invents <code>VERIFIED_HUMAN_YES</code>. <code>--send</code> exits 3. Cash USD 0. Not a CRM.</p>
+  <p class="panel">JavaScript is off. Floor command is now <code>python3 host/lm_gtm_index.py brief</code>. Read <a href="./revenue/lm_gtm_index/INDEX.jsonl">INDEX.jsonl</a>, <a href="./revenue/lm_gtm_index/state.json">state.json</a>, and the separate <a href="./revenue/lm_gtm_index/relationship_handoff_evidence.jsonl">CRM6 handoff evidence</a>. Run <code>brief</code> for compact HOT, <code>freshness</code> for saved INDEX age, <code>sent</code> for HARD_DO_NOT_RESEND, and <code>hold</code> for HOLD/BUILD-AND-VERIFY. Handoff <code>--mailbox-verify</code> never invents <code>VERIFIED_HUMAN_YES</code>. <code>--send</code> exits 3. Current settlement unverified. Recorded projection date unavailable. Not a CRM.</p>
 </noscript>
-<script src="./lm-gtm-index.js?v=20260901a"></script>
+<script src="./lm-gtm-index.js?v=20261008a"></script>
 </body>
 </html>
