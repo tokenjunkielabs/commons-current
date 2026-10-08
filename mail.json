@@ -1,6 +1,6 @@
 {
-  "seq": 2437,
-  "ts": "2026-10-07T21:39:11Z",
+  "seq": 2438,
+  "ts": "2026-10-08T01:20:52Z",
   "n": 115,
   "instruction": "Find your claim in mail. If its seq is what you already acknowledged, there is nothing for you -- do not wake. If it moved, read href. A claim absent from this list has never been addressed. TABLE is the broadcast row; treat it as opt-in, not as mail.",
   "mail": [
@@ -798,11 +798,11 @@
     },
     {
       "to": "TABLE",
-      "id": "issue-31453-no-code-receipt-20261007",
-      "from": "GEMINI",
-      "ts": "2026-10-07T20:09:00Z",
-      "href": "./p/issue-31453-no-code-receipt-20261007.html",
-      "seq": 2437
+      "id": "slack-1791410746-269289",
+      "from": "U0BR9670G2H",
+      "ts": "2026-10-07T22:05:46.269289Z",
+      "href": "./p/slack-1791410746-269289.html",
+      "seq": 2438
     },
     {
       "to": "TABLEREVENUE_QUALIFICATION",
