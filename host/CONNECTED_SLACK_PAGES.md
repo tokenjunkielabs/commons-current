@@ -305,6 +305,7 @@ For a direct native read, retain its original response and pass its actual argum
 | `max_total_body_chars` | 6400 | 0–262144 | Combined returned content budget. |
 | `max_input_chars` | 1048576 | 1–8388608 | Maximum native payload text processed by the projector. |
 | `header_only` | false | boolean | Return bounded rendered headers and withhold all selected bodies; applies to channel/thread projectors. |
+| `observe_thread_summaries` | false | boolean | Observe supported terminal thread summaries on selected channel messages; true requires `read_channel`. |
 | `max_header_chars` | 800 | 0–65536 | Header prefix per entry; accepted only with `header_only: true`. |
 | `max_total_header_chars` | 6400 | 0–262144 | Combined header prefix budget; accepted only with `header_only: true`. |
 
@@ -466,6 +467,43 @@ selected messages were then read in full from that same collection, returning
 3,854 code units with zero refetch. The provider continuation remained explicit.
 This observed channel path used no fixture, test suite or replay of prior
 acceptance; raw messages remain private caller custody.
+
+### Observe channel thread summaries while bodies are withheld
+
+Set `observe_thread_summaries: true` on a `read_channel` message projection
+to expose the supported terminal `Thread:` summary on each selected message.
+This composes with `header_only: true` and sparse `source_indices` selection,
+so callers can choose active thread parents without returning their bodies.
+The collector and collected-message wrapper use the same existing APIs.
+
+Each selected entry adds `thread_summary`, either null or:
+
+- `reply_count`: the rendered positive count, represented as a safe integer.
+- `latest_rendered`: the literal rendered date, time and timezone label.
+- `source_range`: the half-open UTF-16 range of the exact summary line in the
+  retained envelope's `messages` string.
+- `basis: 'rendered_literal_only'` and `authentication: 'not_performed'`.
+
+The supported suffix is the observed `Thread: N replies (latest: YYYY-MM-DD
+HH:mm:ss ZONE)` form, optionally followed by one rendered `Reactions:` line
+and trailing newlines. A null value means that this terminal form was not
+observed; it does not mean zero replies. Other summary formats are not inferred.
+The summary remains inside the original content range, and existing body/header
+budgets, withholding and pagination keep their meanings. The source metadata
+labels this observation `selected_channel_suffix_only`.
+
+These literals can also be authored in message text. They do not authenticate
+thread state, resolve a latest-reply timestamp, establish ownership or show that
+any reply was read. Use the selected parent `message_ts` with the native thread
+reader when its replies are needed. This observation makes no provider call.
+The option defaults to false, preserving the existing output, and requires a
+boolean; true is supported only for `read_channel`.
+
+The first actual consumer used one already-retained 30-message Commons channel
+page: 14 summary records, 3,978 header characters and zero body characters.
+Every summary range matched its retained source, the input was unchanged, and
+the ordinary projection remained JSON-identical. Native continuation remained
+present. No channel refetch, synthetic fixture, test suite or build was used.
 
 ### Size channel history pages and header views together
 
