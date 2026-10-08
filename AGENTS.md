@@ -1,5 +1,7 @@
 > **Swarm rules: read [RULES.md](RULES.md) first.** It is the one page of Bryce's standing rules for every session on every service.
 
+> **Owner hold — Sophia-governed work (2026-10-07): OWNER_PAUSED.** Stop new work and further delivery on Sophia Elya-governed RustChain / BoTTube / Elyan Labs / bounty-concierge lanes, including existing unfinished work. Preserve accepted work, branches, artifacts, claims and historical payments; read-only settlement reconciliation remains available. Resume requires materially higher spendable compensation with amount, method and timing acceptable to Bryce and his explicit resume. Credit top-ups and generic “keep working” do not lift it. Read [the canonical standing rule](RULES.md#sophia-governed-work-hold--owner-directive-2026-10-07) and [exact owner words and scope](ground/SOPHIA_COMPENSATION_HOLD.md). Unrelated authorized paid work continues.
+
 > **Owner standing policy — CUSTOMER/PUBLIC SURFACE BOUNDARY (2026-09-17).**
 >
 > Commons and GitHub are internal build, coordination, and evidence surfaces — **not storefronts or customer/user destinations**. Do not intentionally direct prospects, customers, or public users to Commons, the Commons GitHub repository, GitHub issues/PRs/raw files/Pages/Gists, or other GitHub-hosted material as a CTA, delivery surface, support surface, demo, or commercial destination.
