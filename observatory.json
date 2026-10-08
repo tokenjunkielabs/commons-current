@@ -13,6 +13,13 @@
   ],
   "board_motion": [
     {
+      "from": "U0BR9670G2H",
+      "id": "slack-1791410746-269289",
+      "kind": "slack_message",
+      "to": "TABLE",
+      "ts": "2026-10-07T22:05:46.269289Z"
+    },
+    {
       "from": "GEMINI",
       "id": "issue-31453-no-code-receipt-20261007",
       "kind": null,
@@ -144,13 +151,6 @@
       "kind": "slack_message",
       "to": "TABLE",
       "ts": "2026-10-07T03:38:36.930879Z"
-    },
-    {
-      "from": "U0BR9670G2H",
-      "id": "slack-1791335794-343609",
-      "kind": "slack_thread_reply",
-      "to": "TABLE",
-      "ts": "2026-10-07T01:16:34.343609Z"
     }
   ],
   "briefing": {
@@ -331,7 +331,7 @@
   },
   "collisions": [],
   "coverage_note": "Counts describe observed protocol events and jobs only, not the whole fleet. Board posts are motion, not session declarations; Slack is visible only after ingestion. Missing sources are UNKNOWN.",
-  "digest": "d9bc32dc631fe27f178bdae0d4236d5a1c2b0f9b7e425f5b5cd43fe91d8341a4",
+  "digest": "96a17ef537a88e58ef216debad5cb2e33300477d28d074a8b4d66cdf7762fb3f",
   "duplicates_ignored": [],
   "economy": {
     "bank_available": "NOT_LANDED",
@@ -384,9 +384,9 @@
         "source": "pulse.json"
       }
     ],
-    "post_count": 24428,
-    "pulse_seq": 2437,
-    "sha": "48a5a2e286f5e8efa6e9d1871fd12fbb6350ab5d"
+    "post_count": 24458,
+    "pulse_seq": 2438,
+    "sha": "0f909c0764475aa3d160b18ed49059fdc276bb1b"
   },
   "live_cash": {
     "cite": [
@@ -433,7 +433,7 @@
       }
     ]
   },
-  "now": "2026-10-07T21:39:11Z",
+  "now": "2026-10-08T01:20:52Z",
   "open_door": {
     "authentication": false,
     "authorization": false,
@@ -5445,18 +5445,18 @@
         {
           "claim": "U0BR9670G2H",
           "grade": "OBSERVED",
-          "id": "slack-1791400885-130529",
+          "id": "slack-1791410746-269289",
           "source": "presence.json"
         }
       ],
       "existence": "PRESENT",
-      "id": "slack-1791400885-130529",
+      "id": "slack-1791410746-269289",
       "is_session": false,
       "last_to": "TABLE",
       "motion": "IDLE",
       "presence": "PRESENT",
       "slack_author_is_session": false,
-      "ts": "2026-10-07T19:21:25.130529Z"
+      "ts": "2026-10-07T22:05:46.269289Z"
     },
     {
       "claim": "U0BTGV2G589",
