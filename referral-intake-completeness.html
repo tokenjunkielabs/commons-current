@@ -155,7 +155,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;min-height:220px;background:#1b1
       packetVersion: 1,
       slug: "referral-intake-completeness",
       generatedAt: new Date().toISOString(),
-      buyer: { clinic: v("org"), nameAndTitle: v("buyer"), publicRoute: v("route"), monthlyVolume: Number(v("volume") || 0) },
+      buyer: { clinic: v("org"), nameAndTitle: v("buyer"), publicRoute: v("route"), monthlyVolume: v("volume").trim() === "" ? null : Number(v("volume")) },
       workflow: { ruleSource: v("ruleSource"), observedFailure: v("failure") },
       offer: { diagnosticUsd: 199, window: "one business day", clock: "one business day", optionalPilotUsd: 2500, proofOnlyAfterFit: true },
       latestSyntheticReceipt: last,
