@@ -42,7 +42,13 @@ with a diagnostic.
 ## Reading the result
 
 The parser recognizes explicit claim declarations and retains the source paths
-and any explicit function scope attached to them. Mentions of another operation,
+and any explicit function scope attached to them. Current Slack forms such as
+`TAKE · OPERATION-ID` and `TAKE BUILD/SHIP · OPERATION-ID` are parsed as claims.
+`DONE / RELEASE · OPERATION-ID` and `COLLISION / RELEASE · OPERATION-ID`
+are terminal observations only for that exact operation. A label preceding a
+claim must be bounded and followed by a visible bullet; ordinary `TAKE a look`
+prose is not a declaration. A potential overlap still requires explicit owned
+file paths from the supplied claims. Missing file scope stays unresolved. Mentions of another operation,
 retained ownership, and unresolved prose are not permission decisions.
 
 Explicit completion and scope updates are reconciled only with the operation
