@@ -3894,7 +3894,7 @@
           return "<li><span class=\"st st-" + esc(got.state) + "\">" + esc(got.state) + "</span> " +
             "<a href=\"" + esc(pr.html_url) + "\">#" + esc(pr.number) + "</a> " +
             esc(pr.title) +
-            "<span class=\"pr-note\">ahead " + esc(ahead) + " · behind " + esc(behind) +
+            "<span class=\"pr-note\">ahead " + esc(ahead === 0 ? "0" : ahead) + " · behind " + esc(behind === 0 ? "0" : behind) +
             (got.note ? " · " + esc(got.note) : "") + "</span></li>";
         }).join("") +
           (prs.length > slice.length ? "<li class=\"pr-note\">Measured the 8 most recently updated open PRs of " + prs.length + ". A branch in peers.md is only a push.</li>" : "");
