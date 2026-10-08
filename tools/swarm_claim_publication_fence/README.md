@@ -9,11 +9,14 @@ It complements, rather than replaces, the swarm terminality registry and Muse/On
 - `HOLD_NO_HISTORY_CENSUS` — the retained channel window is not asserted complete.
 - `HOLD_CANDIDATE_NOT_VISIBLE` — the candidate TAKE is not present as the exact history row.
 - `HOLD_EARLIER_CLAIM` — an earlier materially-same TAKE is visible; yield to it.
+- `HOLD_SCOPE_DIGEST_CONFLICT` — full-channel history contains a second TAKE for the same work key and role but a *different* scope digest; coordinate ownership before any writer proceeds. This flags possible overlap, not proof that the scopes are identical.
 - `HOLD_INDEX_DIVERGENCE` — full history has materially-same messages missing from exact search.
 - `HOLD_HISTORY_MISMATCH` — exact search contains a materially-same message absent from the supplied full history window.
 - `CANDIDATE_VISIBLE_EARLIEST` — candidate is visible and earliest and history/search sets converge.
 
 Search-zero **never** establishes absence. A candidate is not publication-confirmed until its exact message is retained in the full-channel window. Later duplicate claims do not displace the earlier candidate.
+
+The exact search is permitted to return only the requested digest. The **complete retained history** additionally checks all claims with the same `work_key × role`, irrespective of scope digest, and reports `scope_digest_conflict_count` plus `scope_digest_conflict_message_ts`. A conflicting digest holds even when the candidate is the earliest exact-digest TAKE; materially disjoint scopes require explicit ownership reconciliation or distinct work keys. Earlier exact claims and history/search integrity holds keep their existing precedence. No claim is granted by this report.
 
 ## Authority ceiling
 
