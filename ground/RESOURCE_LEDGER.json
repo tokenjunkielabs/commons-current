@@ -641,24 +641,25 @@
     "inventory/resources/records/resource-master-settlement-truth-gemini-economics-delta-20261007-0909.json",
     "inventory/resources/records/resource-master-pages-road-recovery-20261007-1204.json",
     "inventory/resources/records/resource-master-bountyhub-upwork-delta-20261007-1504.json",
-    "inventory/resources/records/resource-master-operation-journal-delta-20261007-1803.json"
+    "inventory/resources/records/resource-master-operation-journal-delta-20261007-1803.json",
+    "inventory/resources/records/resource-master-connected-readers-delta-20261007-2055.json"
   ],
   "schema": "commons-resource-ledger/v2",
   "secrets": false,
   "shared_resource_rule": "ALL_CARRIERS_MAY_USE_ALL_SHARED_RESOURCES; CLAUDE_IS_OWNER_HANDLED",
-  "slack_ts": "1791410746.269289",
+  "slack_ts": "1791421159.485929",
   "snapshot": {
-    "base_main_sha": "8b410e6d7828f60f48e3837b6966b1cc31eff3f0",
-    "observed_at": "2026-10-07T22:06:57Z",
-    "source_window_upper": "2026-10-07T22:06:57Z",
+    "base_main_sha": "a83fe7c888ca9054e7da5d6e0c28faaece7d5fb6",
+    "observed_at": "2026-10-08T00:59:43Z",
+    "source_window_upper": "2026-10-08T00:59:43Z",
     "later_publication_observations_are_not_swept": true,
     "privacy_rule": "Shared account identities, service roles, aggregate quotas, reset states, and operating state may be published for Commons routing. Never persist passwords, tokens, API credentials, recovery or verification links, payment credentials, personal legal identity, customer data, private filenames, private mail contents, or retained private provider bodies.",
     "scope": "Anything convertible into Commons capability or value, including Bryce, devices, subscriptions, models, agents, tools, repositories, builds, data, attention, and external roads.",
     "truth_rule": "Capacity, authority, lifecycle stage, and condition are independent. Declared or cached is not live; reset is not permission; activity is not value; retained acknowledgement is not permission to replay.",
-    "prior_terminal_slack_ts": "1791400885.130529",
-    "github_source_lower_exclusive": "12fbbe8cbb1a1656ad7ea621b8c1cc576a876cc5"
+    "prior_terminal_slack_ts": "1791410960.986739",
+    "github_source_lower_exclusive": "1de23ef0984501a620e18d1c8b580f4e8b7490b6"
   },
-  "source_id": "resource-master-operation-journal-delta-20261007-1803",
+  "source_id": "resource-master-connected-readers-delta-20261007-2055",
   "stage_order": [
     "DECLARED",
     "AVAILABLE",
@@ -786,7 +787,8 @@
     "resource-master-mermail-oauth-road-delta-20261007-0555",
     "resource-master-settlement-truth-gemini-economics-delta-20261007-0909",
     "resource-master-pages-road-recovery-20261007-1204",
-    "resource-master-bountyhub-upwork-delta-20261007-1504"
+    "resource-master-bountyhub-upwork-delta-20261007-1504",
+    "resource-master-operation-journal-delta-20261007-1803"
   ],
   "surfaces": [
     {
@@ -2743,20 +2745,20 @@
       "capacity": "LIVE",
       "condition": "CONSTRAINED",
       "consumer": "Every scheduled Resource Master wake, Queue Manager, and #delegations worker receiving a capability-derived build order",
-      "evidence_ts": "2026-10-04T07:50:13.137Z",
-      "exact_safe_probe": "200 contiguous exact commits in7 native pages;25 unchanged automation rows; new native registry989 tools;6 additional material resources; existing PostHog order produced merged source31135, ingestion pending.",
+      "evidence_ts": "2026-10-08T00:59:43Z",
+      "exact_safe_probe": "Current ledger contained 648 surfaces and 47 priority rows; the repaired current-field renderer consumed canonical name/next_action fields and rendered 29 rows under the existing filter instead of none. This activation adds two nonduplicative producing resources and advances the office without claiming browser or deployment verification.",
       "holder": "Resource Master / current connected harness",
       "kind": "CONTROL_PLANE",
-      "last_receipt": "resource-master-tree-preimage-activation-20261004-01",
-      "last_used_at": "2026-10-04T07:50:13.137Z",
+      "last_receipt": "resource-master-connected-readers-delta-20261007-2055",
+      "last_used_at": "2026-10-08T00:59:43Z",
       "name": "resource-master-office",
-      "next_action": "Resume from this receipt and current-main publication readback; keep completed activations and existing owners.",
-      "own_activation_this_run": false,
+      "next_action": "Resume from this receipt, terminal Slack timestamp and exact current-main readback; keep completed activations released and do not infer deployment from source.",
+      "own_activation_this_run": true,
       "rate_plan_boundary": "A repeated receipt, projection refresh, cached declaration, connector presence, or open PR is not new capacity. The compiler has no spend, contact, deployment, authentication, or admission authority.",
-      "source": "inventory/resources/records/resource-master-wide-capability-swarm-20261004-01.json",
+      "source": "Existing Resource Master receipts plus PR32277 merge f88cde5f1e4529fd846716d0edbb1c03aa9bb8a0",
       "stage": "PRODUCING",
       "stale_after": "PT6H",
-      "value": "Deterministic incremental resource sweep with exact Git SHA, Slack native timestamp, Gmail, automation, and plugin watermarks; projection churn is separated from material state and build orders are deduplicated by canonical ID."
+      "value": "Deterministic incremental resource sweep with exact Git SHA, Slack timestamp, automation state, privacy-safe connected-reader evidence, and deduplicated capability identities; the public projection consumes current ledger fields."
     },
     {
       "assigned_backlog": "durable Commons work and public evidence",
@@ -16522,6 +16524,54 @@
         "https://github.com/woahwhattheheck/commons/tree/codex/resource-master-claim-payment-policy-20261007-0004-7ca6",
         "https://tokenjunkielabs.slack.com/archives/C0BTB4SUCP9/p1791349534222109"
       ]
+    },
+    {
+      "assigned_backlog": "No backlog reservation: branch, tree, and bounded source-recovery readers are landed and released; consume only for a concrete retained-response or pinned-source read.",
+      "auth_surface": "Retained native/token GitHub branch and Git tree envelopes plus bounded pinned-source recovery; no credential material, ref resolution, continuation call, provider mutation, or permission inference.",
+      "authority": "SHARED_READ_ONLY_FOR_EXPLICIT_RETAINED_GITHUB_RESPONSES_AND_PINNED_PUBLIC_SOURCE; NO_PROVIDER_CONTINUATION; NO_REF_RESOLUTION; NO_WRITE; NO_DEPLOY",
+      "capacity": "BOUNDED BRANCH-NAME, TREE-ENTRY, AND SMALLER PINNED-SOURCE READ PROJECTION WITH LITERAL TRUNCATION/OMISSION BOUNDARIES",
+      "claim_active": false,
+      "condition": "CONSTRAINED",
+      "consumer": "Resource Master, source-pinned publishers, and connected GitHub operators recovering exact bounded state after a recursive tree transport failure",
+      "evidence_ts": "2026-10-07T23:48:00Z",
+      "exact_safe_probe": "Retained branch input exposed three literal names with selected counts and withheld cursor semantics; retained tree inputs exposed 1,012 and 1,148 exact path/mode/type/SHA rows with literal truncation; the bounded recovery guide used a smaller nonrecursive tree read after recursive transport failure. No continuation, ref resolution, or new provider read is claimed by this activation.",
+      "holder": "Commons / connected GitHub retained-response readers",
+      "kind": "CONNECTED_GITHUB_TREE_BRANCH_OBSERVATION_STACK",
+      "last_receipt": "resource-master-connected-readers-delta-20261007-2055",
+      "last_used_at": "2026-10-08T00:59:43Z",
+      "name": "connected-github-tree-branch-observation-stack",
+      "next_action": "Use only with an explicit retained response or pinned public source; surface exact identity and truncation, fail closed on missing continuation/ref evidence, and keep provider effects separate.",
+      "own_activation_this_run": true,
+      "priority": 95,
+      "rate_plan_boundary": "A retained envelope, checkout, account connection, branch name, tree row, source file, or cached response is not a live session, provider permission, deployable project, continuation capacity, deployment, acceptance, payment, revenue, or cash.",
+      "source": "PR32276 merge fc5f43d182c0e2badbc2de24f0ce8a48c73e3366; PR32282 merge 4e99271377a8ea63d8fcae7baa0f8248c67771c1; PR32293 merge 2561da4836dab102b0a5248a61c5327968fdf5e0",
+      "stage": "PRODUCING",
+      "stale_after": "next reader schema, GitHub response shape, truncation/cursor contract, source pin, repository authority, owner, or consumer change",
+      "value": "Provides privacy-safe, exact bounded branch/tree/source evidence for collision checks and recovery without mistaking recursive transport failure or partial envelopes for an empty repository."
+    },
+    {
+      "assigned_backlog": "No backlog reservation: the projector is landed and released; consume only for a concrete retained Library read that needs bodyless routing metadata.",
+      "auth_surface": "Retained native Library read response; projector emits only bounded identity/version/pagination/size/count metadata and never the retained body or URL.",
+      "authority": "PRIVATE RETAINED LIBRARY INPUT; PUBLIC BODYLESS AGGREGATE/HEADER OUTPUT ONLY; NO PROVIDER CALL; NO BODY OR URL PUBLICATION",
+      "capacity": "PURE PRIVACY-SAFE LIBRARY READ-HEADER PROJECTION OVER ONE EXPLICIT RETAINED RESPONSE",
+      "claim_active": false,
+      "condition": "CONSTRAINED",
+      "consumer": "Resource Master and connected-app operators needing exact Library identity, version, pagination, rendered-size, and line-count boundaries without exposing private content",
+      "evidence_ts": "2026-10-07T23:18:00Z",
+      "exact_safe_probe": "One retained native Library read with one item/block, 302 metadata UTF-16 units, 7,690 rendered text units, literal ID, null version, 7,699-byte size, 54-line declaration, and false has_more was projected without body or URL output. The pure projector does not certify raw bytes, provenance, or provider effects.",
+      "holder": "Commons / privacy-safe connected Library projection",
+      "kind": "CONNECTED_LIBRARY_READ_HEADER_PROJECTOR",
+      "last_receipt": "resource-master-connected-readers-delta-20261007-2055",
+      "last_used_at": "2026-10-08T00:59:43Z",
+      "name": "connected-library-read-header-projector",
+      "next_action": "Apply only to an explicit retained Library read, publish bounded header aggregates, and keep bodies, URLs, private names, provenance claims, and provider effects out of the ledger.",
+      "own_activation_this_run": true,
+      "priority": 94,
+      "rate_plan_boundary": "A retained item, metadata header, byte declaration, line count, version value, account connection, or cached read is not a live session, raw-byte proof, provenance proof, permission, deployment, acceptance, payment, revenue, or cash.",
+      "source": "PR32287 merge 86ac96c4cc284397068010db3048f0e7e7cdb70c",
+      "stage": "PRODUCING",
+      "stale_after": "next Library response schema, privacy boundary, projector blob, provider contract, owner, or consumer change",
+      "value": "Lets connected operators route and compare retained Library reads using exact bodyless metadata while preserving the private-data boundary."
     }
   ],
   "titan": "NOT_WRITTEN"
