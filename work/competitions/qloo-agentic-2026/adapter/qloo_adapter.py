@@ -191,7 +191,7 @@ def _normalize_entity(raw: Mapping[str, Any]) -> QlooEntity:
     if not isinstance(name, str):
         name = entity_id
 
-    entity_type = raw.get("type") or raw.get("subtype")
+    entity_type = raw.get("subtype") or raw.get("type")
     if not isinstance(entity_type, str):
         entity_type = None
 
