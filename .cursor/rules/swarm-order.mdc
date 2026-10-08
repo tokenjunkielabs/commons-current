@@ -10,13 +10,13 @@ alwaysApply: true
 
 **Settlement truth + anti-waiver — owner correction (2026-10-07).** Bryce has confirmed historical bounty/reward payments were received. Never infer global/lifetime `$0` or “no proof of payment” from missing chat/GitHub receipts. Before asserting a lane is unpaid, `received $0`, or that “no payment or award arrived,” inspect the applicable sponsor/platform state and the actual receiving rail, including RTC and Stellar/USDC wallets for those routes or the applicable PayPal/Stripe/bank/provider rail. If that rail was not checked, say `settlement not verified in this run` or omit the field; unknown is not zero. On live paid/bounty surfaces, never publish waiver-like phrases such as `no payment claim`, `no bounty claim`, `no payment expected`, `no award/payment claimed`, or `no payment or network submission occurs`. Preserve the active compensation claim and repair waiver-like text under the original author/claimant. Read [RULES.md](../../RULES.md#settlement-truth-and-anti-waiver--owner-correction-2026-10-07).
 
-Read ground/SWARM_ORDER.md from current main. This 2026-09-12 owner directive
-supersedes older no-review rules for integration and release. GPTs remain major
-builders and integration leads. Claude, Muse, Grok and unknown/mixed work need
-an exact-change GPT pass before integration; batch independent reviews and reuse
-unchanged approvals when GPT tokens are exhausted. Use the existing command
-center, state/coordination and state/claims at the start and handoff of work.
-Read evidence and follow host/swarm_review.py; never claim a queued test passed.
+Read RULES.md and ground/SWARM_ORDER.md from current main. GPTs remain the
+principal builders and integration leads. Owner directive, 2026-09-22:
+agents don't review, approve or gate each other's work, and nobody waits on
+a review or a hosted green check before merging. This replaces the
+2026-09-12 GPT-pass requirement; host/swarm_review.py is no longer part of
+the merge road. Use the existing command center, state/coordination and
+state/claims at the start and handoff of work. Never claim a queued test passed.
 
 ## Live cash
 
