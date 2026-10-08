@@ -10,6 +10,7 @@ The compiler is advisory only. It never:
 - claims or assigns an issue;
 - treats `MAYBE REWARDED` / “may be rewarded” as a guaranteed amount;
 - converts a campaign pool mention into issue-specific compensation;
+- treats an archived repository as an available source-publication target when archive evidence is supplied;
 - overwrites an existing output directory.
 
 A candidate is campaign-eligible only when all three labels are present:
@@ -18,7 +19,7 @@ A candidate is campaign-eligible only when all three labels are present:
 - `MAYBE REWARDED`
 - `Official Campaign | FWC26`
 
-Open + unassigned issues become `READY` only when the supplied snapshot also contains no observed claimant comments and no open pull requests. If the issue text describes a required application/assignment step, it becomes `CLAIM_REQUIRED`; supplied claimant/PR observations become `CLAIMED_OR_PR_OPEN`. Assigned and closed/mislabeled issues remain visible but cannot enter `READY`.
+Open + unassigned issues become `READY` only when the supplied snapshot also contains no observed claimant comments and no open pull requests. If the issue text describes a required application/assignment step, it becomes `CLAIM_REQUIRED`; supplied claimant/PR observations become `CLAIMED_OR_PR_OPEN`. Assigned and closed/mislabeled issues remain visible but cannot enter `READY`. An issue in a repository confirmed archived is `REPOSITORY_ARCHIVED`, never `READY`, even if the issue remains open and unassigned.
 
 ## Input
 
@@ -31,6 +32,7 @@ JSON array or JSONL. Minimal object:
   "title": "sliding-window rate limiter scoped per tenant/API key",
   "url": "https://github.com/StableRoute-Org/Stableroute-backend/issues/551",
   "state": "open",
+  "repository_archived": false,
   "labels": ["GRANTFOX OSS", "MAYBE REWARDED", "Official Campaign | FWC26"],
   "assignees": [],
   "claimant_comments": [],
@@ -40,6 +42,8 @@ JSON array or JSONL. Minimal object:
 ```
 
 `labels` may also contain GitHub-style objects with `name`; `assignees` may contain objects with `login`. `claimant_comments` (or `claim_comments`) and `open_pull_requests` (or `open_prs`) are optional upstream coordination inputs; any supplied claimant or open PR blocks `READY`. `coordination_claims` (or `swarm_claims`) records active internal owners from Slack/workboard evidence and produces `SWARM_TAKEN`, preventing another seat from treating the same packet as free. `observed_at` (or `snapshot_observed_at`) may carry the timezone-aware evidence timestamp.
+
+Supply `repository_archived` (alias `repo_archived`) from a current canonical GitHub **repository** read. It accepts only a boolean or `null`; conflicting aliases and numeric/string stand-ins are errors. Explicit `true` blocks `READY` with `REPOSITORY_ARCHIVED` and appears in both outputs; explicit `false` means the observed repository was not archived. Missing/`null` means **archive state not checked**, not an active-repository guarantee. Intake publishers should include fresh repository evidence before dispatch. The compiler makes no additional network calls.
 
 ## Run
 
@@ -65,4 +69,4 @@ python -m unittest discover -s tools/grantfox_fwc26_workfeed/tests -v
 python -O -m unittest discover -s tools/grantfox_fwc26_workfeed/tests -v
 ```
 
-The tests cover campaign label gating, assignment state, claim-step detection, observed claimant/open-PR blocking, active swarm-owner collision blocking, timezone-aware freshness floors, discretionary-vs-explicit reward evidence, command extraction, security-sensitive marking, hostile duplicate keys, malformed coordination fields, invalid URLs/issue numbers, authority flags, and create-exclusive output.
+The existing tests cover campaign label gating, assignment state, claim-step detection, observed claimant/open-PR blocking, active swarm-owner collision blocking, timezone-aware freshness floors, discretionary-vs-explicit reward evidence, command extraction, security-sensitive marking, hostile duplicate keys, malformed coordination fields, invalid URLs/issue numbers, authority flags, and create-exclusive output. For archive evidence, run the real CLI on a mixed archived/live input and inspect `queue.json` and `QUEUE.md`; do not run broad suites.
